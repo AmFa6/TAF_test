@@ -170,12 +170,8 @@
       </div>
       <div class="field-container">
         <div>
-          <label for="opacityMinExponent" class="medium-font">Min Contrast - <em id="opacityMinExponentValue">10</em></label>
-          <input type="range" id="opacityMinExponent" min="0" max="100" step="5" value="10" class="small-font">
-        </div>
-        <div>
-          <label for="opacityMaxExponent" class="medium-font">Max Contrast - <em id="opacityMaxExponentValue">10</em></label>
-          <input type="range" id="opacityMaxExponent" min="0" max="100" step="5" value="10" class="small-font">
+          <label for="opacityExponent" class="medium-font">Contrast - <em id="opacityExponentValue">10</em></label>
+          <input type="range" id="opacityExponent" min="0" max="100" step="5" value="10" class="small-font">
         </div>
         <div class="button-container">
           <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
@@ -202,12 +198,8 @@
       </div>
       <div class="field-container">
         <div>
-          <label for="outlineMinExponent" class="medium-font">Min Contrast - <em id="outlineMinExponentValue">60</em></label>
-          <input type="range" id="outlineMinExponent" min="0" max="100" step="5" value="60" class="small-font">
-        </div>
-        <div>
-          <label for="outlineMaxExponent" class="medium-font">Max Contrast - <em id="outlineMaxExponentValue">60</em></label>
-          <input type="range" id="outlineMaxExponent" min="0" max="100" step="5" value="60" class="small-font">
+          <label for="outlineExponent" class="medium-font">Contrast - <em id="outlineExponentValue">60</em></label>
+          <input type="range" id="outlineExponent" min="0" max="100" step="5" value="60" class="small-font">
         </div>
         <div class="button-container">
           <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
@@ -222,35 +214,21 @@
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-      const opacityMinExponentInput = document.getElementById('opacityMinExponent');
-      const opacityMinExponentValue = document.getElementById('opacityMinExponentValue');
-      opacityMinExponentInput.addEventListener('input', function() {
-        opacityMinExponentValue.innerHTML = `<em>${opacityMinExponentInput.value}</em>`;
+      const opacityExponentInput = document.getElementById('opacityExponent');
+      const opacityExponentValue = document.getElementById('opacityExponentValue');
+      opacityExponentInput.addEventListener('input', function() {
+        opacityExponentValue.innerHTML = `<em>${opacityExponentInput.value}</em>`;
       });
 
-      const opacityMaxExponentInput = document.getElementById('opacityMaxExponent');
-      const opacityMaxExponentValue = document.getElementById('opacityMaxExponentValue');
-      opacityMaxExponentInput.addEventListener('input', function() {
-        opacityMaxExponentValue.innerHTML = `<em>${opacityMaxExponentInput.value}</em>`;
-      });
-
-      const outlineMinExponentInput = document.getElementById('outlineMinExponent');
-      const outlineMinExponentValue = document.getElementById('outlineMinExponentValue');
-      outlineMinExponentInput.addEventListener('input', function() {
-        outlineMinExponentValue.innerHTML = `<em>${outlineMinExponentInput.value}</em>`;
-      });
-
-      const outlineMaxExponentInput = document.getElementById('outlineMaxExponent');
-      const outlineMaxExponentValue = document.getElementById('outlineMaxExponentValue');
-      outlineMaxExponentInput.addEventListener('input', function() {
-        outlineMaxExponentValue.innerHTML = `<em>${outlineMaxExponentInput.value}</em>`;
+      const outlineExponentInput = document.getElementById('outlineExponent');
+      const outlineExponentValue = document.getElementById('outlineExponentValue');
+      outlineExponentInput.addEventListener('input', function() {
+        outlineExponentValue.innerHTML = `<em>${outlineExponentInput.value}</em>`;
       });
 
       // Initialize values
-      opacityMinExponentValue.innerHTML = `<em>${opacityMinExponentInput.value}</em>`;
-      opacityMaxExponentValue.innerHTML = `<em>${opacityMaxExponentInput.value}</em>`;
-      outlineMinExponentValue.innerHTML = `<em>${outlineMinExponentInput.value}</em>`;
-      outlineMaxExponentValue.innerHTML = `<em>${outlineMaxExponentInput.value}</em>`;
+      opacityExponentValue.innerHTML = `<em>${opacityExponentInput.value}</em>`;
+      outlineExponentValue.innerHTML = `<em>${outlineExponentInput.value}</em>`;
 
       // Handle collapsible settings panel
       const collapsible = document.querySelector(".collapsible");
