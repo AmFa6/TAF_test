@@ -15,7 +15,7 @@ const geoJsonFiles = [
   { year: '2023-2024', path: 'https://AmFa6.github.io/TAF/2023-2024_connectscore.geojson' },
   { year: '2019-2024', path: 'https://AmFa6.github.io/TAF/2019-2024_connectscore.geojson' },
   { year: '2022-2023', path: 'https://AmFa6.github.io/TAF/2022-2023_connectscore.geojson' },
-  { year: '2019-2023', path: 'https://AmFa6.github.io/TAF/2019-2023_connectscore.geojson' },
+  { year: '2019-2023', path: 'https://AmFa6.github.io/TAF/2019-2023_connectscore.geojson' }, 
   { year: '2019-2022', path: 'https://AmFa6.github.io/TAF/2019-2022_connectscore.geojson' }
 ];
 
@@ -52,38 +52,40 @@ const purposeDropdown = document.getElementById("purposeDropdown");
 const modeDropdown = document.getElementById("modeDropdown");
 const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
 const outlineFieldDropdown = document.getElementById("outlineFieldDropdown");
-
-// Get the slider elements
-const rangeSlider = document.getElementById("rangeSlider");
-const rangeSliderMax = document.getElementById("rangeSliderMax");
-const rangeValue = document.getElementById("rangeValue");
-
-// Get the opacity and outline exponent inputs
-const opacityExponentInput = document.getElementById("opacityExponent");
 const minOpacityValueInput = document.getElementById("minOpacityValue");
 const maxOpacityValueInput = document.getElementById("maxOpacityValue");
-const outlineExponentInput = document.getElementById("outlineExponent");
+const opacityExponentInput = document.getElementById("opacityExponent");
 const minOutlineValueInput = document.getElementById("minOutlineValue");
 const maxOutlineValueInput = document.getElementById("maxOutlineValue");
+const outlineExponentInput = document.getElementById("outlineExponent");
+
+// Ensure 'Population' is the default value for opacityFieldDropdown
+opacityFieldDropdown.value = "pop";
+
+// Ensure 'None' is the default value for outlineFieldDropdown
+outlineFieldDropdown.value = "None";
+
+// Maps for purpose and mode
+const purposeMap = {
+  "Education": "Edu",
+  "Employment": "Emp",
+  "Health": "Hth",
+  "High Street": "HSt",
+  "All Amenities": "All"
+};
+
+const modeMap = {
+  "Walk": "Wa",
+  "Cycle": "Cy",
+  "Public Transport": "PT",
+  "Car": "Ca",
+  "All Modes": "To" // Assuming "To" is the suffix for all modes
+};
 
 let autoUpdateOpacity = true;
 let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
 let outlineOrder = 'low-to-high';
-
-// Update the range value display
-function updateRangeValue() {
-  const minVal = rangeSlider.value;
-  const maxVal = rangeSliderMax.value;
-  rangeValue.textContent = `Range: ${minVal} - ${maxVal}`;
-}
-
-// Initialize the range value display
-updateRangeValue();
-
-// Add event listeners to the sliders
-rangeSlider.addEventListener("input", updateRangeValue);
-rangeSliderMax.addEventListener("input", updateRangeValue);
 
 // Function to update layer visibility
 function updateLayerVisibility() {
@@ -111,21 +113,53 @@ function updateLayerVisibility() {
       return feature.properties[fieldToDisplay] !== undefined;
     });
 
-    const minVal = parseFloat(rangeSlider.value);
-    const maxVal = parseFloat(rangeSliderMax.value);
+    if (opacityField === 'None') {
+      minOpacityValueInput.value = '';
+      maxOpacityValueInput.value = '';
+    } else {
+      const opacityValues = filteredFeatures.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
+      const outlineValues = filteredFeatures.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
 
-    const filteredGeoJson = {
-      type: "FeatureCollection",
-      features: filteredFeatures.filter(feature => {
-        const value = feature.properties[fieldToDisplay];
-        return value >= minVal && value <= maxVal;
-      })
-    };
+      let minOpacity = opacityValues.length > 0 ? Math.min(...opacityValues) : 0;
+      let maxOpacity = opacityValues.length > 0 ? Math.max(...opacityValues) : 1;
+      let minOutline = outlineValues.length > 0 ? Math.min(...outlineValues) : 0;
+      let maxOutline = outlineValues.length > 0 ? Math.max(...outlineValues) : 1;
 
-    const geoJsonLayer = L.geoJSON(filteredGeoJson, {
-      style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minVal, maxVal, parseFloat(opacityExponentInput.value), parseFloat(minOutlineValueInput.value), parseFloat(maxOutlineValueInput.value), parseFloat(outlineExponentInput.value), selectedYear),
-      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
-    }).addTo(map);
+      if (opacityField === 'pop' || opacityField === 'hh_fut') {
+        minOpacity = Math.floor(minOpacity);
+        maxOpacity = Math.ceil(maxOpacity);
+      } else {
+        minOpacity = Math.floor(minOpacity * 100) / 100;
+        maxOpacity = Math.ceil(maxOpacity * 100) / 100;
+      }
+
+      if (outlineField === 'pop' || outlineField === 'hh_fut') {
+        minOutline = Math.floor(minOutline);
+        maxOutline = Math.ceil(maxOutline);
+      } else {
+        minOutline = Math.floor(minOutline * 100) / 100;
+        maxOutline = Math.ceil(maxOutline * 100) / 100;
+      }
+
+      if (autoUpdateOpacity) {
+        minOpacityValueInput.value = minOpacity;
+        maxOpacityValueInput.value = maxOpacity;
+      }
+      if (autoUpdateOutline) {
+        minOutlineValueInput.value = minOutline;
+        maxOutlineValueInput.value = maxOutline;
+      }
+
+      const filteredGeoJson = {
+        type: "FeatureCollection",
+        features: filteredFeatures
+      };
+
+      const geoJsonLayer = L.geoJSON(filteredGeoJson, {
+        style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, parseFloat(minOpacityValueInput.value), parseFloat(maxOpacityValueInput.value), parseFloat(opacityExponentInput.value), parseFloat(minOutlineValueInput.value), parseFloat(maxOutlineValueInput.value), parseFloat(outlineExponentInput.value), selectedYear),
+        onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
+      }).addTo(map);
+    }
   }
 
   updateLegend();
@@ -150,15 +184,15 @@ function onEachFeature(feature, layer, selectedYear) {
           score = Math.round(scoreValue);
         }
       }
-
+      
       const percentile = getValue(`${purposeMap[purposeDropdown.value]}_${modeMap[modeDropdown.value]}_100`) !== '-' ? Math.round(getValue(`${purposeMap[purposeDropdown.value]}_${modeMap[modeDropdown.value]}_100`)) : '-';
       const population = getValue('pop') !== '-' ? Math.round(getValue('pop')) : '-';
       const imd = population === 0 ? '-' : (getValue('imd') !== '-' ? getValue('imd').toFixed(2) : '-');
       const carAvailability = population === 0 ? '-' : (getValue('carav') !== '-' ? getValue('carav').toFixed(2) : '-');
       const futureDwellings = getValue('hh_fut') === 0 ? '-' : (getValue('hh_fut') !== '-' ? Math.round(getValue('hh_fut')) : '-');
-
+      
       let popupContent = `<strong>Hex_ID:</strong> ${hexId}<br><strong>${scoreLabel}:</strong> ${score}<br><strong>Percentile:</strong> ${percentile}<br><strong>Population:</strong> ${population}<br><strong>IMD:</strong> ${imd}<br><strong>Car Availability:</strong> ${carAvailability}<br><strong>Future Dwellings:</strong> ${futureDwellings}`;
-
+      
       L.popup()
         .setLatLng(e.latlng)
         .setContent(popupContent)
@@ -167,33 +201,6 @@ function onEachFeature(feature, layer, selectedYear) {
   });
 }
 
-// Function to style features
-function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minVal, maxVal, minOutlineValue, maxOutlineValue, outlineExponent, selectedYear) {
-  const value = feature.properties[fieldToDisplay];
-  const color = getColor(value, selectedYear);
-
-  const opacity = opacityField === 'None' ? 0.75 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.05 : scaleExp(feature.properties[opacityField], minVal, maxVal, parseFloat(opacityExponentInput.value), 0.05, 0.75, opacityOrder));
-  const weight = outlineField === 'None' ? 0 : (feature.properties[outlineField] === 0 || feature.properties[outlineField] === null ? 0 : scaleExp(feature.properties[outlineField], minOutlineValue, maxOutlineValue, parseFloat(outlineExponentInput.value), 0, 2, outlineOrder));
-
-  return {
-    fillColor: color,
-    weight: weight,
-    opacity: 1,
-    color: 'black',
-    fillOpacity: opacity
-  };
-}
-
-// Function to scale values exponentially
-function scaleExp(value, minVal, maxVal, exponent, minScale, maxScale, order) {
-  if (value <= minVal) return order === 'low-to-high' ? minScale : maxScale;
-  if (value >= maxVal) return order === 'low-to-high' ? maxScale : minScale;
-  const normalizedValue = (value - minVal) / (maxVal - minVal);
-  const scaledValue = Math.pow(normalizedValue, exponent / 20);
-  return order === 'low-to-high' ? minScale + scaledValue * (maxScale - minScale) : maxScale - scaledValue * (maxScale - minScale);
-}
-
-// Function to get color based on value
 function getColor(value, selectedYear) {
   if (!selectedYear) {
     console.error('No year selected');
@@ -230,7 +237,6 @@ function getColor(value, selectedYear) {
   }
 }
 
-// Function to update legend
 function updateLegend() {
   const selectedYear = yearDropdown.value;
   const legendContent = document.getElementById("legend-content");
@@ -322,11 +328,47 @@ outlineFieldDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateLayerVisibility();
 });
-rangeSlider.addEventListener("blur", () => {
+minOpacityValueInput.addEventListener("blur", () => {
   autoUpdateOpacity = false;
   updateLayerVisibility();
 });
-rangeSliderMax.addEventListener("blur", () => {
+maxOpacityValueInput.addEventListener("blur", () => {
   autoUpdateOpacity = false;
   updateLayerVisibility();
 });
+opacityExponentInput.addEventListener("input", updateLayerVisibility);
+minOutlineValueInput.addEventListener("blur", () => {
+  autoUpdateOutline = false;
+  updateLayerVisibility();
+});
+maxOutlineValueInput.addEventListener("blur", () => {
+  autoUpdateOutline = false;
+  updateLayerVisibility();
+});
+outlineExponentInput.addEventListener("input", updateLayerVisibility);
+
+// Function to style features
+function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, opacityExponent, minOutlineValue, maxOutlineValue, outlineExponent, selectedYear) {
+  const value = feature.properties[fieldToDisplay];
+  const color = getColor(value, selectedYear);
+
+  const opacity = opacityField === 'None' ? 0.75 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.05 : scaleExp(feature.properties[opacityField], minOpacityValue, maxOpacityValue, opacityExponent, 0.05, 0.75, opacityOrder));
+  const weight = outlineField === 'None' ? 0 : (feature.properties[outlineField] === 0 || feature.properties[outlineField] === null ? 0 : scaleExp(feature.properties[outlineField], minOutlineValue, maxOutlineValue, outlineExponent, 0, 4, outlineOrder));
+  
+  return {
+    fillColor: color,
+    weight: weight,
+    opacity: 1,
+    color: 'black',
+    fillOpacity: opacity
+  };
+}
+
+// Function to scale values exponentially
+function scaleExp(value, minVal, maxVal, exponent, minScale, maxScale, order) {
+  if (value <= minVal) return order === 'low-to-high' ? minScale : maxScale;
+  if (value >= maxVal) return order === 'low-to-high' ? maxScale : minScale;
+  const normalizedValue = (value - minVal) / (maxVal - minVal);
+  const scaledValue = Math.pow(normalizedValue, exponent / 20);
+  return order === 'low-to-high' ? minScale + scaledValue * (maxScale - minScale) : maxScale - scaledValue * (maxScale - minScale);
+}
