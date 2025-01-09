@@ -362,23 +362,7 @@ outlineFieldDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateLayerVisibility();
 });
-minOpacityValueInput.addEventListener("blur", () => {
-  autoUpdateOpacity = false;
-  updateLayerVisibility();
-});
-maxOpacityValueInput.addEventListener("blur", () => {
-  autoUpdateOpacity = false;
-  updateLayerVisibility();
-});
 opacityExponentInput.addEventListener("input", updateLayerVisibility);
-minOutlineValueInput.addEventListener("blur", () => {
-  autoUpdateOutline = false;
-  updateLayerVisibility();
-});
-maxOutlineValueInput.addEventListener("blur", () => {
-  autoUpdateOutline = false;
-  updateLayerVisibility();
-});
 outlineExponentInput.addEventListener("input", updateLayerVisibility);
 
 // Function to style features
