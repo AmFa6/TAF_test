@@ -173,6 +173,14 @@ function updateLayerVisibility() {
       maxOutline = Math.ceil(maxOutline * 100) / 100;
     }
 
+    console.log(`Opacity range: min=${minOpacity}, max=${maxOpacity}`);
+    console.log(`Outline range: min=${minOutline}, max=${maxOutline}`);
+
+    if (isNaN(minOpacity) || isNaN(maxOpacity) || isNaN(minOutline) || isNaN(maxOutline)) {
+      console.error('Range values are not numeric');
+      return;
+    }
+
     if (autoUpdateOpacity) {
       opacityRangeSlider.noUiSlider.updateOptions({
         range: {
