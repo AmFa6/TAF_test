@@ -124,6 +124,7 @@ function initializeSliders() {
 }
 
 // Function to update layer visibility
+
 function updateLayerVisibility() {
   const selectedYear = yearDropdown.value;
   if (!selectedYear) {
@@ -152,26 +153,10 @@ function updateLayerVisibility() {
     const opacityValues = filteredFeatures.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
     const outlineValues = filteredFeatures.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
 
-    let minOpacity = opacityValues.length > 0 ? Math.min(...opacityValues) : 0;
-    let maxOpacity = opacityValues.length > 0 ? Math.max(...opacityValues) : 1;
-    let minOutline = outlineValues.length > 0 ? Math.min(...outlineValues) : 0;
-    let maxOutline = outlineValues.length > 0 ? Math.max(...outlineValues) : 1;
-
-    if (opacityField === 'pop' || opacityField === 'hh_fut') {
-      minOpacity = Math.floor(minOpacity);
-      maxOpacity = Math.ceil(maxOpacity);
-    } else {
-      minOpacity = Math.floor(minOpacity * 100) / 100;
-      maxOpacity = Math.ceil(maxOpacity * 100) / 100;
-    }
-
-    if (outlineField === 'pop' || outlineField === 'hh_fut') {
-      minOutline = Math.floor(minOutline);
-      maxOutline = Math.ceil(maxOutline);
-    } else {
-      minOutline = Math.floor(minOutline * 100) / 100;
-      maxOutline = Math.ceil(maxOutline * 100) / 100;
-    }
+    let minOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[0]);
+    let maxOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[1]);
+    let minOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[0]);
+    let maxOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[1]);
 
     console.log(`Opacity range: min=${minOpacity}, max=${maxOpacity}`);
     console.log(`Outline range: min=${minOutline}, max=${maxOutline}`);
@@ -214,7 +199,7 @@ function updateLayerVisibility() {
     };
 
     const geoJsonLayer = L.geoJSON(filteredGeoJson, {
-      style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, parseFloat(opacityRangeSlider.noUiSlider.get()[0]), parseFloat(opacityRangeSlider.noUiSlider.get()[1]), parseFloat(opacityExponentInput.value), parseFloat(outlineRangeSlider.noUiSlider.get()[0]), parseFloat(outlineRangeSlider.noUiSlider.get()[1]), parseFloat(outlineExponentInput.value), selectedYear),
+      style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, parseFloat(opacityExponentInput.value), minOutline, maxOutline, parseFloat(outlineExponentInput.value), selectedYear),
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
     }).addTo(map);
   }
@@ -335,18 +320,6 @@ function updateLegend() {
   });
 }
 
-// Function to reset opacity values to default
-function resetOpacityValues() {
-  autoUpdateOpacity = true;
-  updateLayerVisibility();
-}
-
-// Function to reset outline values to default
-function resetOutlineValues() {
-  autoUpdateOutline = true;
-  updateLayerVisibility();
-}
-
 // Function to inverse opacity scale
 function inverseOpacityScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
@@ -358,13 +331,6 @@ function inverseOutlineScale() {
   outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
   updateLayerVisibility();
 }
-
-// Add event listeners to reset buttons
-const resetOpacityButton = document.getElementById("resetOpacityButton");
-resetOpacityButton.addEventListener("click", resetOpacityValues);
-
-const resetOutlineButton = document.getElementById("resetOutlineButton");
-resetOutlineButton.addEventListener("click", resetOutlineValues);
 
 // Add event listeners to inverse scale buttons
 const inverseOpacityScaleButton = document.getElementById("inverseOpacityScaleButton");
