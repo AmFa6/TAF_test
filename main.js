@@ -32,6 +32,7 @@ geoJsonFiles.forEach(file => {
       console.log(`Loaded GeoJSON for year ${file.year}`);
       layersLoaded++;
       if (layersLoaded === totalLayers) {
+        initializeSliders();
         updateLayerVisibility();
       }
     })
@@ -83,38 +84,44 @@ let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
 let outlineOrder = 'low-to-high';
 
-const opacityRangeSlider = document.getElementById('opacityRangeSlider');
-noUiSlider.create(opacityRangeSlider, {
-  start: [0, 1],
-  connect: true,
-  range: {
-    'min': 0,
-    'max': 1
-  },
-  step: 0.01,
-  tooltips: true,
-  format: {
-    to: value => value.toFixed(2),
-    from: value => parseFloat(value)
-  }
-});
+let opacityRangeSlider;
+let outlineRangeSlider;
 
-// Initialize noUiSlider for outline width range
-const outlineRangeSlider = document.getElementById('outlineRangeSlider');
-noUiSlider.create(outlineRangeSlider, {
-  start: [0, 4],
-  connect: true,
-  range: {
-    'min': 0,
-    'max': 4
-  },
-  step: 0.1,
-  tooltips: true,
-  format: {
-    to: value => value.toFixed(1),
-    from: value => parseFloat(value)
-  }
-});
+function initializeSliders() {
+  // Initialize noUiSlider for opacity range
+  opacityRangeSlider = document.getElementById('opacityRangeSlider');
+  noUiSlider.create(opacityRangeSlider, {
+    start: [0, 1],
+    connect: true,
+    range: {
+      'min': 0,
+      'max': 1
+    },
+    step: 0.01,
+    tooltips: true,
+    format: {
+      to: value => value.toFixed(2),
+      from: value => parseFloat(value)
+    }
+  });
+
+  // Initialize noUiSlider for outline width range
+  outlineRangeSlider = document.getElementById('outlineRangeSlider');
+  noUiSlider.create(outlineRangeSlider, {
+    start: [0, 4],
+    connect: true,
+    range: {
+      'min': 0,
+      'max': 4
+    },
+    step: 0.1,
+    tooltips: true,
+    format: {
+      to: value => value.toFixed(1),
+      from: value => parseFloat(value)
+    }
+  });
+}
 
 // Function to update layer visibility
 function updateLayerVisibility() {
