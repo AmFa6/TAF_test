@@ -213,6 +213,12 @@
     <h4 style="font-size: 1.2em; margin-top: 0;">Legend</h4>
     <div id="legend-content"></div>
   </div>
+  <div>
+    <label for="rangeSlider">Range:</label>
+    <input type="range" id="rangeSlider" min="0" max="100" step="1" value="0">
+    <input type="range" id="rangeSliderMax" min="0" max="100" step="1" value="100">
+    <span id="rangeValue"></span>
+  </div>
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
