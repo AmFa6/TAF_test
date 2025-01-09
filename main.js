@@ -176,28 +176,36 @@ function updateLayerVisibility() {
     console.log(`Opacity range: min=${minOpacity}, max=${maxOpacity}`);
     console.log(`Outline range: min=${minOutline}, max=${maxOutline}`);
 
-    if (isNaN(minOpacity) || isNaN(maxOpacity) || isNaN(minOutline) || isNaN(maxOutline)) {
-      console.error('Range values are not numeric');
-      return;
+    if (isNaN(minOpacity) || isNaN(maxOpacity)) {
+      console.error('Opacity range values are not numeric');
+      opacityRangeSlider.setAttribute('disabled', true);
+    } else {
+      opacityRangeSlider.removeAttribute('disabled');
+      if (autoUpdateOpacity) {
+        opacityRangeSlider.noUiSlider.updateOptions({
+          range: {
+            'min': minOpacity,
+            'max': maxOpacity
+          }
+        });
+        opacityRangeSlider.noUiSlider.set([minOpacity, maxOpacity]);
+      }
     }
 
-    if (autoUpdateOpacity) {
-      opacityRangeSlider.noUiSlider.updateOptions({
-        range: {
-          'min': minOpacity,
-          'max': maxOpacity
-        }
-      });
-      opacityRangeSlider.noUiSlider.set([minOpacity, maxOpacity]);
-    }
-    if (autoUpdateOutline) {
-      outlineRangeSlider.noUiSlider.updateOptions({
-        range: {
-          'min': minOutline,
-          'max': maxOutline
-        }
-      });
-      outlineRangeSlider.noUiSlider.set([minOutline, maxOutline]);
+    if (isNaN(minOutline) || isNaN(maxOutline)) {
+      console.error('Outline range values are not numeric');
+      outlineRangeSlider.setAttribute('disabled', true);
+    } else {
+      outlineRangeSlider.removeAttribute('disabled');
+      if (autoUpdateOutline) {
+        outlineRangeSlider.noUiSlider.updateOptions({
+          range: {
+            'min': minOutline,
+            'max': maxOutline
+          }
+        });
+        outlineRangeSlider.noUiSlider.set([minOutline, maxOutline]);
+      }
     }
 
     const filteredGeoJson = {
