@@ -52,12 +52,11 @@ const purposeDropdown = document.getElementById("purposeDropdown");
 const modeDropdown = document.getElementById("modeDropdown");
 const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
 const outlineFieldDropdown = document.getElementById("outlineFieldDropdown");
-const minOpacityValueInput = document.getElementById("minOpacityValue");
-const maxOpacityValueInput = document.getElementById("maxOpacityValue");
 const opacityExponentInput = document.getElementById("opacityExponent");
-const minOutlineValueInput = document.getElementById("minOutlineValue");
-const maxOutlineValueInput = document.getElementById("maxOutlineValue");
 const outlineExponentInput = document.getElementById("outlineExponent");
+const rangeSlider = document.getElementById("rangeSlider");
+const rangeSliderMax = document.getElementById("rangeSliderMax");
+const rangeValue = document.getElementById("rangeValue");
 
 // Ensure 'Population' is the default value for opacityFieldDropdown
 opacityFieldDropdown.value = "pop";
@@ -86,6 +85,19 @@ let autoUpdateOpacity = true;
 let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
 let outlineOrder = 'low-to-high';
+
+function updateRangeValue() {
+  const minVal = rangeSlider.value;
+  const maxVal = rangeSliderMax.value;
+  rangeValue.textContent = `Range: ${minVal} - ${maxVal}`;
+}
+
+// Initialize the range value display
+updateRangeValue();
+
+// Add event listeners to the sliders
+rangeSlider.addEventListener("input", updateRangeValue);
+rangeSliderMax.addEventListener("input", updateRangeValue);
 
 // Function to update layer visibility
 function updateLayerVisibility() {
@@ -117,8 +129,8 @@ function updateLayerVisibility() {
       minOpacityValueInput.value = '';
       maxOpacityValueInput.value = '';
     } else {
-      const opacityValues = filteredFeatures.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
-      const outlineValues = filteredFeatures.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
+      const minVal = parseFloat(rangeSlider.value);
+      const maxVal = parseFloat(rangeSliderMax.value);
 
       let minOpacity = opacityValues.length > 0 ? Math.min(...opacityValues) : 0;
       let maxOpacity = opacityValues.length > 0 ? Math.max(...opacityValues) : 1;
@@ -152,18 +164,20 @@ function updateLayerVisibility() {
 
       const filteredGeoJson = {
         type: "FeatureCollection",
-        features: filteredFeatures
+        features: filteredFeatures.filter(feature => {
+          const value = feature.properties[fieldToDisplay];
+          return value >= minVal && value <= maxVal;
+        })
       };
 
       const geoJsonLayer = L.geoJSON(filteredGeoJson, {
-        style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, parseFloat(minOpacityValueInput.value), parseFloat(maxOpacityValueInput.value), parseFloat(opacityExponentInput.value), parseFloat(minOutlineValueInput.value), parseFloat(maxOutlineValueInput.value), parseFloat(outlineExponentInput.value), selectedYear),
+        style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minVal, maxVal, parseFloat(opacityExponentInput.value), parseFloat(outlineExponentInput.value), selectedYear),
         onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
       }).addTo(map);
     }
+  
+    updateLegend();
   }
-
-  updateLegend();
-}
 
 // Function to display pop-up on feature click
 function onEachFeature(feature, layer, selectedYear) {
@@ -190,9 +204,9 @@ function onEachFeature(feature, layer, selectedYear) {
       const imd = population === 0 ? '-' : (getValue('imd') !== '-' ? getValue('imd').toFixed(2) : '-');
       const carAvailability = population === 0 ? '-' : (getValue('carav') !== '-' ? getValue('carav').toFixed(2) : '-');
       const futureDwellings = getValue('hh_fut') === 0 ? '-' : (getValue('hh_fut') !== '-' ? Math.round(getValue('hh_fut')) : '-');
-      
+
       let popupContent = `<strong>Hex_ID:</strong> ${hexId}<br><strong>${scoreLabel}:</strong> ${score}<br><strong>Percentile:</strong> ${percentile}<br><strong>Population:</strong> ${population}<br><strong>IMD:</strong> ${imd}<br><strong>Car Availability:</strong> ${carAvailability}<br><strong>Future Dwellings:</strong> ${futureDwellings}`;
-      
+
       L.popup()
         .setLatLng(e.latlng)
         .setContent(popupContent)
@@ -348,13 +362,13 @@ maxOutlineValueInput.addEventListener("blur", () => {
 outlineExponentInput.addEventListener("input", updateLayerVisibility);
 
 // Function to style features
-function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, opacityExponent, minOutlineValue, maxOutlineValue, outlineExponent, selectedYear) {
+function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minVal, maxVal, opacityExponent, outlineExponent, selectedYear) {
   const value = feature.properties[fieldToDisplay];
   const color = getColor(value, selectedYear);
 
-  const opacity = opacityField === 'None' ? 0.75 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.05 : scaleExp(feature.properties[opacityField], minOpacityValue, maxOpacityValue, opacityExponent, 0.05, 0.75, opacityOrder));
-  const weight = outlineField === 'None' ? 0 : (feature.properties[outlineField] === 0 || feature.properties[outlineField] === null ? 0 : scaleExp(feature.properties[outlineField], minOutlineValue, maxOutlineValue, outlineExponent, 0, 4, outlineOrder));
-  
+  const opacity = opacityField === 'None' ? 0.75 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.05 : scaleExp(feature.properties[opacityField], minVal, maxVal, opacityExponent, 0.05, 0.75, opacityOrder));
+  const weight = outlineField === 'None' ? 0 : (feature.properties[outlineField] === 0 || feature.properties[outlineField] === null ? 0 : scaleExp(feature.properties[outlineField], minVal, maxVal, outlineExponent, 0, 1, outlineOrder));
+
   return {
     fillColor: color,
     weight: weight,
