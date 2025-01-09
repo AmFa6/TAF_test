@@ -150,10 +150,38 @@ function updateLayerVisibility() {
     let minOutline = outlineValues.length > 0 ? Math.min(...outlineValues) : 0;
     let maxOutline = outlineValues.length > 0 ? Math.max(...outlineValues) : 1;
 
+    if (opacityField === 'pop' || opacityField === 'hh_fut') {
+      minOpacity = Math.floor(minOpacity);
+      maxOpacity = Math.ceil(maxOpacity);
+    } else {
+      minOpacity = Math.floor(minOpacity * 100) / 100;
+      maxOpacity = Math.ceil(maxOpacity * 100) / 100;
+    }
+
+    if (outlineField === 'pop' || outlineField === 'hh_fut') {
+      minOutline = Math.floor(minOutline);
+      maxOutline = Math.ceil(maxOutline);
+    } else {
+      minOutline = Math.floor(minOutline * 100) / 100;
+      maxOutline = Math.ceil(maxOutline * 100) / 100;
+    }
+
     if (autoUpdateOpacity) {
+      opacityRangeSlider.noUiSlider.updateOptions({
+        range: {
+          'min': minOpacity,
+          'max': maxOpacity
+        }
+      });
       opacityRangeSlider.noUiSlider.set([minOpacity, maxOpacity]);
     }
     if (autoUpdateOutline) {
+      outlineRangeSlider.noUiSlider.updateOptions({
+        range: {
+          'min': minOutline,
+          'max': maxOutline
+        }
+      });
       outlineRangeSlider.noUiSlider.set([minOutline, maxOutline]);
     }
 
