@@ -123,8 +123,41 @@ function initializeSliders() {
   });
 }
 
-// Function to update layer visibility
+function updateSliderRanges() {
+  const opacityField = opacityFieldDropdown.value;
+  const outlineField = outlineFieldDropdown.value;
 
+  const selectedYear = yearDropdown.value;
+  const selectedLayer = layers[selectedYear];
+
+  if (selectedLayer) {
+    const opacityValues = selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
+    const outlineValues = selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
+
+    const minOpacity = Math.min(...opacityValues);
+    const maxOpacity = Math.max(...opacityValues);
+    const minOutline = Math.min(...outlineValues);
+    const maxOutline = Math.max(...outlineValues);
+
+    opacityRangeSlider.noUiSlider.updateOptions({
+      range: {
+        'min': minOpacity,
+        'max': maxOpacity
+      }
+    });
+    opacityRangeSlider.noUiSlider.set([minOpacity, maxOpacity]);
+
+    outlineRangeSlider.noUiSlider.updateOptions({
+      range: {
+        'min': minOutline,
+        'max': maxOutline
+      }
+    });
+    outlineRangeSlider.noUiSlider.set([minOutline, maxOutline]);
+  }
+}
+
+// Function to update layer visibility
 function updateLayerVisibility() {
   const selectedYear = yearDropdown.value;
   if (!selectedYear) {
@@ -340,15 +373,20 @@ const inverseOutlineScaleButton = document.getElementById("inverseOutlineScaleBu
 inverseOutlineScaleButton.addEventListener("click", inverseOutlineScale);
 
 // Add event listeners to dropdowns and inputs
-yearDropdown.addEventListener("change", updateLayerVisibility);
+yearDropdown.addEventListener("change", () => {
+  updateSliderRanges();
+  updateLayerVisibility();
+});
 purposeDropdown.addEventListener("change", updateLayerVisibility);
 modeDropdown.addEventListener("change", updateLayerVisibility);
 opacityFieldDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
+  updateSliderRanges();
   updateLayerVisibility();
 });
 outlineFieldDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
+  updateSliderRanges();
   updateLayerVisibility();
 });
 opacityExponentInput.addEventListener("input", updateLayerVisibility);
