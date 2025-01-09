@@ -52,11 +52,7 @@ const purposeDropdown = document.getElementById("purposeDropdown");
 const modeDropdown = document.getElementById("modeDropdown");
 const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
 const outlineFieldDropdown = document.getElementById("outlineFieldDropdown");
-const minOpacityValueInput = document.getElementById("minOpacityValue");
-const maxOpacityValueInput = document.getElementById("maxOpacityValue");
 const opacityExponentInput = document.getElementById("opacityExponent");
-const minOutlineValueInput = document.getElementById("minOutlineValue");
-const maxOutlineValueInput = document.getElementById("maxOutlineValue");
 const outlineExponentInput = document.getElementById("outlineExponent");
 
 // Ensure 'Population' is the default value for opacityFieldDropdown
@@ -87,6 +83,39 @@ let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
 let outlineOrder = 'low-to-high';
 
+const opacityRangeSlider = document.getElementById('opacityRangeSlider');
+noUiSlider.create(opacityRangeSlider, {
+  start: [0, 1],
+  connect: true,
+  range: {
+    'min': 0,
+    'max': 1
+  },
+  step: 0.01,
+  tooltips: true,
+  format: {
+    to: value => value.toFixed(2),
+    from: value => parseFloat(value)
+  }
+});
+
+// Initialize noUiSlider for outline width range
+const outlineRangeSlider = document.getElementById('outlineRangeSlider');
+noUiSlider.create(outlineRangeSlider, {
+  start: [0, 4],
+  connect: true,
+  range: {
+    'min': 0,
+    'max': 4
+  },
+  step: 0.1,
+  tooltips: true,
+  format: {
+    to: value => value.toFixed(1),
+    from: value => parseFloat(value)
+  }
+});
+
 // Function to update layer visibility
 function updateLayerVisibility() {
   const selectedYear = yearDropdown.value;
@@ -113,53 +142,30 @@ function updateLayerVisibility() {
       return feature.properties[fieldToDisplay] !== undefined;
     });
 
-    if (opacityField === 'None') {
-      minOpacityValueInput.value = '';
-      maxOpacityValueInput.value = '';
-    } else {
-      const opacityValues = filteredFeatures.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
-      const outlineValues = filteredFeatures.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
+    const opacityValues = filteredFeatures.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
+    const outlineValues = filteredFeatures.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
 
-      let minOpacity = opacityValues.length > 0 ? Math.min(...opacityValues) : 0;
-      let maxOpacity = opacityValues.length > 0 ? Math.max(...opacityValues) : 1;
-      let minOutline = outlineValues.length > 0 ? Math.min(...outlineValues) : 0;
-      let maxOutline = outlineValues.length > 0 ? Math.max(...outlineValues) : 1;
+    let minOpacity = opacityValues.length > 0 ? Math.min(...opacityValues) : 0;
+    let maxOpacity = opacityValues.length > 0 ? Math.max(...opacityValues) : 1;
+    let minOutline = outlineValues.length > 0 ? Math.min(...outlineValues) : 0;
+    let maxOutline = outlineValues.length > 0 ? Math.max(...outlineValues) : 1;
 
-      if (opacityField === 'pop' || opacityField === 'hh_fut') {
-        minOpacity = Math.floor(minOpacity);
-        maxOpacity = Math.ceil(maxOpacity);
-      } else {
-        minOpacity = Math.floor(minOpacity * 100) / 100;
-        maxOpacity = Math.ceil(maxOpacity * 100) / 100;
-      }
-
-      if (outlineField === 'pop' || outlineField === 'hh_fut') {
-        minOutline = Math.floor(minOutline);
-        maxOutline = Math.ceil(maxOutline);
-      } else {
-        minOutline = Math.floor(minOutline * 100) / 100;
-        maxOutline = Math.ceil(maxOutline * 100) / 100;
-      }
-
-      if (autoUpdateOpacity) {
-        minOpacityValueInput.value = minOpacity;
-        maxOpacityValueInput.value = maxOpacity;
-      }
-      if (autoUpdateOutline) {
-        minOutlineValueInput.value = minOutline;
-        maxOutlineValueInput.value = maxOutline;
-      }
-
-      const filteredGeoJson = {
-        type: "FeatureCollection",
-        features: filteredFeatures
-      };
-
-      const geoJsonLayer = L.geoJSON(filteredGeoJson, {
-        style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, parseFloat(minOpacityValueInput.value), parseFloat(maxOpacityValueInput.value), parseFloat(opacityExponentInput.value), parseFloat(minOutlineValueInput.value), parseFloat(maxOutlineValueInput.value), parseFloat(outlineExponentInput.value), selectedYear),
-        onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
-      }).addTo(map);
+    if (autoUpdateOpacity) {
+      opacityRangeSlider.noUiSlider.set([minOpacity, maxOpacity]);
     }
+    if (autoUpdateOutline) {
+      outlineRangeSlider.noUiSlider.set([minOutline, maxOutline]);
+    }
+
+    const filteredGeoJson = {
+      type: "FeatureCollection",
+      features: filteredFeatures
+    };
+
+    const geoJsonLayer = L.geoJSON(filteredGeoJson, {
+      style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, parseFloat(opacityRangeSlider.noUiSlider.get()[0]), parseFloat(opacityRangeSlider.noUiSlider.get()[1]), parseFloat(opacityExponentInput.value), parseFloat(outlineRangeSlider.noUiSlider.get()[0]), parseFloat(outlineRangeSlider.noUiSlider.get()[1]), parseFloat(outlineExponentInput.value), selectedYear),
+      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
+    }).addTo(map);
   }
 
   updateLegend();
