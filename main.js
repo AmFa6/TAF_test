@@ -125,59 +125,25 @@ function updateLayerVisibility() {
       return feature.properties[fieldToDisplay] !== undefined;
     });
 
-    if (opacityField === 'None') {
-      minOpacityValueInput.value = '';
-      maxOpacityValueInput.value = '';
-    } else {
-      const minVal = parseFloat(rangeSlider.value);
-      const maxVal = parseFloat(rangeSliderMax.value);
+    const minVal = parseFloat(rangeSlider.value);
+    const maxVal = parseFloat(rangeSliderMax.value);
 
-      let minOpacity = opacityValues.length > 0 ? Math.min(...opacityValues) : 0;
-      let maxOpacity = opacityValues.length > 0 ? Math.max(...opacityValues) : 1;
-      let minOutline = outlineValues.length > 0 ? Math.min(...outlineValues) : 0;
-      let maxOutline = outlineValues.length > 0 ? Math.max(...outlineValues) : 1;
+    const filteredGeoJson = {
+      type: "FeatureCollection",
+      features: filteredFeatures.filter(feature => {
+        const value = feature.properties[fieldToDisplay];
+        return value >= minVal && value <= maxVal;
+      })
+    };
 
-      if (opacityField === 'pop' || opacityField === 'hh_fut') {
-        minOpacity = Math.floor(minOpacity);
-        maxOpacity = Math.ceil(maxOpacity);
-      } else {
-        minOpacity = Math.floor(minOpacity * 100) / 100;
-        maxOpacity = Math.ceil(maxOpacity * 100) / 100;
-      }
-
-      if (outlineField === 'pop' || outlineField === 'hh_fut') {
-        minOutline = Math.floor(minOutline);
-        maxOutline = Math.ceil(maxOutline);
-      } else {
-        minOutline = Math.floor(minOutline * 100) / 100;
-        maxOutline = Math.ceil(maxOutline * 100) / 100;
-      }
-
-      if (autoUpdateOpacity) {
-        minOpacityValueInput.value = minOpacity;
-        maxOpacityValueInput.value = maxOpacity;
-      }
-      if (autoUpdateOutline) {
-        minOutlineValueInput.value = minOutline;
-        maxOutlineValueInput.value = maxOutline;
-      }
-
-      const filteredGeoJson = {
-        type: "FeatureCollection",
-        features: filteredFeatures.filter(feature => {
-          const value = feature.properties[fieldToDisplay];
-          return value >= minVal && value <= maxVal;
-        })
-      };
-
-      const geoJsonLayer = L.geoJSON(filteredGeoJson, {
-        style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minVal, maxVal, parseFloat(opacityExponentInput.value), parseFloat(outlineExponentInput.value), selectedYear),
-        onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
-      }).addTo(map);
-    }
-  
-    updateLegend();
+    const geoJsonLayer = L.geoJSON(filteredGeoJson, {
+      style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minVal, maxVal, parseFloat(opacityExponentInput.value), parseFloat(minOutlineValueInput.value), parseFloat(maxOutlineValueInput.value), parseFloat(outlineExponentInput.value), selectedYear),
+      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
+    }).addTo(map);
   }
+
+  updateLegend();
+}
 
 // Function to display pop-up on feature click
 function onEachFeature(feature, layer, selectedYear) {
