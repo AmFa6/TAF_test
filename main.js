@@ -53,32 +53,23 @@ const modeDropdown = document.getElementById("modeDropdown");
 const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
 const outlineFieldDropdown = document.getElementById("outlineFieldDropdown");
 
-// Map for purpose and mode
-const purposeMap = {
-  "Education": "Edu",
-  "Employment": "Emp",
-  "Health": "Hth",
-  "High Street": "HSt",
-  "All Amenities": "All"
-};
+// Get the slider elements
+const rangeSlider = document.getElementById("rangeSlider");
+const rangeSliderMax = document.getElementById("rangeSliderMax");
+const rangeValue = document.getElementById("rangeValue");
 
-const modeMap = {
-  "Walk": "Wa",
-  "Cycle": "Cy",
-  "Public Transport": "PT",
-  "Car": "Ca",
-  "All Modes": "To"
-};
+// Get the opacity and outline exponent inputs
+const opacityExponentInput = document.getElementById("opacityExponent");
+const minOpacityValueInput = document.getElementById("minOpacityValue");
+const maxOpacityValueInput = document.getElementById("maxOpacityValue");
+const outlineExponentInput = document.getElementById("outlineExponent");
+const minOutlineValueInput = document.getElementById("minOutlineValue");
+const maxOutlineValueInput = document.getElementById("maxOutlineValue");
 
 let autoUpdateOpacity = true;
 let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
 let outlineOrder = 'low-to-high';
-
-// Get the slider elements
-const rangeSlider = document.getElementById("rangeSlider");
-const rangeSliderMax = document.getElementById("rangeSliderMax");
-const rangeValue = document.getElementById("rangeValue");
 
 // Update the range value display
 function updateRangeValue() {
