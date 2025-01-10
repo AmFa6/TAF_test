@@ -158,8 +158,15 @@ function updateSliderRanges() {
     const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
     const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
 
-    const opacityStep = roundedMaxOpacity / 100;
-    const outlineStep = roundedMaxOutline / 100;
+    let opacityStep = roundedMaxOpacity / 100;
+    let outlineStep = roundedMaxOutline / 100;
+
+    if (isNaN(opacityStep) || opacityStep <= 0) {
+      opacityStep = 1;
+    }
+    if (isNaN(outlineStep) || outlineStep <= 0) {
+      outlineStep = 1;
+    }
 
     const adjustedMaxOpacity = Math.floor(maxOpacity / opacityStep) * opacityStep;
     const adjustedMinOpacity = Math.ceil(minOpacity / opacityStep) * opacityStep;
