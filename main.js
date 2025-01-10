@@ -179,6 +179,9 @@ function updateSliderRanges() {
       }
     }
 
+    console.log('Updating opacity slider:', adjustedMinOpacity, adjustedMaxOpacity, opacityStep);
+    console.log('Updating outline slider:', adjustedMinOutline, adjustedMaxOutline, outlineStep);
+
     opacityRangeSlider.noUiSlider.updateOptions({
       range: {
         'min': adjustedMinOpacity,
@@ -202,6 +205,8 @@ function updateSliderRanges() {
     document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
     document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
+  } else {
+    console.error('Selected layer not found for year:', selectedYear);
   }
 }
 
