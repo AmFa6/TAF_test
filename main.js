@@ -152,23 +152,28 @@ function updateSliderRanges() {
     const opacityStep = roundedMaxOpacity / 100;
     const outlineStep = roundedMaxOutline / 100;
 
+    const adjustedMaxOpacity = Math.floor(maxOpacity / opacityStep) * opacityStep;
+    const adjustedMinOpacity = Math.ceil(minOpacity / opacityStep) * opacityStep;
+    const adjustedMaxOutline = Math.floor(maxOutline / outlineStep) * outlineStep;
+    const adjustedMinOutline = Math.ceil(minOutline / outlineStep) * outlineStep;
+
     opacityRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': roundedMinOpacity / 100,
-        'max': roundedMaxOpacity / 100
+        'min': adjustedMinOpacity / 100,
+        'max': adjustedMaxOpacity / 100
       },
       step: opacityStep
     });
-    opacityRangeSlider.noUiSlider.set([roundedMinOpacity / 100, roundedMaxOpacity / 100]);
+    opacityRangeSlider.noUiSlider.set([adjustedMinOpacity / 100, adjustedMaxOpacity / 100]);
 
     outlineRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': roundedMinOutline / 100,
-        'max': roundedMaxOutline / 100
+        'min': adjustedMinOutline / 100,
+        'max': adjustedMaxOutline / 100
       },
       step: outlineStep
     });
-    outlineRangeSlider.noUiSlider.set([roundedMinOutline / 100, roundedMaxOutline / 100]);
+    outlineRangeSlider.noUiSlider.set([adjustedMinOutline / 100, adjustedMaxOutline / 100]);
   }
 }
 
