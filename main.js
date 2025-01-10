@@ -167,15 +167,15 @@ function updateSliderRanges() {
     const adjustedMinOutline = Math.ceil(minOutline / outlineStep) * outlineStep;
 
     // Function to round values based on step size
-    function roundValue(value, step) {
+    function formatValue(value, step) {
       if (step >= 1) {
-        return Math.round(value);
+        return value.toFixed(0);
       } else if (step >= 0.1) {
-        return Math.round(value * 10) / 10;
+        return value.toFixed(1);
       } else if (step >= 0.01) {
-        return Math.round(value * 100) / 100;
+        return value.toFixed(2);
       } else {
-        return value;
+        return value.toString();
       }
     }
 
@@ -198,10 +198,10 @@ function updateSliderRanges() {
     outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
 
     // Update the range labels
-    document.getElementById('opacityRangeMin').innerText = adjustedMinOpacity.toFixed(2);
-    document.getElementById('opacityRangeMax').innerText = adjustedMaxOpacity.toFixed(2);
-    document.getElementById('outlineRangeMin').innerText = adjustedMinOutline.toFixed(2);
-    document.getElementById('outlineRangeMax').innerText = adjustedMaxOutline.toFixed(2);
+    document.getElementById('opacityRangeMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
+    document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+    document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
+    document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
   }
 }
 
