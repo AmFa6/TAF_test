@@ -156,80 +156,39 @@ function updateSliderRanges() {
     const maxOutline = Math.max(...outlineValues);
 
     const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
-    const roundedMinOpacity = Math.floor(minOpacity / (roundedMaxOpacity / 100)) * (roundedMaxOpacity / 100);
     const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
-    const roundedMinOutline = Math.floor(minOutline / (roundedMaxOutline / 100)) * (roundedMaxOutline / 100);
 
     const opacityStep = roundedMaxOpacity / 100;
     const outlineStep = roundedMaxOutline / 100;
 
+    const adjustedMaxOpacity = Math.floor(maxOpacity / opacityStep) * opacityStep;
+    const adjustedMinOpacity = Math.ceil(minOpacity / opacityStep) * opacityStep;
+    const adjustedMaxOutline = Math.floor(maxOutline / outlineStep) * outlineStep;
+    const adjustedMinOutline = Math.ceil(minOutline / outlineStep) * outlineStep;
+
     opacityRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': roundedMinOpacity / 100,
-        'max': roundedMaxOpacity / 100
+        'min': adjustedMinOpacity / 100,
+        'max': adjustedMaxOpacity / 100
       },
       step: opacityStep
     });
-    opacityRangeSlider.noUiSlider.set([roundedMinOpacity / 100, roundedMaxOpacity / 100]);
+    opacityRangeSlider.noUiSlider.set([adjustedMinOpacity / 100, adjustedMaxOpacity / 100]);
 
     outlineRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': roundedMinOutline / 100,
-        'max': roundedMaxOutline / 100
+        'min': adjustedMinOutline / 100,
+        'max': adjustedMaxOutline / 100
       },
       step: outlineStep
     });
-    outlineRangeSlider.noUiSlider.set([roundedMinOutline / 100, roundedMaxOutline / 100]);
+    outlineRangeSlider.noUiSlider.set([adjustedMinOutline / 100, adjustedMaxOutline / 100]);
 
     // Update the range labels
-    document.getElementById('opacityRangeMin').innerText = (roundedMinOpacity / 100).toFixed(2);
-    document.getElementById('opacityRangeMax').innerText = (roundedMaxOpacity / 100).toFixed(2);
-    document.getElementById('outlineRangeMin').innerText = (roundedMinOutline / 100).toFixed(2);
-    document.getElementById('outlineRangeMax').innerText = (roundedMaxOutline / 100).toFixed(2);
-  }
-}
-
-function updateSliderRanges() {
-  const opacityField = opacityFieldDropdown.value;
-  const outlineField = outlineFieldDropdown.value;
-
-  const selectedYear = yearDropdown.value;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const opacityValues = selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
-    const outlineValues = selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
-
-    const minOpacity = Math.min(...opacityValues);
-    const maxOpacity = Math.max(...opacityValues);
-    const minOutline = Math.min(...outlineValues);
-    const maxOutline = Math.max(...outlineValues);
-
-    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
-    const roundedMinOpacity = Math.floor(minOpacity / (roundedMaxOpacity / 100)) * (roundedMaxOpacity / 100);
-    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
-    const roundedMinOutline = Math.floor(minOutline / (roundedMaxOutline / 100)) * (roundedMaxOutline / 100);
-
-    const opacityStep = roundedMaxOpacity / 100;
-    const outlineStep = roundedMaxOutline / 100;
-
-    opacityRangeSlider.noUiSlider.updateOptions({
-      range: {
-        'min': roundedMinOpacity / 100,
-        'max': roundedMaxOpacity / 100
-      },
-      step: opacityStep
-    });
-    opacityRangeSlider.noUiSlider.set([roundedMinOpacity / 100, roundedMaxOpacity / 100]);
-
-    outlineRangeSlider.noUiSlider.updateOptions({
-      range: {
-        'min': roundedMinOutline / 100,
-        'max': roundedMaxOutline / 100
-      },
-      step: outlineStep
-    });
-    outlineRangeSlider.noUiSlider.set([roundedMinOutline / 100, roundedMaxOutline / 100]);
+    document.getElementById('opacityRangeMin').innerText = (adjustedMinOpacity / 100).toFixed(2);
+    document.getElementById('opacityRangeMax').innerText = (adjustedMaxOpacity / 100).toFixed(2);
+    document.getElementById('outlineRangeMin').innerText = (adjustedMinOutline / 100).toFixed(2);
+    document.getElementById('outlineRangeMax').innerText = (adjustedMaxOutline / 100).toFixed(2);
   }
 }
 
