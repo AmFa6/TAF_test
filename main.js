@@ -98,7 +98,7 @@ function initializeSliders() {
       'min': 0,
       'max': 0
     },
-    step: 0,
+    step: 1,
     tooltips: false,
     format: {
       to: value => value.toFixed(0),
@@ -115,7 +115,7 @@ function initializeSliders() {
       'min': 0,
       'max': 0
     },
-    step: 0,
+    step: 1,
     tooltips: false,
     format: {
       to: value => value.toFixed(0),
@@ -147,8 +147,8 @@ function updateSliderRanges() {
   const selectedLayer = layers[selectedYear];
 
   if (selectedLayer) {
-    const opacityValues = selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
-    const outlineValues = selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
+    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
+    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
 
     const minOpacity = Math.min(...opacityValues);
     const maxOpacity = Math.max(...opacityValues);
@@ -186,32 +186,56 @@ function updateSliderRanges() {
       }
     }
 
-    console.log('Updating opacity slider:', adjustedMinOpacity, adjustedMaxOpacity, opacityStep);
-    console.log('Updating outline slider:', adjustedMinOutline, adjustedMaxOutline, outlineStep);
-
-    opacityRangeSlider.noUiSlider.updateOptions({
-      range: {
-        'min': adjustedMinOpacity,
-        'max': adjustedMaxOpacity
-      },
-      step: opacityStep
-    });
-    opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-
-    outlineRangeSlider.noUiSlider.updateOptions({
-      range: {
-        'min': adjustedMinOutline,
-        'max': adjustedMaxOutline
-      },
-      step: outlineStep
-    });
-    outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-
-    // Update the range labels
-    document.getElementById('opacityRangeMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
-    document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
-    document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
-    document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
+    if (opacityField === "None") {
+      opacityRangeSlider.setAttribute('disabled', true);
+      opacityRangeSlider.noUiSlider.updateOptions({
+        range: {
+          'min': 0,
+          'max': 0
+        },
+        step: 1
+      });
+      opacityRangeSlider.noUiSlider.set([0, 0]);
+      document.getElementById('opacityRangeMin').innerText = '';
+      document.getElementById('opacityRangeMax').innerText = '';
+    } else {
+      opacityRangeSlider.removeAttribute('disabled');
+      opacityRangeSlider.noUiSlider.updateOptions({
+        range: {
+          'min': adjustedMinOpacity,
+          'max': adjustedMaxOpacity
+        },
+        step: opacityStep
+      });
+      opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
+      document.getElementById('opacityRangeMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
+      document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+    }
+    if (outlineField === "None") {
+      outlineRangeSlider.setAttribute('disabled', true);
+      outlineRangeSlider.noUiSlider.updateOptions({
+        range: {
+          'min': 0,
+          'max': 0
+        },
+        step: 1
+      });
+      outlineRangeSlider.noUiSlider.set([0, 0]);
+      document.getElementById('outlineRangeMin').innerText = '';
+      document.getElementById('outlineRangeMax').innerText = '';
+    } else {
+      outlineRangeSlider.removeAttribute('disabled');
+      outlineRangeSlider.noUiSlider.updateOptions({
+        range: {
+          'min': adjustedMinOutline,
+          'max': adjustedMaxOutline
+        },
+        step: parseFloat(outlineStep.toFixed(1))
+      });
+      outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
+      document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
+      document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
+    }
   } else {
     console.error('Selected layer not found for year:', selectedYear);
   }
