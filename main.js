@@ -33,6 +33,7 @@ geoJsonFiles.forEach(file => {
       layersLoaded++;
       if (layersLoaded === totalLayers) {
         initializeSliders();
+        updateSliderRanges();
         updateLayerVisibility();
       }
     })
@@ -143,21 +144,31 @@ function updateSliderRanges() {
     const minOutline = Math.min(...outlineValues);
     const maxOutline = Math.max(...outlineValues);
 
+    const roundedMaxOpacity = Math.ceil(maxOpacity / 10) * 10;
+    const roundedMinOpacity = Math.ceil(minOpacity / 10) * 10;
+    const roundedMaxOutline = Math.ceil(maxOutline / 10) * 10;
+    const roundedMinOutline = Math.ceil(minOutline / 10) * 10;
+
+    const opacityStep = roundedMaxOpacity / 100;
+    const outlineStep = roundedMaxOutline / 100;
+
     opacityRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': minOpacity,
-        'max': maxOpacity
-      }
+        'min': roundedMinOpacity / 100,
+        'max': roundedMaxOpacity / 100
+      },
+      step: opacityStep
     });
-    opacityRangeSlider.noUiSlider.set([minOpacity, maxOpacity]);
+    opacityRangeSlider.noUiSlider.set([roundedMinOpacity / 100, roundedMaxOpacity / 100]);
 
     outlineRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': minOutline,
-        'max': maxOutline
-      }
+        'min': roundedMinOutline / 100,
+        'max': roundedMaxOutline / 100
+      },
+      step: outlineStep
     });
-    outlineRangeSlider.noUiSlider.set([minOutline, maxOutline]);
+    outlineRangeSlider.noUiSlider.set([roundedMinOutline / 100, roundedMaxOutline / 100]);
   }
 }
 
