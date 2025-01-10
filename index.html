@@ -126,21 +126,22 @@
       background: #f0f0f0;
       border-radius: 5px;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+      height: 0.5em; /* Adjusted for half thickness of the bar */
     }
     .noUi-connect {
       background: #767676;
-      height: 100%;
+      height: 0.5em; /* Match the target's height */
     }
     .noUi-handle {
       background: #767676;   
       border: 1px solid #767676;
       border-radius: 50%; 
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      width: 3.5px;
-      height: 3.5px;
+      width: 1.75px; /* Half the original width */
+      height: 1.75px; /* Half the original height */
     }
     .noUi-horizontal .noUi-handle {
-      top: -1px;
+      top: -0.5em; /* Adjusted to align with the thinner bar */
     }
     .noUi-tooltip {
       background: #007bff;
@@ -149,6 +150,7 @@
       padding: 5px;
       font-size: 0.8em;
     }
+
   </style>
 </head>
 <body>
