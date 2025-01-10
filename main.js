@@ -144,36 +144,31 @@ function updateSliderRanges() {
     const minOutline = Math.min(...outlineValues);
     const maxOutline = Math.max(...outlineValues);
 
-    const roundedMaxOpacity = Math.ceil(maxOpacity / 10) * 10;
-    const roundedMinOpacity = Math.ceil(minOpacity / 10) * 10;
-    const roundedMaxOutline = Math.ceil(maxOutline / 10) * 10;
-    const roundedMinOutline = Math.ceil(minOutline / 10) * 10;
+    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
+    const roundedMinOpacity = Math.floor(minOpacity / (roundedMaxOpacity / 100)) * (roundedMaxOpacity / 100);
+    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
+    const roundedMinOutline = Math.floor(minOutline / (roundedMaxOutline / 100)) * (roundedMaxOutline / 100);
 
     const opacityStep = roundedMaxOpacity / 100;
     const outlineStep = roundedMaxOutline / 100;
 
-    const adjustedMaxOpacity = Math.floor(maxOpacity / opacityStep) * opacityStep;
-    const adjustedMinOpacity = Math.ceil(minOpacity / opacityStep) * opacityStep;
-    const adjustedMaxOutline = Math.floor(maxOutline / outlineStep) * outlineStep;
-    const adjustedMinOutline = Math.ceil(minOutline / outlineStep) * outlineStep;
-
     opacityRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': adjustedMinOpacity / 100,
-        'max': adjustedMaxOpacity / 100
+        'min': roundedMinOpacity / 100,
+        'max': roundedMaxOpacity / 100
       },
       step: opacityStep
     });
-    opacityRangeSlider.noUiSlider.set([adjustedMinOpacity / 100, adjustedMaxOpacity / 100]);
+    opacityRangeSlider.noUiSlider.set([roundedMinOpacity / 100, roundedMaxOpacity / 100]);
 
     outlineRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': adjustedMinOutline / 100,
-        'max': adjustedMaxOutline / 100
+        'min': roundedMinOutline / 100,
+        'max': roundedMaxOutline / 100
       },
       step: outlineStep
     });
-    outlineRangeSlider.noUiSlider.set([adjustedMinOutline / 100, adjustedMaxOutline / 100]);
+    outlineRangeSlider.noUiSlider.set([roundedMinOutline / 100, roundedMaxOutline / 100]);
   }
 }
 
