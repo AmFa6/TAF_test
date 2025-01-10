@@ -121,6 +121,10 @@ function initializeSliders() {
       from: value => parseFloat(value)
     }
   });
+
+  // Add event listeners to update map rendering when sliders are adjusted
+  opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
+  outlineRangeSlider.noUiSlider.on('update', updateLayerVisibility);
 }
 
 function updateSliderRanges() {
@@ -183,9 +187,6 @@ function updateLayerVisibility() {
       return feature.properties[fieldToDisplay] !== undefined;
     });
 
-    const opacityValues = filteredFeatures.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0);
-    const outlineValues = filteredFeatures.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0);
-
     let minOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[0]);
     let maxOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[1]);
     let minOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[0]);
@@ -193,38 +194,6 @@ function updateLayerVisibility() {
 
     console.log(`Opacity range: min=${minOpacity}, max=${maxOpacity}`);
     console.log(`Outline range: min=${minOutline}, max=${maxOutline}`);
-
-    if (isNaN(minOpacity) || isNaN(maxOpacity)) {
-      console.error('Opacity range values are not numeric');
-      opacityRangeSlider.setAttribute('disabled', true);
-    } else {
-      opacityRangeSlider.removeAttribute('disabled');
-      if (autoUpdateOpacity) {
-        opacityRangeSlider.noUiSlider.updateOptions({
-          range: {
-            'min': minOpacity,
-            'max': maxOpacity
-          }
-        });
-        opacityRangeSlider.noUiSlider.set([minOpacity, maxOpacity]);
-      }
-    }
-
-    if (isNaN(minOutline) || isNaN(maxOutline)) {
-      console.error('Outline range values are not numeric');
-      outlineRangeSlider.setAttribute('disabled', true);
-    } else {
-      outlineRangeSlider.removeAttribute('disabled');
-      if (autoUpdateOutline) {
-        outlineRangeSlider.noUiSlider.updateOptions({
-          range: {
-            'min': minOutline,
-            'max': maxOutline
-          }
-        });
-        outlineRangeSlider.noUiSlider.set([minOutline, maxOutline]);
-      }
-    }
 
     const filteredGeoJson = {
       type: "FeatureCollection",
