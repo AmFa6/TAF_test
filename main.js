@@ -126,6 +126,17 @@ function initializeSliders() {
   // Add event listeners to update map rendering when sliders are adjusted
   opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
   outlineRangeSlider.noUiSlider.on('update', updateLayerVisibility);
+
+  // Add event listeners to update range labels
+  opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
+    document.getElementById('opacityRangeMin').innerText = values[0];
+    document.getElementById('opacityRangeMax').innerText = values[1];
+  });
+
+  outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
+    document.getElementById('outlineRangeMin').innerText = values[0];
+    document.getElementById('outlineRangeMax').innerText = values[1];
+  });
 }
 
 function updateSliderRanges() {
