@@ -129,13 +129,13 @@ function initializeSliders() {
 
   // Add event listeners to update range labels
   opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('opacityRangeMin').innerText = values[0];
-    document.getElementById('opacityRangeMax').innerText = values[1];
+    document.getElementById('opacityRangeMin').innerText = parseFloat(values[0]).toFixed(2);
+    document.getElementById('opacityRangeMax').innerText = parseFloat(values[1]).toFixed(2);
   });
 
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('outlineRangeMin').innerText = values[0];
-    document.getElementById('outlineRangeMax').innerText = values[1];
+    document.getElementById('outlineRangeMin').innerText = parseFloat(values[0]).toFixed(1);
+    document.getElementById('outlineRangeMax').innerText = parseFloat(values[1]).toFixed(1);
   });
 }
 
@@ -166,7 +166,7 @@ function updateSliderRanges() {
     const adjustedMaxOutline = Math.floor(maxOutline / outlineStep) * outlineStep;
     const adjustedMinOutline = Math.ceil(minOutline / outlineStep) * outlineStep;
 
-    // Function to round values based on step size
+    // Function to format values based on step size for display
     function formatValue(value, step) {
       if (step >= 1) {
         return value.toFixed(0);
