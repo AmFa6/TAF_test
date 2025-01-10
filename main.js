@@ -101,7 +101,7 @@ function initializeSliders() {
     step: 1,
     tooltips: false,
     format: {
-      to: value => value.toFixed(0),
+      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
       from: value => parseFloat(value)
     }
   });
@@ -118,7 +118,7 @@ function initializeSliders() {
     step: 1,
     tooltips: false,
     format: {
-      to: value => value.toFixed(0),
+      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
       from: value => parseFloat(value)
     }
   });
