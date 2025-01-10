@@ -168,27 +168,27 @@ function updateSliderRanges() {
 
     opacityRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': adjustedMinOpacity / 100,
-        'max': adjustedMaxOpacity / 100
+        'min': adjustedMinOpacity,
+        'max': adjustedMaxOpacity
       },
       step: opacityStep
     });
-    opacityRangeSlider.noUiSlider.set([adjustedMinOpacity / 100, adjustedMaxOpacity / 100]);
+    opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
 
     outlineRangeSlider.noUiSlider.updateOptions({
       range: {
-        'min': adjustedMinOutline / 100,
-        'max': adjustedMaxOutline / 100
+        'min': adjustedMinOutline,
+        'max': adjustedMaxOutline
       },
       step: outlineStep
     });
-    outlineRangeSlider.noUiSlider.set([adjustedMinOutline / 100, adjustedMaxOutline / 100]);
+    outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
 
     // Update the range labels
-    document.getElementById('opacityRangeMin').innerText = (adjustedMinOpacity / 100).toFixed(2);
-    document.getElementById('opacityRangeMax').innerText = (adjustedMaxOpacity / 100).toFixed(2);
-    document.getElementById('outlineRangeMin').innerText = (adjustedMinOutline / 100).toFixed(2);
-    document.getElementById('outlineRangeMax').innerText = (adjustedMaxOutline / 100).toFixed(2);
+    document.getElementById('opacityRangeMin').innerText = adjustedMinOpacity.toFixed(2);
+    document.getElementById('opacityRangeMax').innerText = adjustedMaxOpacity.toFixed(2);
+    document.getElementById('outlineRangeMin').innerText = adjustedMinOutline.toFixed(2);
+    document.getElementById('outlineRangeMax').innerText = adjustedMaxOutline.toFixed(2);
   }
 }
 
