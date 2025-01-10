@@ -38,7 +38,7 @@ geoJsonFiles.forEach(file => {
       }
     })
     .catch(error => console.error(`Error loading GeoJSON: ${error.message}`));
-});
+})
 
 // Populate year dropdown
 const yearDropdown = document.getElementById("yearDropdown");
