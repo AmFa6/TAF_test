@@ -99,9 +99,9 @@ function initializeSliders() {
       'max': 0
     },
     step: 0,
-    tooltips: true,
+    tooltips: false,
     format: {
-      to: value => value.toFixed(2),
+      to: value => value.toFixed(0),
       from: value => parseFloat(value)
     }
   });
@@ -116,9 +116,9 @@ function initializeSliders() {
       'max': 0
     },
     step: 0,
-    tooltips: true,
+    tooltips: false,
     format: {
-      to: value => value.toFixed(1),
+      to: value => value.toFixed(0),
       from: value => parseFloat(value)
     }
   });
