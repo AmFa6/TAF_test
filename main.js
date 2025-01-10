@@ -129,14 +129,27 @@ function initializeSliders() {
 
   // Add event listeners to update range labels
   opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('opacityRangeMin').innerText = values[0];
-    document.getElementById('opacityRangeMax').innerText = values[1];
+    document.getElementById('opacityRangeMin').innerText = formatValue(values[0], opacityRangeSlider.noUiSlider.options.step);
+    document.getElementById('opacityRangeMax').innerText = formatValue(values[1], opacityRangeSlider.noUiSlider.options.step);
   });
 
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('outlineRangeMin').innerText = values[0];
-    document.getElementById('outlineRangeMax').innerText = values[1];
+    document.getElementById('outlineRangeMin').innerText = formatValue(values[0], outlineRangeSlider.noUiSlider.options.step);
+    document.getElementById('outlineRangeMax').innerText = formatValue(values[1], outlineRangeSlider.noUiSlider.options.step);
   });
+}
+
+// Function to format values based on step size for display
+function formatValue(value, step) {
+  if (step >= 1) {
+    return parseFloat(value).toFixed(0);
+  } else if (step >= 0.1) {
+    return parseFloat(value).toFixed(1);
+  } else if (step >= 0.01) {
+    return parseFloat(value).toFixed(2);
+  } else {
+    return value.toString();
+  }
 }
 
 function updateSliderRanges() {
@@ -172,19 +185,6 @@ function updateSliderRanges() {
     const adjustedMinOpacity = Math.ceil(minOpacity / opacityStep) * opacityStep;
     const adjustedMaxOutline = Math.floor(maxOutline / outlineStep) * outlineStep;
     const adjustedMinOutline = Math.ceil(minOutline / outlineStep) * outlineStep;
-
-    // Function to format values based on step size for display
-    function formatValue(value, step) {
-      if (step >= 1) {
-        return value.toFixed(0);
-      } else if (step >= 0.1) {
-        return value.toFixed(1);
-      } else if (step >= 0.01) {
-        return value.toFixed(2);
-      } else {
-        return value.toString();
-      }
-    }
 
     if (opacityField === "None") {
       opacityRangeSlider.setAttribute('disabled', true);
