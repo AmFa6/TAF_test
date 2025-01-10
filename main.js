@@ -92,13 +92,13 @@ function initializeSliders() {
   // Initialize noUiSlider for opacity range
   opacityRangeSlider = document.getElementById('opacityRangeSlider');
   noUiSlider.create(opacityRangeSlider, {
-    start: [0, 1],
+    start: [0, 0],
     connect: true,
     range: {
       'min': 0,
-      'max': 1
+      'max': 0
     },
-    step: 0.01,
+    step: 0,
     tooltips: true,
     format: {
       to: value => value.toFixed(2),
@@ -109,13 +109,13 @@ function initializeSliders() {
   // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
-    start: [0, 4],
+    start: [0, 0],
     connect: true,
     range: {
       'min': 0,
-      'max': 4
+      'max': 0
     },
-    step: 0.1,
+    step: 0,
     tooltips: true,
     format: {
       to: value => value.toFixed(1),
@@ -165,6 +165,19 @@ function updateSliderRanges() {
     const adjustedMinOpacity = Math.ceil(minOpacity / opacityStep) * opacityStep;
     const adjustedMaxOutline = Math.floor(maxOutline / outlineStep) * outlineStep;
     const adjustedMinOutline = Math.ceil(minOutline / outlineStep) * outlineStep;
+
+    // Function to round values based on step size
+    function roundValue(value, step) {
+      if (step >= 1) {
+        return Math.round(value);
+      } else if (step >= 0.1) {
+        return Math.round(value * 10) / 10;
+      } else if (step >= 0.01) {
+        return Math.round(value * 100) / 100;
+      } else {
+        return value;
+      }
+    }
 
     opacityRangeSlider.noUiSlider.updateOptions({
       range: {
