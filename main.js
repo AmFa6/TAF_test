@@ -429,4 +429,3 @@ function scaleExp(value, minVal, maxVal, exponent, minScale, maxScale, order) {
   const normalizedValue = (value - minVal) / (maxVal - minVal);
   const scaledValue = Math.pow(normalizedValue, exponent / 20);
   return order === 'low-to-high' ? minScale + scaledValue * (maxScale - minScale) : maxScale - scaledValue * (maxScale - minScale);
-}
