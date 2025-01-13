@@ -139,6 +139,12 @@ function initializeSliders() {
   });
 }
 
+// Make slider handles smaller
+document.querySelectorAll('.noUi-handle').forEach(handle => {
+  handle.style.width = '5px';
+  handle.style.height = '5px';
+});
+
 // Function to format values based on step size for display
 function formatValue(value, step) {
   if (step >= 1) {
