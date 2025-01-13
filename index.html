@@ -133,12 +133,15 @@
       height: 0.5em;
     }
     .noUi-handle {
-      background: #767676;
-      border: none;
-      border-radius: 50%; 
-      box-shadow: none;
-      width: 4px !important;
-      height: 4px !important;
+      background: #767676 !important;
+      border: none !important;
+      border-radius: 50% !important;
+      box-shadow: none !important;
+      width: 4px !important; /* Adjust this value */
+      height: 4px !important; /* Adjust this value */
+      top: 0 !important; /* Ensure the handle is centered */
+      transform: translate(-50%, -50%) !important; /* Center the handle */
+      cursor: pointer !important; /* Change the cursor to pointer */
     }
     .noUi-horizontal .noUi-handle {
       top: -4px;
