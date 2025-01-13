@@ -144,8 +144,9 @@
       transform: translate(-50%, -50%) !important; /* Center the handle within the slider */
       cursor: pointer !important;
     }
-    .noUi-horizontal .noUi-handle {
-      top: -4px;
+    .noUi-handle:before,
+    .noUi-handle:after {
+      display: none !important; /* Remove the additional bars */
     }
     .noUi-tooltip {
       background: #007bff;
