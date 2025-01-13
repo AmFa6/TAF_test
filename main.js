@@ -103,11 +103,6 @@ function initializeSliders() {
     format: {
       to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
       from: value => parseFloat(value)
-    },
-    cssClasses: {
-      target: 'custom-noUi-target',
-      connect: 'custom-noUi-connect',
-      handle: 'custom-noUi-handle'
     }
   });
 
@@ -125,11 +120,6 @@ function initializeSliders() {
     format: {
       to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
       from: value => parseFloat(value)
-    },
-    cssClasses: {
-      target: 'custom-noUi-target',
-      connect: 'custom-noUi-connect',
-      handle: 'custom-noUi-handle'
     }
   });
 
