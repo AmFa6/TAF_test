@@ -199,10 +199,6 @@
         </div>
       </div>
       <div class="field-container">
-        <div>
-          <label for="opacityExponent" class="medium-font">Contrast - <em id="opacityExponentValue">10</em></label>
-          <input type="range" id="opacityExponent" min="0" max="100" step="5" value="10" class="small-font">
-        </div>
         <div class="button-container">
           <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
         </div>
@@ -224,10 +220,6 @@
         </div>
       </div>
       <div class="field-container">
-        <div>
-          <label for="outlineExponent" class="medium-font">Contrast - <em id="outlineExponentValue">60</em></label>
-          <input type="range" id="outlineExponent" min="0" max="100" step="5" value="60" class="small-font">
-        </div>
         <div class="button-container">
           <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
         </div>
@@ -241,22 +233,6 @@
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-      const opacityExponentInput = document.getElementById('opacityExponent');
-      const opacityExponentValue = document.getElementById('opacityExponentValue');
-      opacityExponentInput.addEventListener('input', function() {
-        opacityExponentValue.innerHTML = `<em>${opacityExponentInput.value}</em>`;
-      });
-
-      const outlineExponentInput = document.getElementById('outlineExponent');
-      const outlineExponentValue = document.getElementById('outlineExponentValue');
-      outlineExponentInput.addEventListener('input', function() {
-        outlineExponentValue.innerHTML = `<em>${outlineExponentInput.value}</em>`;
-      });
-
-      // Initialize values
-      opacityExponentValue.innerHTML = `<em>${opacityExponentInput.value}</em>`;
-      outlineExponentValue.innerHTML = `<em>${outlineExponentInput.value}</em>`;
-
       // Handle collapsible settings panel
       const collapsible = document.querySelector(".collapsible");
       const content = document.querySelector(".collapsible-content");
