@@ -54,8 +54,6 @@ const purposeDropdown = document.getElementById("purposeDropdown");
 const modeDropdown = document.getElementById("modeDropdown");
 const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
 const outlineFieldDropdown = document.getElementById("outlineFieldDropdown");
-const opacityExponentInput = document.getElementById("opacityExponent");
-const outlineExponentInput = document.getElementById("outlineExponent");
 
 // Ensure 'Population' is the default value for opacityFieldDropdown
 opacityFieldDropdown.value = "pop";
@@ -281,7 +279,7 @@ function updateLayerVisibility() {
     };
 
     const geoJsonLayer = L.geoJSON(filteredGeoJson, {
-      style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, parseFloat(opacityExponentInput.value), minOutline, maxOutline, parseFloat(outlineExponentInput.value), selectedYear),
+      style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
     }).addTo(map);
   }
@@ -438,16 +436,14 @@ outlineFieldDropdown.addEventListener("change", () => {
   updateSliderRanges();
   updateLayerVisibility();
 });
-opacityExponentInput.addEventListener("input", updateLayerVisibility);
-outlineExponentInput.addEventListener("input", updateLayerVisibility);
 
 // Function to style features
-function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, opacityExponent, minOutlineValue, maxOutlineValue, outlineExponent, selectedYear) {
+function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
   const value = feature.properties[fieldToDisplay];
   const color = getColor(value, selectedYear);
 
-  const opacity = opacityField === 'None' ? 0.75 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.05 : scaleExp(feature.properties[opacityField], minOpacityValue, maxOpacityValue, opacityExponent, 0.05, 0.75, opacityOrder));
-  const weight = outlineField === 'None' ? 0 : (feature.properties[outlineField] === 0 || feature.properties[outlineField] === null ? 0 : scaleExp(feature.properties[outlineField], minOutlineValue, maxOutlineValue, outlineExponent, 0, 4, outlineOrder));
+  const opacity = opacityField === 'None' ? 0.75 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.05 : scaleExp(feature.properties[opacityField], minOpacityValue, maxOpacityValue, 0.05, 0.75, opacityOrder));
+  const weight = outlineField === 'None' ? 0 : (feature.properties[outlineField] === 0 || feature.properties[outlineField] === null ? 0 : scaleExp(feature.properties[outlineField], minOutlineValue, maxOutlineValue, 0, 4, outlineOrder));
   
   return {
     fillColor: color,
@@ -458,11 +454,9 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
   };
 }
 
-// Function to scale values exponentially
-function scaleExp(value, minVal, maxVal, exponent, minScale, maxScale, order) {
+function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
   if (value <= minVal) return order === 'low-to-high' ? minScale : maxScale;
   if (value >= maxVal) return order === 'low-to-high' ? maxScale : minScale;
   const normalizedValue = (value - minVal) / (maxVal - minVal);
-  const scaledValue = Math.pow(normalizedValue, exponent / 20);
   return order === 'low-to-high' ? minScale + scaledValue * (maxScale - minScale) : maxScale - scaledValue * (maxScale - minScale);
 }
