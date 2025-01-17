@@ -455,8 +455,9 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
 }
 
 function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
-  if (value <= minVal) return order === 'low-to-high' ? minScale : maxScale;
-  if (value >= maxVal) return order === 'low-to-high' ? maxScale : minScale;
-  const normalizedValue = (value - minVal) / (maxVal - minVal);
-  return order === 'low-to-high' ? minScale + scaledValue * (maxScale - minScale) : maxScale - scaledValue * (maxScale - minScale);
+    if (value <= minVal) return order === 'low-to-high' ? minScale : maxScale;
+    if (value >= maxVal) return order === 'low-to-high' ? maxScale : minScale;
+    const normalizedValue = (value - minVal) / (maxVal - minVal);
+    const scaledValue = order === 'low-to-high' ? normalizedValue : 1 - normalizedValue;
+    return minScale + scaledValue * (maxScale - minScale);
 }
