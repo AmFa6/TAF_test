@@ -135,22 +135,6 @@
     .noUi-connect-right-solid {
       background: #767676 !important; /* Solid grey fill */
     }
-    .noUi-connect-width-gradient {
-      position: relative;
-      background: none; /* Remove the default background */
-    }
-    .noUi-connect-width-gradient::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      height: 2px; /* Initial thin line */
-      background: #767676; /* Solid grey color */
-      transition: height 0.3s; /* Smooth transition */
-    }
-    .noUi-connect-width-gradient.noUi-connect-right::before {
-      width: 100%; /* Full width for the right connect element */
-    }
     .noUi-handle {
       background: #767676 !important; /* Handle color */
       border: none !important;
@@ -168,7 +152,7 @@
     }
     .noUi-handle:before,
     .noUi-handle:after {
-      display: none !important; /* Remove the additional bars */
+        display: none !important; /* Remove the additional bars */
     }
     .noUi-tooltip {
       background: #007bff;
