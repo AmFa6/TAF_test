@@ -110,6 +110,12 @@ function initializeSliders() {
     handles[0].classList.add('noUi-handle-left');
   }
 
+  // Apply the class to the right connect element
+  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  if (connectElements.length > 1) {
+    connectElements[1].classList.add('noUi-connect-right');
+  }
+
   // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
