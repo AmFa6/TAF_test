@@ -436,14 +436,32 @@ function updateLegend() {
 
 // Function to inverse opacity scale
 function inverseOpacityScale() {
-  opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateLayerVisibility();
+    opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+    const opacityHandles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+    if(opacityHandles.length > 0) {
+        opacityHandles[0].classList.toggle('noUi-handle-left');
+    }
+    const opacityConnectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+    if(opacityConnectElements.length > 1) {
+        opacityConnectElements[1].classList.toggle('noUi-connect-right');
+        opacityConnectElements[1].classList.toggle('noUi-connect-right-solid');
+    }
+    updateLayerVisibility();
 }
 
 // Function to inverse outline scale
 function inverseOutlineScale() {
-  outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateLayerVisibility();
+    outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+    const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+    if(outlineHandles.length > 0) {
+        outlineHandles[0].classList.toggle('noUi-handle-left');
+    }
+    const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
+    if(outlineConnectElements.length > 1) {
+        outlineConnectElements[1].classList.toggle('noUi-connect-right');
+        outlineConnectElements[1].classList.toggle('noUi-connect-width-gradient');
+    }
+    updateLayerVisibility();
 }
 
 // Add event listeners to inverse scale buttons
