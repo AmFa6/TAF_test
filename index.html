@@ -137,19 +137,16 @@
     }
     .noUi-connect-width-gradient {
       position: relative;
+      background: none; /* Remove the default background */
     }
     .noUi-connect-width-gradient::before {
       content: '';
       position: absolute;
       left: 0;
-      top: 0;
-      bottom: 0;
+      top: 50%;
+      height: 2px; /* Initial thin line */
       background: #767676; /* Solid grey color */
-      width: 0; /* Start with zero width */
-      transition: width 0.3s; /* Smooth transition */
-    }
-    .noUi-connect-width-gradient.noUi-connect-right {
-      background: none; /* Remove the default background */
+      transition: height 0.3s; /* Smooth transition */
     }
     .noUi-connect-width-gradient.noUi-connect-right::before {
       width: 100%; /* Full width for the right connect element */
