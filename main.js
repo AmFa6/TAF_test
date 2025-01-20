@@ -105,23 +105,23 @@ function initializeSliders() {
   });
 
   // Apply the class to the left handle
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  if (handles.length > 0) {
-    handles[0].classList.add('noUi-handle-left');
+  const opacityHandles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  if (opacityHandles.length > 0) {
+    opacityHandles[0].classList.add('noUi-handle-left');
   }
 
   // Apply the class to the right connect element
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-right');
-    connectElements[1].classList.add('noUi-connect-right-solid');
+  const opacityConnectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  if (opacityConnectElements.length > 1) {
+    opacityConnectElements[1].classList.add('noUi-connect-right');
+    opacityConnectElements[1].classList.add('noUi-connect-right-solid');
   }
 
   // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
     start: [0, 0],
-    connect: [false, true, true],
+    connect: [false, true, true], // Set left connect to false and right to true
     range: {
       'min': 0,
       'max': 0
@@ -143,7 +143,7 @@ function initializeSliders() {
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
     outlineConnectElements[1].classList.add('noUi-connect-right');
-    outlineConnectElements[1].classList.add('noUi-connect-right-solid');
+    outlineConnectElements[1].classList.add('noUi-connect-width-gradient');
   }
 
   // Add event listeners to update map rendering when sliders are adjusted
