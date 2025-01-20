@@ -425,6 +425,35 @@ function updateLegend() {
   });
 }
 
+let isInverse = false;
+
+function toggleInverseScale() {
+  isInverse = !isInverse;
+  const opacityRangeSlider = document.getElementById('opacityRangeSlider');
+  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+
+  if (isInverse) {
+    handles[0].classList.remove('noUi-handle-left');
+    handles[1].classList.add('noUi-handle-left');
+    connectElements[1].classList.remove('noUi-connect-right-solid');
+    connectElements[0].classList.add('noUi-connect-right-solid');
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, false]
+    });
+  } else {
+    handles[1].classList.remove('noUi-handle-left');
+    handles[0].classList.add('noUi-handle-left');
+    connectElements[0].classList.remove('noUi-connect-right-solid');
+    connectElements[1].classList.add('noUi-connect-right-solid');
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [false, true, true]
+    });
+  }
+}
+
+document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
+
 // Function to inverse opacity scale
 function inverseOpacityScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
