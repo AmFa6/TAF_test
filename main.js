@@ -104,6 +104,12 @@ function initializeSliders() {
     }
   });
 
+  // Apply the class to the left handle
+  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  if (handles.length > 0) {
+    handles[0].classList.add('noUi-handle-left');
+  }
+
   // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
