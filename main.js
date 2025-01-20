@@ -87,78 +87,96 @@ let opacityRangeSlider;
 let outlineRangeSlider;
 
 function initializeSliders() {
-  // Initialize noUiSlider for opacity range
-  opacityRangeSlider = document.getElementById('opacityRangeSlider');
-  noUiSlider.create(opacityRangeSlider, {
-    start: [0, 0],
-    connect: [false, true, true], // Set left connect to false and right to true
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
-      from: value => parseFloat(value)
+    // Initialize noUiSlider for opacity range
+    opacityRangeSlider = document.getElementById('opacityRangeSlider');
+    if (opacityRangeSlider) {
+        noUiSlider.create(opacityRangeSlider, {
+            start: [0, 0],
+            connect: [false, true, true], // Set left connect to false and right to true
+            range: {
+                'min': 0,
+                'max': 0
+            },
+            step: 1,
+            tooltips: false,
+            format: {
+                to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
+                from: value => parseFloat(value)
+            }
+        });
+
+        // Apply the class to the left handle
+        const opacityHandles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+        if (opacityHandles.length > 0) {
+            opacityHandles[0].classList.add('noUi-handle-left');
+        }
+
+        // Apply the class to the right connect element
+        const opacityConnectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+        if (opacityConnectElements.length > 1) {
+            opacityConnectElements[1].classList.add('noUi-connect-right');
+            opacityConnectElements[1].classList.add('noUi-connect-right-solid');
+        }
+
+        // Add event listeners to update map rendering when sliders are adjusted
+        opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
+
+        // Add event listeners to update range labels
+        opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
+            document.getElementById('opacityRangeMin').innerText = formatValue(values[0], opacityRangeSlider.noUiSlider.options.step);
+            document.getElementById('opacityRangeMax').innerText = formatValue(values[1], opacityRangeSlider.noUiSlider.options.step);
+        });
     }
-  });
 
-  // Apply the class to the left handle
-  const opacityHandles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  if (opacityHandles.length > 0) {
-    opacityHandles[0].classList.add('noUi-handle-left');
-  }
+    // Initialize noUiSlider for outline width range
+    outlineRangeSlider = document.getElementById('outlineRangeSlider');
+    if (outlineRangeSlider) {
+        noUiSlider.create(outlineRangeSlider, {
+            start: [0, 0],
+            connect: [false, true, true], // Set left connect to false and right to true
+            range: {
+                'min': 0,
+                'max': 0
+            },
+            step: 1,
+            tooltips: false,
+            format: {
+                to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
+                from: value => parseFloat(value)
+            }
+        });
 
-  // Apply the class to the right connect element
-  const opacityConnectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  if (opacityConnectElements.length > 1) {
-    opacityConnectElements[1].classList.add('noUi-connect-right');
-    opacityConnectElements[1].classList.add('noUi-connect-right-solid');
-  }
+        const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+        if (outlineHandles.length > 0) {
+            outlineHandles[0].classList.add('noUi-handle-left');
+        }
 
-  // Initialize noUiSlider for outline width range
-  outlineRangeSlider = document.getElementById('outlineRangeSlider');
-  noUiSlider.create(outlineRangeSlider, {
-    start: [0, 0],
-    connect: [false, true, true], // Set left connect to false and right to true
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
-      from: value => parseFloat(value)
+        // Apply the class to the right connect element
+        const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
+        if (outlineConnectElements.length > 1) {
+            outlineConnectElements[1].classList.add('noUi-connect-right');
+            outlineConnectElements[1].classList.add('noUi-connect-width-gradient');
+        }
+
+        // Add event listeners to update map rendering when sliders are adjusted
+        outlineRangeSlider.noUiSlider.on('update', updateLayerVisibility);
+
+        // Add event listeners to update range labels
+        outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
+            document.getElementById('outlineRangeMin').innerText = formatValue(values[0], outlineRangeSlider.noUiSlider.options.step);
+            document.getElementById('outlineRangeMax').innerText = formatValue(values[1], outlineRangeSlider.noUiSlider.options.step);
+
+            // Update the height of the middle section based on the slider values
+            const minOutlineValue = parseFloat(values[0]);
+            const maxOutlineValue = parseFloat(values[1]);
+            const outlineConnectElement = outlineRangeSlider.querySelector('.noUi-connect-width-gradient::before');
+            if (outlineConnectElement) {
+                const height = (minOutlineValue / maxOutlineValue) * 100;
+                outlineConnectElement.style.height = `${height}%`;
+            }
+        });
     }
-  });
-
-  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
-  if (outlineHandles.length > 0) {
-    outlineHandles[0].classList.add('noUi-handle-left');
-  }
-
-  // Apply the class to the right connect element
-  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
-  if (outlineConnectElements.length > 1) {
-    outlineConnectElements[1].classList.add('noUi-connect-right');
-    outlineConnectElements[1].classList.add('noUi-connect-right-solid');
-  }
-
-  // Add event listeners to update map rendering when sliders are adjusted
-  opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
-  outlineRangeSlider.noUiSlider.on('update', updateLayerVisibility);
-
-  // Add event listeners to update range labels
-  opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('opacityRangeMin').innerText = formatValue(values[0], opacityRangeSlider.noUiSlider.options.step);
-    document.getElementById('opacityRangeMax').innerText = formatValue(values[1], opacityRangeSlider.noUiSlider.options.step);
-  });
-
-  outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('outlineRangeMin').innerText = formatValue(values[0], outlineRangeSlider.noUiSlider.options.step);
-    document.getElementById('outlineRangeMax').innerText = formatValue(values[1], outlineRangeSlider.noUiSlider.options.step);
+}
 
 // Function to format values based on step size for display
 function formatValue(value, step) {
