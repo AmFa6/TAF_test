@@ -159,15 +159,6 @@ function initializeSliders() {
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
     document.getElementById('outlineRangeMin').innerText = formatValue(values[0], outlineRangeSlider.noUiSlider.options.step);
     document.getElementById('outlineRangeMax').innerText = formatValue(values[1], outlineRangeSlider.noUiSlider.options.step);
-
-    // Update the height of the middle section based on the slider values
-    const minOutlineValue = parseFloat(values[0]);
-    const maxOutlineValue = parseFloat(values[1]);
-    const outlineConnectElement = outlineRangeSlider.querySelector('.noUi-connect-width-gradient::before');
-    if (outlineConnectElement) {
-      const height = (minOutlineValue / maxOutlineValue) * 100;
-      outlineConnectElement.style.height = `${height}%`;
-    }
   });
 }
 
