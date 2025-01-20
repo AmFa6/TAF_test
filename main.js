@@ -114,6 +114,7 @@ function initializeSliders() {
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
   if (connectElements.length > 1) {
     connectElements[1].classList.add('noUi-connect-right');
+    connectElements[1].classList.add('noUi-connect-right-solid');
   }
 
   // Initialize noUiSlider for outline width range
