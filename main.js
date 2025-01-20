@@ -121,7 +121,7 @@ function initializeSliders() {
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
     start: [0, 0],
-    connect: true,
+    connect: [false, true, true],
     range: {
       'min': 0,
       'max': 0
@@ -133,6 +133,18 @@ function initializeSliders() {
       from: value => parseFloat(value)
     }
   });
+
+  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+  if (outlineHandles.length > 0) {
+    outlineHandles[0].classList.add('noUi-handle-left');
+  }
+
+  // Apply the class to the right connect element
+  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
+  if (outlineConnectElements.length > 1) {
+    outlineConnectElements[1].classList.add('noUi-connect-right');
+    outlineConnectElements[1].classList.add('noUi-connect-right-solid');
+  }
 
   // Add event listeners to update map rendering when sliders are adjusted
   opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
