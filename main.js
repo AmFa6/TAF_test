@@ -442,14 +442,12 @@ function toggleInverseScale() {
   } else {
     handles[1].classList.remove('noUi-handle-left');
     handles[0].classList.add('noUi-handle-left');
-    connectElements[0].classList.add('noUi-connect-right-solid');
     connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 1) 50%, #767676 50%)';
-    connectElements[1].style.background = 'linear-gradient(to right, #767676 0%, rgba(118, 118, 118, 1) 50%, rgba(118, 118, 118, 0) 100%)';
+    connectElements[1].style.background = '#767676';
   }
 }
 
 document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
-
 // Function to inverse opacity scale
 function inverseOpacityScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
