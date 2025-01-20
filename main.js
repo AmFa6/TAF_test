@@ -143,7 +143,7 @@ function initializeSliders() {
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
     outlineConnectElements[1].classList.add('noUi-connect-right');
-    outlineConnectElements[1].classList.add('noUi-connect-width-gradient');
+    outlineConnectElements[1].classList.add('noUi-connect-right-solid');
   }
 
   // Add event listeners to update map rendering when sliders are adjusted
@@ -159,17 +159,6 @@ function initializeSliders() {
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
     document.getElementById('outlineRangeMin').innerText = formatValue(values[0], outlineRangeSlider.noUiSlider.options.step);
     document.getElementById('outlineRangeMax').innerText = formatValue(values[1], outlineRangeSlider.noUiSlider.options.step);
-
-    // Update the height of the middle section based on the slider values
-    const minOutlineValue = parseFloat(values[0]);
-    const maxOutlineValue = parseFloat(values[1]);
-    const outlineConnectElement = outlineRangeSlider.querySelector('.noUi-connect-width-gradient::before');
-    if (outlineConnectElement) {
-      const height = (minOutlineValue / maxOutlineValue) * 100;
-      outlineConnectElement.style.height = `${height}%`;
-    }
-  });
-}
 
 // Function to format values based on step size for display
 function formatValue(value, step) {
