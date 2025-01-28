@@ -18,10 +18,9 @@
       height: 100%;
       width: 100%;
     }
-    #panel {
+    #panel, #amenitiesPanel {
       position: absolute;
       top: 10px;
-      left: 10px;
       z-index: 1000; /* Ensure the controls are always on top */
       background: white;
       padding: 10px;
@@ -30,11 +29,17 @@
       width: 250px;
       box-sizing: border-box;
     }
-    #panel label, #panel select, #panel input {
+    #panel {
+      left: 10px;
+    }
+    #amenitiesPanel {
+      right: 10px;
+    }
+    #panel label, #panel select, #panel input, #amenitiesPanel label, #amenitiesPanel select, #amenitiesPanel input {
       display: block;
       margin-bottom: 5px; /* Reduce space between elements */
     }
-    #panel select, #panel input {
+    #panel select, #panel input, #amenitiesPanel select, #amenitiesPanel input {
       width: 100%;
       padding: 5px;
       border: 1px solid #ccc;
@@ -43,12 +48,12 @@
       color: black;
       box-sizing: border-box;
     }
-    #panel select:focus, #panel input:focus {
+    #panel select:focus, #panel input:focus, #amenitiesPanel select:focus, #amenitiesPanel input:focus {
       outline: none;
       border-color: #007bff;
       box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     }
-    #panel input[type="range"] {
+    #panel input[type="range"], #amenitiesPanel input[type="range"] {
       width: 100%;
     }
     .field-container {
@@ -113,7 +118,7 @@
     #legend {
       position: absolute;
       top: 10px;
-      right: 10px;
+      right: 270px;
       background: white;
       padding: 5px;
       border-radius: 5px;
@@ -231,6 +236,62 @@
         </div>
       </div>
     </div>
+  </div>
+  <div id="amenitiesPanel">
+    <label for="amenitiesYearDropdown" class="large-font">Year:</label>
+    <select id="amenitiesYearDropdown" class="medium-font">
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+    </select>
+    <br>
+    <label for="amenitiesList" class="large-font">Amenities:</label>
+    <div id="amenitiesList" class="medium-font">
+      <label><input type="checkbox" value="SecSch"> Secondary Schools</label><br>
+      <label><input type="checkbox" value="PriSch"> Primary Schools</label><br>
+      <label><input type="checkbox" value="GP"> GPs</label><br>
+      <label><input type="checkbox" value="CitCtr"> City Centres</label><br>
+      <label><input type="checkbox" value="MajCtr"> Major Centres</label><br>
+      <label><input type="checkbox" value="DisCtr"> District Centres</label><br>
+      <label><input type="checkbox" value="Em500"> Employment (500 jobs)</label><br>
+      <label><input type="checkbox" value="Em5000"> Employment (5000 jobs)</label><br>
+      <label><input type="checkbox" value="StrEmp"> Strategic Employment Sites</label><br>
+      <label><input type="checkbox" value="FurEd"> Further Education</label><br>
+      <label><input type="checkbox" value="Hos"> Hospital</label><br>
+    </div>
+    <br>
+    <label for="modeDropdownAmenities" class="large-font">Mode:</label>
+    <select id="modeDropdownAmenities" class="medium-font">
+      <option value="Wa">Walk</option>
+      <option value="Cy">Cycle</option>
+      <option value="PT">Public Transport</option>
+      <option value="Ca">Car</option>
+    </select>
+    <br>
+    <label for="opacityDropdownAmenities" class="large-font">Opacity:</label>
+    <select id="opacityDropdownAmenities" class="medium-font">
+      <option value="pop">Population</option>
+      <option value="imd">Index of Multiple Deprivation</option>
+      <option value="ruc">Rural Urban Classification</option>
+      <option value="hh_fut">Future Housing Growth</option>
+      <option value="carav">Car Availability</option>
+    </select>
+    <br>
+    <label for="inverseOpacityCheckboxAmenities" class="medium-font">Inverse Opacity:</label>
+    <input type="checkbox" id="inverseOpacityCheckboxAmenities">
+    <br>
+    <label for="strokeDropdownAmenities" class="large-font">Stroke Width:</label>
+    <select id="strokeDropdownAmenities" class="medium-font">
+      <option value="pop">Population</option>
+      <option value="imd">Index of Multiple Deprivation</option>
+      <option value="ruc">Rural Urban Classification</option>
+      <option value="hh_fut">Future Housing Growth</option>
+      <option value="carav">Car Availability</option>
+    </select>
+    <br>
+    <label for="inverseStrokeCheckboxAmenities" class="medium-font">Inverse Stroke:</label>
+    <input type="checkbox" id="inverseStrokeCheckboxAmenities">
+    <br>
+    <button id="applyAmenitiesButton" class="large-font">Apply</button>
   </div>
   <div id="legend">
     <h4 style="font-size: 1.2em; margin-top: 0;">Legend</h4>
