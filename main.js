@@ -577,14 +577,3 @@ function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
     const scaledValue = order === 'low-to-high' ? normalizedValue : 1 - normalizedValue;
     return minScale + scaledValue * (maxScale - minScale);
 }
-
-document.getElementById('applyCatchmentsButton').addEventListener('click', applyCatchments);
-
-function applyCatchments() {
-  const selectedYear = document.getElementById('amenitiesYearDropdown').value;
-  const selectedAmenities = Array.from(document.querySelectorAll('#amenitiesList input:checked')).map(input => input.value);
-  const selectedMode = document.getElementById('modeDropdownAmenities').value;
-  const selectedOpacity = document.getElementById('opacityDropdownAmenities').value;
-  const inverseOpacity = document.getElementById('inverseOpacityCheckboxAmenities').checked;
-  const selectedStroke = document.getElementById('strokeDropdownAmenities').value;
-  const inverseStroke = document.getElementById('inverseStrokeCheckboxAmenities').checked;
