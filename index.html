@@ -108,10 +108,17 @@
       font-size: 0.8em;
       margin-left: 5px;
     }
-    .collapsible-content {
+    .settings-collapsible-content {
       display: none;
       overflow: hidden;
       background-color: #f0f0f0; /* Grey background */
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .default-collapsible-content {
+      display: none;
+      overflow: hidden;
+      background-color: white; /* White background */
       padding: 10px;
       border-radius: 5px;
     }
@@ -172,9 +179,9 @@
   <div id="map"></div>
   <div id="panel">
     <button type="button" class="collapsible">
-      <h2>Connectivity Scores</h2>
+      <h2 style="font-size: 1em;">Connectivity Scores</h2>
     </button>
-    <div class="collapsible-content">
+    <div class="default-collapsible-content">
       <label for="yearDropdown" class="large-font">Year:</label>
       <select id="yearDropdown" class="medium-font"></select>
       <br>
@@ -197,7 +204,7 @@
       </select>
       <br>
       <button type="button" class="collapsible">Settings</button>
-      <div class="collapsible-content">
+      <div class="settings-collapsible-content">
         <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
         <select id="opacityFieldDropdown" class="small-font">
           <option value="None">None</option>
@@ -307,7 +314,7 @@
     document.addEventListener('DOMContentLoaded', (event) => {
       // Handle collapsible settings panel
       const collapsible = document.querySelectorAll(".collapsible");
-      const content = document.querySelectorAll(".collapsible-content");
+      const content = document.querySelectorAll(".default-collapsible-content, .settings-collapsible-content");
 
       collapsible.forEach((button, index) => {
         button.addEventListener("click", function() {
