@@ -248,6 +248,18 @@
         </div>
       </div>
     </div>
+    <button type="button" class="collapsible">
+      <h2 style="font-size: 1em; margin: 0;">Journey Time - Amenities</h2><!-- New panel -->
+    </button>
+    <div class="default-collapsible-content">
+      <!-- Content goes here -->
+    </div>
+    <button type="button" class="collapsible">
+      <h2 style="font-size: 1em; margin: 0;">Journey Time - Hexagons</h2><!-- New panel -->
+    </button>
+    <div class="default-collapsible-content">
+      <!-- Content goes here -->
+    </div>
   </div>
   <div id="amenitiesPanel">
     <label for="amenitiesYearDropdown" class="large-font">Year:</label>
@@ -318,9 +330,14 @@
 
       collapsible.forEach((button, index) => {
         button.addEventListener("click", function() {
+          collapsible.forEach((btn, idx) => {
+            if (btn !== this) {
+              content[idx].style.display = "none";
+              btn.classList.remove("active");
+            }
+          });
           this.classList.toggle("active");
           content[index].style.display = content[index].style.display === "block" ? "none" : "block";
-          this.classList.toggle("collapsed", content[index].style.display === "none");
         });
       });
 
