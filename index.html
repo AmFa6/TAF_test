@@ -254,18 +254,6 @@
         </div>
       </div>
     </div>
-    <button type="button" class="collapsible">
-      <h2>Journey Time - Amenities</h2><!-- New panel -->
-    </button>
-    <div class="default-collapsible-content">
-      <!-- Content goes here -->
-    </div>
-    <button type="button" class="collapsible">
-      <h2>Journey Time - Hexagons</h2><!-- New panel -->
-    </button>
-    <div class="default-collapsible-content">
-      <!-- Content goes here -->
-    </div>
   </div>
   <div id="amenitiesPanel">
     <label for="amenitiesYearDropdown" class="large-font">Year:</label>
@@ -332,7 +320,7 @@
     document.addEventListener('DOMContentLoaded', (event) => {
       const collapsible = document.querySelectorAll(".collapsible");
       const content = document.querySelectorAll(".default-collapsible-content, .settings-collapsible-content");
-  
+
       collapsible.forEach((button, index) => {
         button.addEventListener("click", function(event) {
           if (this.classList.contains('settings-collapsible')) {
@@ -352,7 +340,7 @@
           }
         });
       });
-  
+
       // Initially collapse the content
       content.forEach((section) => {
         section.style.display = "none";
