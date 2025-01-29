@@ -94,13 +94,13 @@
       border: none;
       text-align: left;
       outline: none;
-      font-size: 1.6em;
+      font-size: 1em; /* Adjusted font size for Connectivity Scores */
       background: white;
       margin: 5px 0; /* Minimal margins top and bottom */
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px;
+      padding: 10px;
       border-radius: 5px;
     }
     .collapsible:after {
@@ -179,7 +179,7 @@
   <div id="map"></div>
   <div id="panel">
     <button type="button" class="collapsible">
-      <h2>Connectivity Scores</h2>
+      <h2 style="font-size: 1em;">Connectivity Scores</h2>
     </button>
     <div class="default-collapsible-content">
       <label for="yearDropdown" class="large-font">Year:</label>
@@ -203,7 +203,7 @@
         <option value="Car">Car</option>
       </select>
       <br>
-      <button type="button" class="collapsible">Settings</button>
+      <button type="button" class="collapsible medium-font">Settings</button> <!-- Adjusted font size for Settings -->
       <div class="settings-collapsible-content">
         <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
         <select id="opacityFieldDropdown" class="small-font">
