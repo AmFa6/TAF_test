@@ -15,10 +15,16 @@
       padding: 0;
       font-family: "Trebuchet MS", sans-serif;
     }
-    h2 {
+    h2, .large-font {
       margin: 5px;
       font-size: 1.4em;
       font-weight: normal;
+    }
+    .medium-font {
+      font-size: 1.2em;
+    }
+    .small-font {
+      font-size: 0.8em;
     }
     #map {
       height: 100%;
@@ -86,15 +92,6 @@
     }
     .button-container > button:first-child {
       margin-left: 0;
-    }
-    .large-font {
-      font-size: 1.4em;
-    }
-    .medium-font {
-      font-size: 1.2em;
-    }
-    .small-font {
-      font-size: 0.8em;
     }
     .collapsible {
       cursor: pointer;
@@ -185,7 +182,7 @@
   <div id="map"></div>
   <div id="panel">
     <button type="button" class="collapsible">
-      <h2>Connectivity Scores</h2>
+      <h2 class="large-font">Connectivity Scores</h2>
     </button>
     <div class="default-collapsible-content">
       <label for="yearDropdown" class="medium-font">Year:</label>
