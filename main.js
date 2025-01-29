@@ -55,10 +55,7 @@ const modeDropdown = document.getElementById("modeDropdown");
 const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
 const outlineFieldDropdown = document.getElementById("outlineFieldDropdown");
 
-// Ensure 'Population' is the default value for opacityFieldDropdown
-opacityFieldDropdown.value = "pop";
-
-// Ensure 'None' is the default value for outlineFieldDropdown
+opacityFieldDropdown.value = "None";
 outlineFieldDropdown.value = "None";
 
 // Maps for purpose and mode
