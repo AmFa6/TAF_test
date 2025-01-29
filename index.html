@@ -14,17 +14,22 @@
       margin: 0;
       padding: 0;
       font-family: "Trebuchet MS", sans-serif;
+      font-weight: normal;
     }
-    h2,
-    font-weight: normal;
-    margin: 0px;
+    h2.large-font, 
     .large-font {
       font-size: 1.4em;
     }
-    .medium-font {
+    label.medium-font, 
+    select.medium-font {
       font-size: 1.2em;
     }
-    .small-font {
+    select, 
+    option, 
+    button.settings-collapsible {
+      font-size: 1em;
+    }
+    .settings-collapsible-content .small-font {
       font-size: 0.8em;
     }
     #map {
@@ -207,7 +212,7 @@
         <option value="Car">Car</option>
       </select>
       <br>
-      <button type="button" class="collapsible medium-font settings-collapsible">Settings</button>
+      <button type="button" class="settings-collapsible">Settings</button>
       <div class="settings-collapsible-content">
         <label for="opacityFieldDropdown" class="small-font">Set Hexagon Transparency to:</label>
         <select id="opacityFieldDropdown" class="small-font">
