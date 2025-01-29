@@ -332,14 +332,15 @@
     document.addEventListener('DOMContentLoaded', (event) => {
       const collapsible = document.querySelectorAll(".collapsible");
       const content = document.querySelectorAll(".default-collapsible-content, .settings-collapsible-content");
-    
+  
       collapsible.forEach((button, index) => {
         button.addEventListener("click", function(event) {
-          // Check if the clicked element is inside a settings section
-          if (this.classList.contains('settings-collapsible') || this.closest('.settings-collapsible-content')) {
-            event.stopPropagation(); // Prevent collapsing the parent section
+          if (this.classList.contains('settings-collapsible')) {
+            // Expand or collapse the settings section without affecting the parent
+            const settingsContent = this.nextElementSibling;
+            settingsContent.style.display = settingsContent.style.display === "block" ? "none" : "block";
           } else {
-            // Collapse other sections, but not settings sections
+            // Collapse other sections but not settings sections
             collapsible.forEach((btn, idx) => {
               if (btn !== this && !btn.classList.contains('settings-collapsible')) {
                 content[idx].style.display = "none";
@@ -351,7 +352,7 @@
           }
         });
       });
-    
+  
       // Initially collapse the content
       content.forEach((section) => {
         section.style.display = "none";
