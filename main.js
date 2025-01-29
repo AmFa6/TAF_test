@@ -6,6 +6,7 @@ const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/lig
   attribution: '&copy; OpenStreetMap contributors & CartoDB'
 }).addTo(map);
 
+// Add rivers layer using Overpass API
 const riversLayer = new L.OverpassLayer({
   query: `
     [out:json];
