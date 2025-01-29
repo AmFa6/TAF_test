@@ -20,7 +20,7 @@
       height: 100%;
       width: 100%;
     }
-    #panel {
+    #panel-container {
       position: absolute;
       top: 10px;
       left: 10px;
@@ -32,14 +32,17 @@
       width: 250px;
       box-sizing: border-box;
     }
-    #panel label, #panel select, #panel input {
+    .panel {
+      margin-bottom: 10px;
+    }
+    .panel label, .panel select, .panel input {
       display: block;
       margin-bottom: 5px; /* Reduce space between elements */
       font-family: 'Trebuchet MS', sans-serif;
       font-size: 1.1em; /* Large font size */
       font-weight: normal; /* Ensure font is not bold */
     }
-    #panel select, #panel input {
+    .panel select, .panel input {
       width: 100%;
       padding: 5px;
       border: 1px solid #ccc;
@@ -49,12 +52,12 @@
       box-sizing: border-box;
       font-size: 1em; /* Medium font size */
     }
-    #panel select:focus, #panel input:focus {
+    .panel select:focus, .panel input:focus {
       outline: none;
       border-color: #007bff;
       box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     }
-    #panel input[type="range"] {
+    .panel input[type="range"] {
       width: 100%;
     }
     .field-container {
@@ -200,83 +203,85 @@
 </head>
 <body>
   <div id="map"></div>
-  <div id="panel">
-    <button class="panel-header">Connectivity Scores</button>
-    <div id="panel-content">
-      <label for="yearDropdown" class="large-font">Year:</label>
-      <select id="yearDropdown" class="medium-font"></select>
-      <br>
-      <label for="purposeDropdown" class="large-font">Purpose of Travel:</label>
-      <select id="purposeDropdown" class="medium-font">
-        <option value="All Amenities">All Amenities</option>
-        <option value="Education">Education</option>
-        <option value="Employment">Employment</option>
-        <option value="High Street">High Street</option>
-        <option value="Health">Health</option>
-      </select>
-      <br>
-      <label for="modeDropdown" class="large-font">Mode of Travel:</label>
-      <select id="modeDropdown" class="medium-font">
-        <option value="All Modes">All Modes</option>
-        <option value="Walk">Walk</option>
-        <option value="Cycle">Cycle</option>
-        <option value="Public Transport">Public Transport</option>
-        <option value="Car">Car</option>
-      </select>
-      <br>
-      <button type="button" class="collapsible">Settings</button>
-      <div class="collapsible-content">
-        <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
-        <select id="opacityFieldDropdown" class="small-font">
-          <option value="None">None</option>
-          <option value="pop">Population</option>
-          <option value="imd">Index of Multiple Deprivation</option>
-          <option value="carav">Car Availability</option>
-          <option value="hh_fut">Future Dwellings</option>
+  <div id="panel-container">
+    <div id="panel" class="panel">
+      <button class="panel-header">Connectivity Scores</button>
+      <div id="panel-content">
+        <label for="yearDropdown" class="large-font">Year:</label>
+        <select id="yearDropdown" class="medium-font"></select>
+        <br>
+        <label for="purposeDropdown" class="large-font">Purpose of Travel:</label>
+        <select id="purposeDropdown" class="medium-font">
+          <option value="All Amenities">All Amenities</option>
+          <option value="Education">Education</option>
+          <option value="Employment">Employment</option>
+          <option value="High Street">High Street</option>
+          <option value="Health">Health</option>
         </select>
         <br>
-        <div class="field-container">
-          <div>
-            <label for="opacityRangeSlider" class="medium-font">Range: <span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
-            <div id="opacityRangeSlider"></div>
-          </div>
-        </div>
-        <div class="field-container">
-          <div class="button-container">
-            <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
-          </div>
-        </div>
-        <br>
-        <label for="outlineFieldDropdown" class="medium-font">Set Hexagon Outline to:</label>
-        <select id="outlineFieldDropdown" class="small-font">
-          <option value="None">None</option>
-          <option value="imd">Index of Multiple Deprivation</option>
-          <option value="pop">Population</option>
-          <option value="carav">Car Availability</option>
-          <option value="hh_fut">Future Dwellings</option>
+        <label for="modeDropdown" class="large-font">Mode of Travel:</label>
+        <select id="modeDropdown" class="medium-font">
+          <option value="All Modes">All Modes</option>
+          <option value="Walk">Walk</option>
+          <option value="Cycle">Cycle</option>
+          <option value="Public Transport">Public Transport</option>
+          <option value="Car">Car</option>
         </select>
         <br>
-        <div class="field-container">
-          <div>
-            <label for="outlineRangeSlider" class="medium-font">Range: <span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
-            <div id="outlineRangeSlider"></div>
+        <button type="button" class="collapsible">Settings</button>
+        <div class="collapsible-content">
+          <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
+          <select id="opacityFieldDropdown" class="small-font">
+            <option value="None">None</option>
+            <option value="pop">Population</option>
+            <option value="imd">Index of Multiple Deprivation</option>
+            <option value="carav">Car Availability</option>
+            <option value="hh_fut">Future Dwellings</option>
+          </select>
+          <br>
+          <div class="field-container">
+            <div>
+              <label for="opacityRangeSlider" class="medium-font">Range: <span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
+              <div id="opacityRangeSlider"></div>
+            </div>
           </div>
-        </div>
-        <div class="field-container">
-          <div class="button-container">
-            <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
+          <div class="field-container">
+            <div class="button-container">
+              <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
+            </div>
+          </div>
+          <br>
+          <label for="outlineFieldDropdown" class="medium-font">Set Hexagon Outline to:</label>
+          <select id="outlineFieldDropdown" class="small-font">
+            <option value="None">None</option>
+            <option value="imd">Index of Multiple Deprivation</option>
+            <option value="pop">Population</option>
+            <option value="carav">Car Availability</option>
+            <option value="hh_fut">Future Dwellings</option>
+          </select>
+          <br>
+          <div class="field-container">
+            <div>
+              <label for="outlineRangeSlider" class="medium-font">Range: <span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
+              <div id="outlineRangeSlider"></div>
+            </div>
+          </div>
+          <div class="field-container">
+            <div class="button-container">
+              <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div id="panel-amenities">
-    <button class="panel-header">Journey Time Catchments - Amenities</button>
-    <div id="panel-amenities-content"></div>
-  </div>
-  <div id="panel-hexagons">
-    <button class="panel-header">Journey Time Catchments - Hexagons</button>
-    <div id="panel-hexagons-content"></div>
+    <div id="panel-amenities" class="panel">
+      <button class="panel-header">Journey Time Catchments - Amenities</button>
+      <div id="panel-amenities-content"></div>
+    </div>
+    <div id="panel-hexagons" class="panel">
+      <button class="panel-header">Journey Time Catchments - Hexagons</button>
+      <div id="panel-hexagons-content"></div>
+    </div>
   </div>
   <div id="legend">
     <h4 style="font-size: 1.2em; margin-top: 0;">Legend</h4>
