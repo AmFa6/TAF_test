@@ -384,7 +384,6 @@ function getColor(value, selectedYear) {
   }
 }
 
-// Function to update the legend
 function updateLegend() {
   const selectedYear = yearDropdown.value;
   const legendContent = document.getElementById("legend-content");
@@ -426,74 +425,7 @@ function updateLegend() {
   });
 }
 
-// Function to apply catchments based on selected options
-function applyCatchments() {
-  const selectedYear = document.getElementById('amenitiesYearDropdown').value;
-  const selectedAmenities = Array.from(document.querySelectorAll('#amenitiesList input:checked')).map(input => input.value);
-  const selectedMode = document.getElementById('modeDropdownAmenities').value;
-  const selectedOpacity = document.getElementById('opacityDropdownAmenities').value;
-  const inverseOpacity = document.getElementById('inverseOpacityCheckboxAmenities').checked;
-  const selectedStroke = document.getElementById('strokeDropdownAmenities').value;
-  const inverseStroke = document.getElementById('inverseStrokeCheckboxAmenities').checked;
-
-  // Fetch the relevant data and process it
-  const csvDirectory = 'https://AmFa6.github.io/TAF_test/';
-  const promises = selectedAmenities.map(amenity => {
-    const csvFileName = `${selectedYear}_${amenity}_csv.csv`;
-    const csvFilePath = `${csvDirectory}${csvFileName}`;
-    return fetch(csvFilePath).then(response => response.text());
-  });
-
-  Promise.all(promises).then(csvDataArray => {
-    const hexLayer = layers[selectedYear];
-    const hexLayerGdf = hexLayer.features.map(feature => ({
-      ...feature,
-      properties: {
-        ...feature.properties,
-        Time: null
-      }
-    }));
-
-    const smallestTimes = {};
-
-    csvDataArray.forEach((csvData, index) => {
-      const amenity = selectedAmenities[index];
-      const csvRows = csvData.split('\n').slice(1);
-      csvRows.forEach(row => {
-        const [coreid, mode, time] = row.split(',');
-        if (mode === selectedMode) {
-          const hexId = coreid;
-          const timeValue = parseFloat(time);
-          if (!smallestTimes[hexId] || timeValue < smallestTimes[hexId]) {
-            smallestTimes[hexId] = timeValue;
-          }
-        }
-      });
-    });
-
-    hexLayerGdf.forEach(feature => {
-      const hexId = feature.properties.Hex_ID;
-      if (smallestTimes[hexId] !== undefined) {
-        feature.properties.Time = smallestTimes[hexId];
-      }
-    });
-
-    // Update the map with the new data
-    const updatedGeoJson = {
-      type: "FeatureCollection",
-      features: hexLayerGdf
-    };
-
-    const geoJsonLayer = L.geoJSON(updatedGeoJson, {
-      style: feature => styleFeature(feature, 'Time', selectedOpacity, selectedStroke, 0, 30, 0, 4, selectedYear),
-      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
-    }).addTo(map);
-
-    updateLegend();
-  }).catch(error => console.error(`Error processing CSV data: ${error.message}`));
-}
-
-document.getElementById('applyAmenitiesButton').addEventListener('click', applyCatchments);
+let isInverse = false;
 
 function toggleInverseScale() {
   isInverse = !isInverse;
