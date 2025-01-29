@@ -194,45 +194,48 @@
         <option value="Car">Car</option>
       </select>
       <br>
-      <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
-      <select id="opacityFieldDropdown" class="small-font">
-        <option value="None">None</option>
-        <option value="pop">Population</option>
-        <option value="imd">Index of Multiple Deprivation</option>
-        <option value="carav">Car Availability</option>
-        <option value="hh_fut">Future Dwellings</option>
-      </select>
-      <br>
-      <div class="field-container">
-        <div>
-          <label for="opacityRangeSlider" class="medium-font">Range: <span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
-          <div id="opacityRangeSlider"></div>
+      <button type="button" class="collapsible">Settings</button>
+      <div class="collapsible-content">
+        <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
+        <select id="opacityFieldDropdown" class="small-font">
+          <option value="None">None</option>
+          <option value="pop">Population</option>
+          <option value="imd">Index of Multiple Deprivation</option>
+          <option value="carav">Car Availability</option>
+          <option value="hh_fut">Future Dwellings</option>
+        </select>
+        <br>
+        <div class="field-container">
+          <div>
+            <label for="opacityRangeSlider" class="medium-font">Range: <span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
+            <div id="opacityRangeSlider"></div>
+          </div>
         </div>
-      </div>
-      <div class="field-container">
-        <div class="button-container">
-          <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
+        <div class="field-container">
+          <div class="button-container">
+            <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
+          </div>
         </div>
-      </div>
-      <br>
-      <label for="outlineFieldDropdown" class="medium-font">Set Hexagon Outline to:</label>
-      <select id="outlineFieldDropdown" class="small-font">
-        <option value="None">None</option>
-        <option value="imd">Index of Multiple Deprivation</option>
-        <option value="pop">Population</option>
-        <option value="carav">Car Availability</option>
-        <option value="hh_fut">Future Dwellings</option>
-      </select>
-      <br>
-      <div class="field-container">
-        <div>
-          <label for="outlineRangeSlider" class="medium-font">Range: <span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
-          <div id="outlineRangeSlider"></div>
+        <br>
+        <label for="outlineFieldDropdown" class="medium-font">Set Hexagon Outline to:</label>
+        <select id="outlineFieldDropdown" class="small-font">
+          <option value="None">None</option>
+          <option value="imd">Index of Multiple Deprivation</option>
+          <option value="pop">Population</option>
+          <option value="carav">Car Availability</option>
+          <option value="hh_fut">Future Dwellings</option>
+        </select>
+        <br>
+        <div class="field-container">
+          <div>
+            <label for="outlineRangeSlider" class="medium-font">Range: <span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
+            <div id="outlineRangeSlider"></div>
+          </div>
         </div>
-      </div>
-      <div class="field-container">
-        <div class="button-container">
-          <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
+        <div class="field-container">
+          <div class="button-container">
+            <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
+          </div>
         </div>
       </div>
     </div>
@@ -301,17 +304,21 @@
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
       // Handle collapsible settings panel
-      const collapsible = document.querySelector(".collapsible");
-      const content = document.querySelector(".collapsible-content");
+      const collapsible = document.querySelectorAll(".collapsible");
+      const content = document.querySelectorAll(".collapsible-content");
 
-      collapsible.addEventListener("click", function() {
-        this.classList.toggle("active");
-        content.style.display = content.style.display === "block" ? "none" : "block";
-        this.classList.toggle("collapsed", content.style.display === "none");
+      collapsible.forEach((button, index) => {
+        button.addEventListener("click", function() {
+          this.classList.toggle("active");
+          content[index].style.display = content[index].style.display === "block" ? "none" : "block";
+          this.classList.toggle("collapsed", content[index].style.display === "none");
+        });
       });
 
       // Initially collapse the content
-      content.style.display = "none";
+      content.forEach((section) => {
+        section.style.display = "none";
+      });
     });
   </script>
 </body>
