@@ -305,6 +305,14 @@
       panelHeaders.forEach(header => {
         const panelContent = header.nextElementSibling;
         header.addEventListener("click", function() {
+          // Collapse all other panels
+          panelHeaders.forEach(otherHeader => {
+            if (otherHeader !== header) {
+              otherHeader.classList.add("collapsed");
+              otherHeader.nextElementSibling.style.display = "none";
+            }
+          });
+          // Toggle the clicked panel
           panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
           header.classList.toggle("collapsed", panelContent.style.display === "none");
         });
