@@ -94,14 +94,14 @@
       border: none;
       text-align: left;
       outline: none;
-      font-size: 1.6em; /* Adjusted font size for Connectivity Scores */
+      font-size: 1em; /* Adjusted font size for Connectivity Scores */
       background: white;
-      margin: 0px 0; /* Minimal margins top and bottom */
+      margin: 5px 0; /* Minimal margins top and bottom */
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0px;
-      border-radius: 0px;
+      padding: 5px; /* Reduced padding */
+      border-radius: 5px;
     }
     .collapsible:after {
       content: '\25BC';
@@ -179,7 +179,7 @@
   <div id="map"></div>
   <div id="panel">
     <button type="button" class="collapsible">
-      <h2 style="font-size: 1.6em;">Connectivity Scores</h2>
+      <h2 style="font-size: 1em; margin: 0;">Connectivity Scores</h2><!-- Reduced blank space -->
     </button>
     <div class="default-collapsible-content">
       <label for="yearDropdown" class="large-font">Year:</label>
