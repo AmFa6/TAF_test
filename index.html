@@ -270,6 +270,14 @@
       </div>
     </div>
   </div>
+  <div id="panel-amenities">
+    <button class="panel-header">Journey Time Catchments - Amenities</button>
+    <div id="panel-amenities-content"></div>
+  </div>
+  <div id="panel-hexagons">
+    <button class="panel-header">Journey Time Catchments - Hexagons</button>
+    <div id="panel-hexagons-content"></div>
+  </div>
   <div id="legend">
     <h4 style="font-size: 1.2em; margin-top: 0;">Legend</h4>
     <div id="legend-content"></div>
@@ -287,18 +295,18 @@
         this.classList.toggle("collapsed", content.style.display === "none");
       });
 
-      // Handle collapsible panel
-      const panelHeader = document.querySelector(".panel-header");
-      const panelContent = document.querySelector("#panel-content");
-
-      panelHeader.addEventListener("click", function() {
-        panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
-        panelHeader.classList.toggle("collapsed", panelContent.style.display === "none");
+      // Handle collapsible panels
+      const panelHeaders = document.querySelectorAll(".panel-header");
+      panelHeaders.forEach(header => {
+        const panelContent = header.nextElementSibling;
+        header.addEventListener("click", function() {
+          panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
+          header.classList.toggle("collapsed", panelContent.style.display === "none");
+        });
+        // Initially collapse the panel content
+        panelContent.style.display = "none";
+        header.classList.add("collapsed");
       });
-
-      // Initially collapse the panel content
-      panelContent.style.display = "none";
-      panelHeader.classList.add("collapsed");
 
       // Initially collapse the settings content
       content.style.display = "none";
