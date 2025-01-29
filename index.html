@@ -330,23 +330,28 @@
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-      // Handle collapsible settings panel
       const collapsible = document.querySelectorAll(".collapsible");
       const content = document.querySelectorAll(".default-collapsible-content, .settings-collapsible-content");
-
+  
       collapsible.forEach((button, index) => {
-        button.addEventListener("click", function() {
-          collapsible.forEach((btn, idx) => {
-            if (btn !== this) {
-              content[idx].style.display = "none";
-              btn.classList.remove("active");
-            }
-          });
-          this.classList.toggle("active");
-          content[index].style.display = content[index].style.display === "block" ? "none" : "block";
+        button.addEventListener("click", function(event) {
+          // Check if the clicked element is inside a settings section
+          if (this.classList.contains('settings-collapsible') || this.closest('.settings-collapsible-content')) {
+            event.stopPropagation(); // Prevent collapsing the parent section
+          } else {
+            // Collapse other sections
+            collapsible.forEach((btn, idx) => {
+              if (btn !== this && !btn.classList.contains('settings-collapsible')) {
+                content[idx].style.display = "none";
+                btn.classList.remove("active");
+              }
+            });
+            this.classList.toggle("active");
+            content[index].style.display = content[index].style.display === "block" ? "none" : "block";
+          }
         });
       });
-
+  
       // Initially collapse the content
       content.forEach((section) => {
         section.style.display = "none";
