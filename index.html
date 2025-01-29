@@ -44,6 +44,7 @@
     #panel label, #panel select, #panel input, #amenitiesPanel label, #amenitiesPanel select, #amenitiesPanel input {
       display: block;
       margin-bottom: 5px; /* Reduce space between elements */
+      font-weight: normal; /* Remove bold styling */
     }
     #panel select, #panel input, #amenitiesPanel select, #amenitiesPanel input {
       width: 100%;
@@ -87,7 +88,6 @@
       margin-left: 0;
     }
     .large-font {
-      font-weight: normal;
       font-size: 1.2em;
     }
     .medium-font {
@@ -209,7 +209,7 @@
         <option value="Car">Car</option>
       </select>
       <br>
-      <button type="button" class="collapsible medium-font">Settings</button> <!-- Adjusted font size for Settings -->
+      <button type="button" class="collapsible medium-font settings-collapsible">Settings</button> <!-- Adjusted font size for Settings -->
       <div class="settings-collapsible-content">
         <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
         <select id="opacityFieldDropdown" class="small-font">
@@ -332,14 +332,14 @@
     document.addEventListener('DOMContentLoaded', (event) => {
       const collapsible = document.querySelectorAll(".collapsible");
       const content = document.querySelectorAll(".default-collapsible-content, .settings-collapsible-content");
-  
+    
       collapsible.forEach((button, index) => {
         button.addEventListener("click", function(event) {
           // Check if the clicked element is inside a settings section
           if (this.classList.contains('settings-collapsible') || this.closest('.settings-collapsible-content')) {
             event.stopPropagation(); // Prevent collapsing the parent section
           } else {
-            // Collapse other sections
+            // Collapse other sections, but not settings sections
             collapsible.forEach((btn, idx) => {
               if (btn !== this && !btn.classList.contains('settings-collapsible')) {
                 content[idx].style.display = "none";
@@ -351,7 +351,7 @@
           }
         });
       });
-  
+    
       // Initially collapse the content
       content.forEach((section) => {
         section.style.display = "none";
