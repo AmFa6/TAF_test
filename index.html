@@ -13,6 +13,7 @@
       height: 100%;
       margin: 0;
       padding: 0;
+      font-family: 'Trebuchet MS', sans-serif;
     }
     #map {
       height: 100%;
@@ -33,6 +34,9 @@
     #panel label, #panel select, #panel input {
       display: block;
       margin-bottom: 5px; /* Reduce space between elements */
+      font-family: 'Trebuchet MS', sans-serif;
+      font-size: 1.2em; /* Large font size */
+      font-weight: normal; /* Ensure font is not bold */
     }
     #panel select, #panel input {
       width: 100%;
@@ -42,6 +46,7 @@
       background-color: white;
       color: black;
       box-sizing: border-box;
+      font-size: 1em; /* Medium font size */
     }
     #panel select:focus, #panel input:focus {
       outline: none;
@@ -75,15 +80,6 @@
     .button-container > button:first-child {
       margin-left: 0;
     }
-    .large-font {
-      font-size: 1.2em;
-    }
-    .medium-font {
-      font-size: 1em;
-    }
-    .small-font {
-      font-size: 0.8em;
-    }
     .collapsible {
       cursor: pointer;
       border: none;
@@ -97,6 +93,8 @@
       align-items: center;
       padding: 10px;
       border-radius: 5px;
+      font-family: 'Trebuchet MS', sans-serif;
+      font-weight: normal; /* Ensure font is not bold */
     }
     .collapsible:after {
       content: '\25BC';
@@ -109,6 +107,7 @@
       background-color: #f0f0f0;
       padding: 10px;
       border-radius: 5px;
+      font-size: 0.8em; /* Small font size */
     }
     #legend {
       position: absolute;
@@ -166,6 +165,8 @@
     .collapsible-content select,
     .collapsible-content input {
       font-size: 0.8em; /* Small font size */
+      font-family: 'Trebuchet MS', sans-serif;
+      font-weight: normal; /* Ensure font is not bold */
     }
   </style>
 </head>
