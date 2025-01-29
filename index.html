@@ -13,33 +13,16 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      font-family: "Trebuchet MS", sans-serif;
-      font-weight: normal;
-    }
-    h2.large-font, 
-    .large-font {
-      font-size: 1.4em;
-    }
-    label.medium-font, 
-    select.medium-font {
-      font-size: 1.2em;
-    }
-    select, 
-    option, 
-    button.settings-collapsible {
-      font-size: 1em;
-    }
-    .settings-collapsible-content .small-font {
-      font-size: 0.8em;
     }
     #map {
       height: 100%;
       width: 100%;
     }
-    #panel, #amenitiesPanel {
+    #panel {
       position: absolute;
       top: 10px;
-      z-index: 1000;
+      left: 10px;
+      z-index: 1000; /* Ensure the controls are always on top */
       background: white;
       padding: 10px;
       border-radius: 5px;
@@ -47,18 +30,11 @@
       width: 250px;
       box-sizing: border-box;
     }
-    #panel {
-      left: 10px;
-    }
-    #amenitiesPanel {
-      right: 10px;
-    }
-    #panel label, #panel select, #panel input, #amenitiesPanel label, #amenitiesPanel select, #amenitiesPanel input {
+    #panel label, #panel select, #panel input {
       display: block;
-      margin-bottom: 5px;
-      font-weight: normal;
+      margin-bottom: 5px; /* Reduce space between elements */
     }
-    #panel select, #panel input, #amenitiesPanel select, #amenitiesPanel input {
+    #panel select, #panel input {
       width: 100%;
       padding: 5px;
       border: 1px solid #ccc;
@@ -67,12 +43,12 @@
       color: black;
       box-sizing: border-box;
     }
-    #panel select:focus, #panel input:focus, #amenitiesPanel select:focus, #amenitiesPanel input:focus {
+    #panel select:focus, #panel input:focus {
       outline: none;
       border-color: #007bff;
       box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     }
-    #panel input[type="range"], #amenitiesPanel input[type="range"] {
+    #panel input[type="range"] {
       width: 100%;
     }
     .field-container {
@@ -99,17 +75,27 @@
     .button-container > button:first-child {
       margin-left: 0;
     }
+    .large-font {
+      font-size: 1.2em;
+    }
+    .medium-font {
+      font-size: 1em;
+    }
+    .small-font {
+      font-size: 0.8em;
+    }
     .collapsible {
       cursor: pointer;
       border: none;
       text-align: left;
       outline: none;
-      background: white;
-      margin: 5px 0;
+      font-size: 1em;
+      background: #f0f0f0;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px;
+      padding: 10px;
       border-radius: 5px;
     }
     .collapsible:after {
@@ -117,24 +103,17 @@
       font-size: 0.8em;
       margin-left: 5px;
     }
-    .settings-collapsible-content {
+    .collapsible-content {
       display: none;
       overflow: hidden;
       background-color: #f0f0f0;
       padding: 10px;
       border-radius: 5px;
     }
-    .default-collapsible-content {
-      display: none;
-      overflow: hidden;
-      background-color: white;
-      padding: 10px;
-      border-radius: 5px;
-    }
     #legend {
       position: absolute;
       top: 10px;
-      right: 270px;
+      right: 10px;
       background: white;
       padding: 5px;
       border-radius: 5px;
@@ -144,7 +123,7 @@
       word-wrap: break-word;
     }
     .noUi-target {
-      background: #f0f0f0;
+      background: #f0f0f0; /* Background of the slider */
       border-radius: 5px;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
       height: 0.5em;
@@ -154,26 +133,26 @@
       height: 0.5em;
     }
     .noUi-connect-right-solid {
-      background: #767676 !important;
+      background: #767676 !important; /* Solid grey fill */
     }
     .noUi-handle {
-      background: #767676 !important;
+      background: #767676 !important; /* Handle color */
       border: none !important;
       border-radius: 50% !important;
       box-shadow: none !important;
-      width: 14px !important;
-      height: 14px !important;
+      width: 14px !important; /* Adjust this value if needed */
+      height: 14px !important; /* Adjust this value if needed */
       cursor: pointer !important;
-      top: 50%;
-      transform: translate(-50%, 5%) !important;
+      top: 50%; /* Vertically center the handle */
+      transform: translate(-50%, 5%) !important; /* Center the handle over its position */
     }
     .noUi-handle-left {
-      background: rgba(255, 255, 255, 0.0) !important;
-      border: 2px solid #767676 !important;
+      background: rgba(255, 255, 255, 0.0) !important; /* Transparent inside */
+      border: 2px solid #767676 !important; /* Grey outline */
     }
     .noUi-handle:before,
     .noUi-handle:after {
-      display: none !important;
+      display: none !important; /* Remove the additional bars */
     }
     .noUi-tooltip {
       background: #007bff;
@@ -187,144 +166,71 @@
 <body>
   <div id="map"></div>
   <div id="panel">
-    <button type="button" class="collapsible">
-      <h2 class="large-font">Connectivity Scores</h2>
-    </button>
-    <div class="default-collapsible-content">
-      <label for="yearDropdown" class="medium-font">Year:</label>
-      <select id="yearDropdown" class="medium-font"></select>
-      <br>
-      <label for="purposeDropdown" class="medium-font">Purpose of Travel:</label>
-      <select id="purposeDropdown" class="medium-font">
-        <option value="All Amenities">All Amenities</option>
-        <option value="Education">Education</option>
-        <option value="Employment">Employment</option>
-        <option value="High Street">High Street</option>
-        <option value="Health">Health</option>
+    <label for="yearDropdown" class="large-font">Year:</label>
+    <select id="yearDropdown" class="medium-font"></select>
+    <br>
+    <label for="purposeDropdown" class="large-font">Purpose of Travel:</label>
+    <select id="purposeDropdown" class="medium-font">
+      <option value="All Amenities">All Amenities</option>
+      <option value="Education">Education</option>
+      <option value="Employment">Employment</option>
+      <option value="High Street">High Street</option>
+      <option value="Health">Health</option>
+    </select>
+    <br>
+    <label for="modeDropdown" class="large-font">Mode of Travel:</label>
+    <select id="modeDropdown" class="medium-font">
+      <option value="All Modes">All Modes</option>
+      <option value="Walk">Walk</option>
+      <option value="Cycle">Cycle</option>
+      <option value="Public Transport">Public Transport</option>
+      <option value="Car">Car</option>
+    </select>
+    <br>
+    <button type="button" class="collapsible">Settings</button>
+    <div class="collapsible-content">
+      <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
+      <select id="opacityFieldDropdown" class="small-font">
+        <option value="None">None</option>
+        <option value="pop">Population</option>
+        <option value="imd">Index of Multiple Deprivation</option>
+        <option value="carav">Car Availability</option>
+        <option value="hh_fut">Future Dwellings</option>
       </select>
       <br>
-      <label for="modeDropdown" class="medium-font">Mode of Travel:</label>
-      <select id="modeDropdown" class="medium-font">
-        <option value="All Modes">All Modes</option>
-        <option value="Walk">Walk</option>
-        <option value="Cycle">Cycle</option>
-        <option value="Public Transport">Public Transport</option>
-        <option value="Car">Car</option>
+      <div class="field-container">
+        <div>
+          <label for="opacityRangeSlider" class="medium-font">Range: <span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
+          <div id="opacityRangeSlider"></div>
+        </div>
+      </div>
+      <div class="field-container">
+        <div class="button-container">
+          <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
+        </div>
+      </div>
+      <br>
+      <label for="outlineFieldDropdown" class="medium-font">Set Hexagon Outline to:</label>
+      <select id="outlineFieldDropdown" class="small-font">
+        <option value="None">None</option>
+        <option value="imd">Index of Multiple Deprivation</option>
+        <option value="pop">Population</option>
+        <option value="carav">Car Availability</option>
+        <option value="hh_fut">Future Dwellings</option>
       </select>
       <br>
-      <button type="button" class="settings-collapsible">Settings</button>
-      <div class="settings-collapsible-content">
-        <label for="opacityFieldDropdown" class="small-font">Set Hexagon Transparency to:</label>
-        <select id="opacityFieldDropdown" class="small-font">
-          <option value="None">None</option>
-          <option value="pop">Population</option>
-          <option value="imd">Index of Multiple Deprivation</option>
-          <option value="carav">Car Availability</option>
-          <option value="hh_fut">Future Dwellings</option>
-        </select>
-        <br>
-        <div class="field-container">
-          <div>
-            <label for="opacityRangeSlider" class="small-font">Range: <span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
-            <div id="opacityRangeSlider"></div>
-          </div>
+      <div class="field-container">
+        <div>
+          <label for="outlineRangeSlider" class="medium-font">Range: <span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
+          <div id="outlineRangeSlider"></div>
         </div>
-        <div class="field-container">
-          <div class="button-container">
-            <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
-          </div>
-        </div>
-        <br>
-        <label for="outlineFieldDropdown" class="small-font">Set Hexagon Outline to:</label>
-        <select id="outlineFieldDropdown" class="small-font">
-          <option value="None">None</option>
-          <option value="imd">Index of Multiple Deprivation</option>
-          <option value="pop">Population</option>
-          <option value="carav">Car Availability</option>
-          <option value="hh_fut">Future Dwellings</option>
-        </select>
-        <br>
-        <div class="field-container">
-          <div>
-            <label for="outlineRangeSlider" class="small-font">Range: <span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
-            <div id="outlineRangeSlider"></div>
-          </div>
-        </div>
-        <div class="field-container">
-          <div class="button-container">
-            <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
-          </div>
+      </div>
+      <div class="field-container">
+        <div class="button-container">
+          <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
         </div>
       </div>
     </div>
-    <button type="button" class="collapsible">
-      <h2 class="large-font">Journey Time - Amenities</h2>
-    </button>
-    <div class="default-collapsible-content">
-      <!-- Content goes here -->
-    </div>
-    <button type="button" class="collapsible">
-      <h2 class="large-font">Journey Time - Hexagons</h2>
-    </button>
-    <div class="default-collapsible-content">
-      <!-- Content goes here -->
-    </div>
-  </div>
-  <div id="amenitiesPanel">
-    <label for="amenitiesYearDropdown" class="large-font">Year:</label>
-    <select id="amenitiesYearDropdown" class="medium-font">
-      <option value="2024">2024</option>
-      <option value="2023">2023</option>
-    </select>
-    <br>
-    <label for="amenitiesList" class="large-font">Amenities:</label>
-    <div id="amenitiesList" class="medium-font">
-      <label><input type="checkbox" value="SecSch"> Secondary Schools</label><br>
-      <label><input type="checkbox" value="PriSch"> Primary Schools</label><br>
-      <label><input type="checkbox" value="GP"> GPs</label><br>
-      <label><input type="checkbox" value="CitCtr"> City Centres</label><br>
-      <label><input type="checkbox" value="MajCtr"> Major Centres</label><br>
-      <label><input type="checkbox" value="DisCtr"> District Centres</label><br>
-      <label><input type="checkbox" value="Em500"> Employment (500 jobs)</label><br>
-      <label><input type="checkbox" value="Em5000"> Employment (5000 jobs)</label><br>
-      <label><input type="checkbox" value="StrEmp"> Strategic Employment Sites</label><br>
-      <label><input type="checkbox" value="FurEd"> Further Education</label><br>
-      <label><input type="checkbox" value="Hos"> Hospital</label><br>
-    </div>
-    <br>
-    <label for="modeDropdownAmenities" class="large-font">Mode:</label>
-    <select id="modeDropdownAmenities" class="medium-font">
-      <option value="Wa">Walk</option>
-      <option value="Cy">Cycle</option>
-      <option value="PT">Public Transport</option>
-      <option value="Ca">Car</option>
-    </select>
-    <br>
-    <label for="opacityDropdownAmenities" class="large-font">Opacity:</label>
-    <select id="opacityDropdownAmenities" class="medium-font">
-      <option value="pop">Population</option>
-      <option value="imd">Index of Multiple Deprivation</option>
-      <option value="ruc">Rural Urban Classification</option>
-      <option value="hh_fut">Future Housing Growth</option>
-      <option value="carav">Car Availability</option>
-    </select>
-    <br>
-    <label for="inverseOpacityCheckboxAmenities" class="medium-font">Inverse Opacity:</label>
-    <input type="checkbox" id="inverseOpacityCheckboxAmenities">
-    <br>
-    <label for="strokeDropdownAmenities" class="large-font">Stroke Width:</label>
-    <select id="strokeDropdownAmenities" class="medium-font">
-      <option value="pop">Population</option>
-      <option value="imd">Index of Multiple Deprivation</option>
-      <option value="ruc">Rural Urban Classification</option>
-      <option value="hh_fut">Future Housing Growth</option>
-      <option value="carav">Car Availability</option>
-    </select>
-    <br>
-    <label for="inverseStrokeCheckboxAmenities" class="medium-font">Inverse Stroke:</label>
-    <input type="checkbox" id="inverseStrokeCheckboxAmenities">
-    <br>
-    <button id="applyAmenitiesButton" class="large-font">Apply</button>
   </div>
   <div id="legend">
     <h4 style="font-size: 1.2em; margin-top: 0;">Legend</h4>
@@ -333,32 +239,14 @@
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-      const collapsible = document.querySelectorAll(".collapsible");
-      const content = document.querySelectorAll(".default-collapsible-content, .settings-collapsible-content");
+      // Handle collapsible settings panel
+      const collapsible = document.querySelector(".collapsible");
+      const content = document.querySelector(".collapsible-content");
 
-      collapsible.forEach((button, index) => {
-        button.addEventListener("click", function(event) {
-          if (this.classList.contains('settings-collapsible')) {
-            // Expand or collapse the settings section without affecting the parent
-            const settingsContent = this.nextElementSibling;
-            settingsContent.style.display = settingsContent.style.display === "block" ? "none" : "block";
-          } else {
-            // Collapse other sections but not settings sections
-            collapsible.forEach((btn, idx) => {
-              if (btn !== this && !btn.classList.contains('settings-collapsible')) {
-                content[idx].style.display = "none";
-                btn.classList.remove("active");
-              }
-            });
-            this.classList.toggle("active");
-            content[index].style.display = content[index].style.display === "block" ? "none" : "block";
-          }
-        });
-      });
-
-      // Initially collapse the content
-      content.forEach((section) => {
-        section.style.display = "none";
+      collapsible.addEventListener("click", function() {
+        this.classList.toggle("active");
+        content.style.display = content.style.display === "block" ? "none" : "block";
+        this.classList.toggle("collapsed", content.style.display === "none");
       });
     });
   </script>
