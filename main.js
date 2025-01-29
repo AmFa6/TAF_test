@@ -54,7 +54,7 @@ const purposeDropdown = document.getElementById("purposeDropdown");
 const modeDropdown = document.getElementById("modeDropdown");
 const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
 const outlineFieldDropdown = document.getElementById("outlineFieldDropdown");
-
+yearDropdown.value = "";
 opacityFieldDropdown.value = "None";
 outlineFieldDropdown.value = "None";
 
