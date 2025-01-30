@@ -275,6 +275,12 @@ function updateLayerVisibility() {
   const opacityField = opacityFieldDropdown.value;
   const outlineField = outlineFieldDropdown.value;
 
+  console.log('Updating layer visibility. Selected year:', selectedYear);
+  console.log('Selected purpose:', selectedPurpose);
+  console.log('Selected mode:', selectedMode);
+  console.log('Opacity field:', opacityField);
+  console.log('Outline field:', outlineField);
+
   map.eachLayer(layer => {
     if (layer !== baseLayer) {
       map.removeLayer(layer);
@@ -429,6 +435,8 @@ function toggleInverseScale() {
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
 
+  console.log('Toggling inverse scale. Is inverse:', isInverse);
+
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, false] // Set left connect to true and right to false
@@ -437,7 +445,8 @@ function toggleInverseScale() {
     handles[1].classList.add('noUi-handle-left');
     connectElements[0].classList.add('noUi-connect-right-solid');
     connectElements[1].classList.remove('noUi-connect-right-solid');
-    connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)';
+    connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 1) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 0) 100%)';
+    console.log('Inverse state applied. Gradient direction: to left');
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [false, true, true] // Set left connect to false and right to true
@@ -447,6 +456,7 @@ function toggleInverseScale() {
     connectElements[1].classList.add('noUi-connect-right-solid');
     connectElements[0].classList.remove('noUi-connect-right-solid');
     connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)';
+    console.log('Normal state applied. Gradient direction: to right');
   }
   updateLayerVisibility();
 }
