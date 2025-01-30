@@ -6,9 +6,6 @@
   <title>Transport Accessibility Framework</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script type="module">
-    import 'https://unpkg.com/leaflet-overpass-layer@2.9.0/src/OverPassLayer.js';
-  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
   <style>
@@ -286,12 +283,11 @@
       <div id="panel-hexagons-content"></div>
     </div>
   </div>
-  </div>
   <div id="legend">
     <h4 style="font-size: 1.2em; margin-top: 0;">Legend</h4>
     <div id="legend-content"></div>
   </div>
-  <script type="module" src="main.js"></script>
+  <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
       // Handle collapsible settings panel
