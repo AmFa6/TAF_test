@@ -437,6 +437,7 @@ function toggleInverseScale() {
     handles[1].classList.add('noUi-handle-left');
     connectElements[0].classList.add('noUi-connect-right-solid');
     connectElements[1].classList.remove('noUi-connect-right-solid');
+    connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)';
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [false, true, true] // Set left connect to false and right to true
@@ -445,6 +446,7 @@ function toggleInverseScale() {
     handles[0].classList.add('noUi-handle-left');
     connectElements[1].classList.add('noUi-connect-right-solid');
     connectElements[0].classList.remove('noUi-connect-right-solid');
+    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)';
   }
   updateLayerVisibility();
 }
