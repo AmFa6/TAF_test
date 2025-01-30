@@ -158,16 +158,19 @@
     }
     .noUi-handle:before,
     .noUi-handle::after {
-    content: attr(data-value);
-    position: absolute;
-    top: -20px; /* Reduce space between handle and number */
-    left: 50%;
-    transform: translateX(-50%);
-    background: #007bff00;
-    color: #000000;
-    padding: 2px 5px;
-    border: none;
-    font-size: 0.8em;
+      content: attr(data-value);
+      position: absolute;
+      top: -20px; /* Reduce space between handle and number */
+      left: 50%;
+      transform: translateX(-50%);
+      background: #007bff00;
+      color: #000000;
+      padding: 2px 5px;
+      border: none;
+      font-size: 0.8em;
+      font-family: 'Trebuchet MS', sans-serif;
+      font-weight: normal; /* Ensure font is not bold */
+      text-rendering: optimizeLegibility; /* Improve text rendering */
     }
     .noUi-handle-left::after {
       left: 50%;
