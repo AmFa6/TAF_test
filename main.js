@@ -88,7 +88,7 @@ function initializeSliders() {
   opacityRangeSlider = document.getElementById('opacityRangeSlider');
   noUiSlider.create(opacityRangeSlider, {
     start: [0, 0],
-    connect: [true, true, true], // Set left connect to false and right to true
+    connect: [false, true, true], // Set left connect to false and right to true
     range: {
       'min': 0,
       'max': 0
@@ -118,7 +118,7 @@ function initializeSliders() {
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
     start: [0, 0],
-    connect: [true, true, true],
+    connect: [false, true, true],
     range: {
       'min': 0,
       'max': 0
@@ -426,16 +426,21 @@ let isInverse = false;
 
 function toggleInverseScale() {
   isInverse = !isInverse;
-  const opacityRangeSlider = document.getElementById('opacityRangeSlider');
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
 
   if (isInverse) {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, false] // Set left connect to true and right to false
+    });
     handles[0].classList.remove('noUi-handle-left');
     handles[1].classList.add('noUi-handle-left');
     connectElements[0].classList.add('noUi-connect-right-solid');
     connectElements[2].classList.remove('noUi-connect-right-solid');
   } else {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [false, true, true] // Set left connect to false and right to true
+    });
     handles[1].classList.remove('noUi-handle-left');
     handles[0].classList.add('noUi-handle-left');
     connectElements[2].classList.add('noUi-connect-right-solid');
