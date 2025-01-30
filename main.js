@@ -433,13 +433,15 @@ function toggleInverseScale() {
   if (isInverse) {
     handles[0].classList.remove('noUi-handle-left');
     handles[1].classList.add('noUi-handle-left');
-    connectElements[0].classList.add('noUi-connect-right-solid');
-    connectElements[1].classList.remove('noUi-connect-right-solid');
+    connectElements[0].style.background = 'rgba(118, 118, 118, 1)'; // Dark grey to the left of the left handle
+    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 1) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 0) 100%)'; // Gradient from dark grey to light grey
+    connectElements[2].style.background = 'rgba(118, 118, 118, 0)'; // Light grey to the right of the right handle
   } else {
     handles[1].classList.remove('noUi-handle-left');
     handles[0].classList.add('noUi-handle-left');
-    connectElements[1].classList.add('noUi-connect-right-solid');
-    connectElements[0].classList.remove('noUi-connect-right-solid');
+    connectElements[0].style.background = 'rgba(118, 118, 118, 0)'; // Light grey to the left of the left handle
+    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Gradient from light grey to dark grey
+    connectElements[2].style.background = 'rgba(118, 118, 118, 1)'; // Dark grey to the right of the right handle
   }
   updateLayerVisibility();
 }
