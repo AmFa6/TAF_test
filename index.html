@@ -164,9 +164,17 @@
       padding: 2px 5px;
       border: none;
       font-size: 0.8em;
-      top:-17px;
-      left: -10px; /* Move more to the left */
-      transform: translateX(-50%); /* Center the text horizontally */
+      top: -17px; /* Adjust this value if needed */
+    }
+
+    .noUi-handle-left::after {
+      left: 0; /* Align to the left */
+      transform: translateX(0); /* No horizontal translation */
+    }
+
+    .noUi-handle-right::after {
+      right: 0; /* Align to the right */
+      transform: translateX(0); /* No horizontal translation */
     }
     .slider-labels {
       display: flex;
