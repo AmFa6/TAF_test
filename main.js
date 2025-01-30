@@ -1,3 +1,6 @@
+import L from 'leaflet';
+import 'leaflet-overpass-layer';
+
 // Initialize the map
 const map = L.map('map').setView([51.480, -2.591], 11);
 
