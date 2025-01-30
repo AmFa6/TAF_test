@@ -88,30 +88,30 @@ function initializeSliders() {
   opacityRangeSlider = document.getElementById('opacityRangeSlider');
   noUiSlider.create(opacityRangeSlider, {
     start: [0, 0],
-    connect: [false, true, true],
+    connect: [false, true, true], // Set left connect to false and right to true
     range: {
       'min': 0,
       'max': 0
     },
     step: 1,
-    tooltips: [true, true], // Ensure tooltips are enabled for both handles
+    tooltips: false,
     format: {
-      to: value => parseFloat(value).toFixed(2),
+      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
       from: value => parseFloat(value)
     }
   });
 
   // Apply the class to the left handle
-  const opacityHandles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  if (opacityHandles.length > 0) {
-    opacityHandles[0].classList.add('noUi-handle-left');
+  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  if (handles.length > 0) {
+    handles[0].classList.add('noUi-handle-left');
   }
 
   // Apply the class to the right connect element
-  const opacityConnectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  if (opacityConnectElements.length > 1) {
-    opacityConnectElements[1].classList.add('noUi-connect-right');
-    opacityConnectElements[1].classList.add('noUi-connect-right-solid');
+  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  if (connectElements.length > 1) {
+    connectElements[1].classList.add('noUi-connect-right');
+    connectElements[1].classList.add('noUi-connect-right-solid');
   }
 
   // Initialize noUiSlider for outline width range
@@ -124,9 +124,9 @@ function initializeSliders() {
       'max': 0
     },
     step: 1,
-    tooltips: [true, true], // Ensure tooltips are enabled for both handles
+    tooltips: false,
     format: {
-      to: value => parseFloat(value).toFixed(2),
+      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
       from: value => parseFloat(value)
     }
   });
@@ -206,11 +206,6 @@ function updateSliderRanges() {
     const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
     const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
 
-    document.getElementById('opacityRangeMinStatic').innerText = formatValue(adjustedMinOpacity, opacityStep);
-    document.getElementById('opacityRangeMaxStatic').innerText = formatValue(adjustedMaxOpacity, opacityStep);
-    document.getElementById('outlineRangeMinStatic').innerText = formatValue(adjustedMinOutline, outlineStep);
-    document.getElementById('outlineRangeMaxStatic').innerText = formatValue(adjustedMaxOutline, outlineStep);
-
     if (opacityField === "None") {
       opacityRangeSlider.setAttribute('disabled', true);
       opacityRangeSlider.noUiSlider.updateOptions({
@@ -221,7 +216,8 @@ function updateSliderRanges() {
         step: 1
       });
       opacityRangeSlider.noUiSlider.set([0, 0]);
-      opacityRangeSlider.style.display = 'none';
+      document.getElementById('opacityRangeMin').innerText = '';
+      document.getElementById('opacityRangeMax').innerText = '';
     } else {
       opacityRangeSlider.removeAttribute('disabled');
       opacityRangeSlider.noUiSlider.updateOptions({
@@ -232,7 +228,8 @@ function updateSliderRanges() {
         step: opacityStep
       });
       opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      opacityRangeSlider.style.display = 'block';
+      document.getElementById('opacityRangeMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
+      document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
     if (outlineField === "None") {
       outlineRangeSlider.setAttribute('disabled', true);
@@ -244,7 +241,8 @@ function updateSliderRanges() {
         step: 1
       });
       outlineRangeSlider.noUiSlider.set([0, 0]);
-      outlineRangeSlider.style.display = 'none';
+      document.getElementById('outlineRangeMin').innerText = '';
+      document.getElementById('outlineRangeMax').innerText = '';
     } else {
       outlineRangeSlider.removeAttribute('disabled');
       outlineRangeSlider.noUiSlider.updateOptions({
@@ -255,7 +253,8 @@ function updateSliderRanges() {
         step: parseFloat(outlineStep.toFixed(1))
       });
       outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-      outlineRangeSlider.style.display = 'block';
+      document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
+      document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   } else {
     console.error('Selected layer not found for year:', selectedYear);
