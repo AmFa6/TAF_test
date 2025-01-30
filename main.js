@@ -201,10 +201,10 @@ function updateSliderRanges() {
       outlineStep = 1;
     }
 
-    const adjustedMaxOpacity = Math.floor(maxOpacity / opacityStep) * opacityStep;
-    const adjustedMinOpacity = Math.ceil(minOpacity / opacityStep) * opacityStep;
-    const adjustedMaxOutline = Math.floor(maxOutline / outlineStep) * outlineStep;
-    const adjustedMinOutline = Math.ceil(minOutline / outlineStep) * outlineStep;
+    const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
+    const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
+    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
+    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
 
     if (opacityField === "None") {
       opacityRangeSlider.setAttribute('disabled', true);
