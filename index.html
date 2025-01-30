@@ -8,7 +8,6 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.1.0/wNumb.min.js"></script>
   <style>
     html, body {
       height: 100%;
@@ -162,9 +161,9 @@
       display: none !important; /* Remove the additional bars */
     }
     .noUi-tooltip {
-      background: rgba(0, 0, 0, 0); /* Tooltip background color */
-      color: #000000; /* Tooltip text color */
-      border: none; /* Remove the tooltip border */
+      background: #007bff;
+      color: #fff;
+      border-radius: 3px;
       padding: 5px;
       font-size: 0.9em;
     }
@@ -242,11 +241,8 @@
           <br>
           <div class="field-container">
             <div>
+              <label for="opacityRangeSlider" class="medium-font">Range: <span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
               <div id="opacityRangeSlider"></div>
-              <div class="range-values">
-                <span id="opacityRangeMinStatic"></span>
-                <span id="opacityRangeMaxStatic" style="float: right;"></span>
-              </div>
             </div>
           </div>
           <div class="field-container">
@@ -266,11 +262,8 @@
           <br>
           <div class="field-container">
             <div>
+              <label for="outlineRangeSlider" class="medium-font">Range: <span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
               <div id="outlineRangeSlider"></div>
-              <div class="range-values">
-                <span id="outlineRangeMinStatic"></span>
-                <span id="outlineRangeMaxStatic" style="float: right;"></span>
-              </div>
             </div>
           </div>
           <div class="field-container">
@@ -297,6 +290,7 @@
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
+      // Handle collapsible settings panel
       const collapsible = document.querySelector(".collapsible");
       const content = document.querySelector(".collapsible-content");
 
@@ -306,23 +300,28 @@
         this.classList.toggle("collapsed", content.style.display === "none");
       });
 
+      // Handle collapsible panels
       const panelHeaders = document.querySelectorAll(".panel-header");
       panelHeaders.forEach(header => {
         const panelContent = header.nextElementSibling;
         header.addEventListener("click", function() {
+          // Collapse all other panels
           panelHeaders.forEach(otherHeader => {
             if (otherHeader !== header) {
               otherHeader.classList.add("collapsed");
               otherHeader.nextElementSibling.style.display = "none";
             }
           });
+          // Toggle the clicked panel
           panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
           header.classList.toggle("collapsed", panelContent.style.display === "none");
         });
+        // Initially collapse the panel content
         panelContent.style.display = "none";
         header.classList.add("collapsed");
       });
 
+      // Initially collapse the settings content
       content.style.display = "none";
       collapsible.classList.add("collapsed");
     });
