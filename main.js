@@ -221,7 +221,7 @@ function updateSliderRanges() {
         step: 1
       });
       opacityRangeSlider.noUiSlider.set([0, 0]);
-      opacityRangeSlider.setAttribute('style', 'display: none;');
+      opacityRangeSlider.style.display = 'none';
     } else {
       opacityRangeSlider.removeAttribute('disabled');
       opacityRangeSlider.noUiSlider.updateOptions({
@@ -232,7 +232,7 @@ function updateSliderRanges() {
         step: opacityStep
       });
       opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      opacityRangeSlider.removeAttribute('style');
+      opacityRangeSlider.style.display = 'block';
     }
     if (outlineField === "None") {
       outlineRangeSlider.setAttribute('disabled', true);
@@ -244,7 +244,7 @@ function updateSliderRanges() {
         step: 1
       });
       outlineRangeSlider.noUiSlider.set([0, 0]);
-      outlineRangeSlider.setAttribute('style', 'display: none;');
+      outlineRangeSlider.style.display = 'none';
     } else {
       outlineRangeSlider.removeAttribute('disabled');
       outlineRangeSlider.noUiSlider.updateOptions({
@@ -255,7 +255,7 @@ function updateSliderRanges() {
         step: parseFloat(outlineStep.toFixed(1))
       });
       outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-      outlineRangeSlider.removeAttribute('style');
+      outlineRangeSlider.style.display = 'block';
     }
   } else {
     console.error('Selected layer not found for year:', selectedYear);
