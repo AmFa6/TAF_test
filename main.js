@@ -159,6 +159,8 @@ function initializeSliders() {
   });
 }
 
+let isInverse = false;
+
 // Function to format values based on step size for display
 function formatValue(value, step) {
   if (step >= 1) {
@@ -422,8 +424,6 @@ function updateLegend() {
   });
 }
 
-let isInverse = false;
-
 function toggleInverseScale() {
   isInverse = !isInverse;
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
@@ -436,14 +436,14 @@ function toggleInverseScale() {
     handles[0].classList.remove('noUi-handle-left');
     handles[1].classList.add('noUi-handle-left');
     connectElements[0].classList.add('noUi-connect-right-solid');
-    connectElements[2].classList.remove('noUi-connect-right-solid');
+    connectElements[1].classList.remove('noUi-connect-right-solid');
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [false, true, true] // Set left connect to false and right to true
     });
     handles[1].classList.remove('noUi-handle-left');
     handles[0].classList.add('noUi-handle-left');
-    connectElements[2].classList.add('noUi-connect-right-solid');
+    connectElements[1].classList.add('noUi-connect-right-solid');
     connectElements[0].classList.remove('noUi-connect-right-solid');
   }
   updateLayerVisibility();
