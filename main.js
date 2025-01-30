@@ -433,12 +433,12 @@ function toggleInverseScale() {
   if (isInverse) {
     handles[0].classList.remove('noUi-handle-left');
     handles[1].classList.add('noUi-handle-left');
-//    connectElements[0].classList.add('noUi-connect-right-solid');
-    connectElements[1].classList.remove('noUi-connect-right-solid');
+    connectElements[0].classList.add('noUi-connect-right-solid');
+    connectElements[2].classList.remove('noUi-connect-right-solid');
   } else {
     handles[1].classList.remove('noUi-handle-left');
     handles[0].classList.add('noUi-handle-left');
-    connectElements[1].classList.add('noUi-connect-right-solid');
+    connectElements[2].classList.add('noUi-connect-right-solid');
     connectElements[0].classList.remove('noUi-connect-right-solid');
   }
   updateLayerVisibility();
