@@ -149,13 +149,13 @@ function initializeSliders() {
 
   // Add event listeners to update range labels
   opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('opacityRangeMin').innerText = formatValue(values[0], opacityRangeSlider.noUiSlider.options.step);
-    document.getElementById('opacityRangeMax').innerText = formatValue(values[1], opacityRangeSlider.noUiSlider.options.step);
+    const handleElement = handles[handle];
+    handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeSlider.noUiSlider.options.step));
   });
 
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('outlineRangeMin').innerText = formatValue(values[0], outlineRangeSlider.noUiSlider.options.step);
-    document.getElementById('outlineRangeMax').innerText = formatValue(values[1], outlineRangeSlider.noUiSlider.options.step);
+    const handleElement = outlineHandles[handle];
+    handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeSlider.noUiSlider.options.step));
   });
 }
 
