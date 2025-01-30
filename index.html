@@ -161,8 +161,6 @@
       content: attr(data-value);
       position: absolute;
       top: -20px; /* Reduce space between handle and number */
-      left: 100%;
-      transform: translateX(-100%);
       background: #007bff00;
       color: #000000;
       padding: 2px 5px;
@@ -173,12 +171,12 @@
       text-rendering: optimizeLegibility; /* Improve text rendering */
     }
     .noUi-handle-left::after {
-      left: 50%;
-      transform: translateX(-50%);
+      left: 90%;
+      transform: translateX(-90%);
     }
     .noUi-handle-right::after {
-      left: 50%;
-      transform: translateX(-50%);
+      left: 90%;
+      transform: translateX(-90%);
     }
     .slider-labels {
       display: flex;
