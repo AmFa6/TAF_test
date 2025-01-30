@@ -1,508 +1,349 @@
-// Initialize the map
-const map = L.map('map').setView([51.480, -2.591], 11);
-
-// Add a base layer
-const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors & CartoDB'
-}).addTo(map);
-
-// List of GeoJSON files and corresponding years
-const geoJsonFiles = [
-  { year: '2024', path: 'https://AmFa6.github.io/TAF_test/2024_connectscore.geojson' },
-  { year: '2023', path: 'https://AmFa6.github.io/TAF_test/2023_connectscore.geojson' },
-  { year: '2022', path: 'https://AmFa6.github.io/TAF_test/2022_connectscore.geojson' },
-  { year: '2019', path: 'https://AmFa6.github.io/TAF_test/2019_connectscore.geojson' },
-  { year: '2023-2024', path: 'https://AmFa6.github.io/TAF_test/2023-2024_connectscore.geojson' },
-  { year: '2019-2024', path: 'https://AmFa6.github.io/TAF_test/2019-2024_connectscore.geojson' },
-  { year: '2022-2023', path: 'https://AmFa6.github.io/TAF_test/2022-2023_connectscore.geojson' },
-  { year: '2019-2023', path: 'https://AmFa6.github.io/TAF_test/2019-2023_connectscore.geojson' }, 
-  { year: '2019-2022', path: 'https://AmFa6.github.io/TAF_test/2019-2022_connectscore.geojson' }
-];
-
-// Load GeoJSON layers
-const layers = {};
-let layersLoaded = 0;
-const totalLayers = geoJsonFiles.length;
-
-geoJsonFiles.forEach(file => {
-  fetch(file.path)
-    .then(response => response.json())
-    .then(geoJson => {
-      layers[file.year] = geoJson;
-      console.log(`Loaded GeoJSON for year ${file.year}`);
-      layersLoaded++;
-      if (layersLoaded === totalLayers) {
-        initializeSliders();
-        updateSliderRanges();
-        updateLayerVisibility();
-      }
-    })
-    .catch(error => console.error(`Error loading GeoJSON: ${error.message}`));
-});
-
-// Populate year dropdown
-const yearDropdown = document.getElementById("yearDropdown");
-geoJsonFiles.forEach(file => {
-  const option = document.createElement("option");
-  option.value = file.year;
-  option.text = file.year;
-  yearDropdown.add(option);
-});
-
-// Get other dropdown elements
-const purposeDropdown = document.getElementById("purposeDropdown");
-const modeDropdown = document.getElementById("modeDropdown");
-const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
-const outlineFieldDropdown = document.getElementById("outlineFieldDropdown");
-yearDropdown.value = "";
-opacityFieldDropdown.value = "None";
-outlineFieldDropdown.value = "None";
-
-// Maps for purpose and mode
-const purposeMap = {
-  "Education": "Edu",
-  "Employment": "Emp",
-  "Health": "Hth",
-  "High Street": "HSt",
-  "All Amenities": "All"
-};
-
-const modeMap = {
-  "Walk": "Wa",
-  "Cycle": "Cy",
-  "Public Transport": "PT",
-  "Car": "Ca",
-  "All Modes": "To" // Assuming "To" is the suffix for all modes
-};
-
-let autoUpdateOpacity = true;
-let autoUpdateOutline = true;
-let opacityOrder = 'low-to-high';
-let outlineOrder = 'low-to-high';
-
-let opacityRangeSlider;
-let outlineRangeSlider;
-
-function initializeSliders() {
-  // Initialize noUiSlider for opacity range
-  opacityRangeSlider = document.getElementById('opacityRangeSlider');
-  noUiSlider.create(opacityRangeSlider, {
-    start: [0, 0],
-    connect: [false, true, true], // Set left connect to false and right to true
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
-      from: value => parseFloat(value)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transport Accessibility Framework</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Trebuchet MS', sans-serif;
+      font-weight: normal; /* Ensure font is not bold */
     }
-  });
-
-  // Apply the class to the left handle
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  if (handles.length > 0) {
-    handles[0].classList.add('noUi-handle-left');
-  }
-
-  // Apply the class to the right connect element
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-right');
-    connectElements[1].classList.add('noUi-connect-right-solid');
-  }
-
-  // Initialize noUiSlider for outline width range
-  outlineRangeSlider = document.getElementById('outlineRangeSlider');
-  noUiSlider.create(outlineRangeSlider, {
-    start: [0, 0],
-    connect: [false, true, true],
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
-      from: value => parseFloat(value)
+    #map {
+      height: 100%;
+      width: 100%;
     }
-  });
-
-  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
-  if (outlineHandles.length > 0) {
-    outlineHandles[0].classList.add('noUi-handle-left');
-  }
-
-  // Apply the class to the right connect element
-  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
-  if (outlineConnectElements.length > 1) {
-    outlineConnectElements[1].classList.add('noUi-connect-right');
-    outlineConnectElements[1].classList.add('noUi-connect-right-solid');
-  }
-
-  // Add event listeners to update map rendering when sliders are adjusted
-  opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
-  outlineRangeSlider.noUiSlider.on('update', updateLayerVisibility);
-
-  // Add event listeners to update range labels
-  opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
-    const handleElement = handles[handle];
-    handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeSlider.noUiSlider.options.step));
-  });
-  
-  outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
-    const handleElement = outlineHandles[handle];
-    handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeSlider.noUiSlider.options.step));
-  });
-}
-
-// Function to format values based on step size for display
-function formatValue(value, step) {
-  if (step >= 1) {
-    return parseFloat(value).toFixed(0);
-  } else if (step >= 0.1) {
-    return parseFloat(value).toFixed(1);
-  } else if (step >= 0.01) {
-    return parseFloat(value).toFixed(2);
-  } else {
-    return value.toString();
-  }
-}
-
-function updateSliderRanges() {
-  const opacityField = opacityFieldDropdown.value;
-  const outlineField = outlineFieldDropdown.value;
-
-  const selectedYear = yearDropdown.value;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
-    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
-
-    const minOpacity = Math.min(...opacityValues);
-    const maxOpacity = Math.max(...opacityValues);
-    const minOutline = Math.min(...outlineValues);
-    const maxOutline = Math.max(...outlineValues);
-
-    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
-    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
-
-    let opacityStep = roundedMaxOpacity / 100;
-    let outlineStep = roundedMaxOutline / 100;
-
-    if (isNaN(opacityStep) || opacityStep <= 0) {
-      opacityStep = 1;
+    #panel-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000; /* Ensure the controls are always on top */
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      width: 275px;
+      box-sizing: border-box;
     }
-    if (isNaN(outlineStep) || outlineStep <= 0) {
-      outlineStep = 1;
+    .panel {
+      margin-bottom: 10px;
     }
+    .panel label, .panel select, .panel input {
+      display: block;
+      margin-bottom: 5px; /* Reduce space between elements */
+      font-family: 'Trebuchet MS', sans-serif;
+      font-size: 1.1em; /* Large font size */
+      font-weight: normal; /* Ensure font is not bold */
+    }
+    .panel select, .panel input {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background-color: white;
+      color: black;
+      box-sizing: border-box;
+      font-size: 1em; /* Medium font size */
+    }
+    .panel select:focus, .panel input:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    .panel input[type="range"] {
+      width: 100%;
+    }
+    .field-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .field-container > div:first-child {
+      flex: 1.05;
+    }
+    .field-container > div:last-child {
+      flex: 0.95;
+      margin-left: 10px;
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .button-container > button {
+      flex: 1;
+      margin-left: 10px;
+    }
+    .button-container > button:first-child {
+      margin-left: 0;
+    }
+    .collapsible {
+      cursor: pointer;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 1em; /* Larger font size for Settings */
+      background: #f0f0f0;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: 'Trebuchet MS', sans-serif;
+      font-weight: normal; /* Ensure font is not bold */
+    }
+    .collapsible:after {
+      content: '\25BC';
+      font-size: 0.9em;
+      margin-left: 5px;
+    }
+    .collapsible.collapsed:after {
+      content: '\25B6';
+    }
+    .collapsible-content {
+      display: none;
+      overflow: hidden;
+      background-color: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 0.9em; /* Small font size */
+    }
+    #legend {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: white;
+      padding: 5px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      width: 250px;
+      word-wrap: break-word;
+    }
+    .noUi-target {
+      background: #f0f0f0; /* Background of the slider */
+      border-radius: 5px;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+      height: 0.5em;
+    }
+    .noUi-connect {
+      background: linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 1) 50%, #767676 50%);
+      height: 0.5em;
+    }
+    .noUi-connect-right-solid {
+      background: #767676 !important; /* Solid grey fill */
+    }
+    .noUi-handle {
+      background: #767676 !important; /* Handle color */
+      border: none !important;
+      border-radius: 50% !important;
+      box-shadow: none !important;
+      width: 14px !important; /* Adjust this value if needed */
+      height: 14px !important; /* Adjust this value if needed */
+      cursor: pointer !important;
+      top: 50%; /* Vertically center the handle */
+      transform: translate(-50%, 5%) !important; /* Center the handle over its position */
+    }
+    .noUi-handle-left {
+      background: rgba(255, 255, 255, 0.0) !important; /* Transparent inside */
+      border: 2px solid #767676 !important; /* Grey outline */
+    }
+    .noUi-handle::after {
+      content: attr(data-value);
+      position: absolute;
+      background: #007bff00;
+      color: #000000;
+      padding: 2px 5px;
+      border: none;
+      font-size: 0.8em;
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+    .slider-labels span {
+      font-size: 0.8em;
+    }
+    .noUi-tooltip {
+      background: #007bff;
+      color: #fff;
+      border-radius: 3px;
+      padding: 5px;
+      font-size: 0.9em;
+    }
+    /* Specific styles for the settings panel */
+    .collapsible-content label,
+    .collapsible-content select,
+    .collapsible-content input {
+      font-size: 0.8em; /* Small font size */
+      font-family: 'Trebuchet MS', sans-serif;
+      font-weight: normal; /* Ensure font is not bold */
+    }
+    .panel-header {
+      cursor: pointer;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 1.2em; /* Font size for Connectivity Scores */
+      background: white;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: 'Trebuchet MS', sans-serif;
+      font-weight: normal; /* Ensure font is not bold */
+    }
+    .panel-header:after {
+      content: '\25BC';
+      font-size: 0.9em;
+      margin-left: 5px;
+    }
+    .panel-header.collapsed:after {
+      content: '\25B6';
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="panel-container">
+    <div id="panel" class="panel">
+      <button class="panel-header">Connectivity Scores</button>
+      <div id="panel-content">
+        <label for="yearDropdown" class="large-font">Year:</label>
+        <select id="yearDropdown" class="medium-font"></select>
+        <br>
+        <label for="purposeDropdown" class="large-font">Purpose of Travel:</label>
+        <select id="purposeDropdown" class="medium-font">
+          <option value="All Amenities">All Amenities</option>
+          <option value="Education">Education</option>
+          <option value="Employment">Employment</option>
+          <option value="High Street">High Street</option>
+          <option value="Health">Health</option>
+        </select>
+        <br>
+        <label for="modeDropdown" class="large-font">Mode of Travel:</label>
+        <select id="modeDropdown" class="medium-font">
+          <option value="All Modes">All Modes</option>
+          <option value="Walk">Walk</option>
+          <option value="Cycle">Cycle</option>
+          <option value="Public Transport">Public Transport</option>
+          <option value="Car">Car</option>
+        </select>
+        <br>
+        <button type="button" class="collapsible">Settings</button>
+        <div class="collapsible-content">
+          <label for="opacityFieldDropdown" class="medium-font">Set Hexagon Transparency to:</label>
+          <select id="opacityFieldDropdown" class="small-font">
+            <option value="None">None</option>
+            <option value="pop">Population</option>
+            <option value="imd">Index of Multiple Deprivation</option>
+            <option value="carav">Car Availability</option>
+            <option value="hh_fut">Future Dwellings</option>
+          </select>
+          <br>
+          <div class="field-container">
+            <div>
+              <div id="opacityRangeSlider"></div>
+              <div class="slider-labels">
+                <span id="opacityRangeMin">0</span>
+                <span id="opacityRangeMax">1</span>
+              </div>
+            </div>
+          </div>
+          <div class="field-container">
+            <div class="button-container">
+              <button id="inverseOpacityScaleButton" class="small-font">Inverse Scale</button>
+            </div>
+          </div>
+          <br>
+          <label for="outlineFieldDropdown" class="medium-font">Set Hexagon Outline to:</label>
+          <select id="outlineFieldDropdown" class="small-font">
+            <option value="None">None</option>
+            <option value="imd">Index of Multiple Deprivation</option>
+            <option value="pop">Population</option>
+            <option value="carav">Car Availability</option>
+            <option value="hh_fut">Future Dwellings</option>
+          </select>
+          <br>
+          <div class="field-container">
+            <div>
+              <div id="outlineRangeSlider"></div>
+              <div class="slider-labels">
+                <span id="outlineRangeMin">0</span>
+                <span id="outlineRangeMax">4</span>
+              </div>
+            </div>
+          </div>
+          <div class="field-container">
+            <div class="button-container">
+              <button id="inverseOutlineScaleButton" class="small-font">Inverse Scale</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="panel-amenities" class="panel">
+      <button class="panel-header">Journey Time Catchments - Amenities</button>
+      <div id="panel-amenities-content"></div>
+    </div>
+    <div id="panel-hexagons" class="panel">
+      <button class="panel-header">Journey Time Catchments - Hexagons</button>
+      <div id="panel-hexagons-content"></div>
+    </div>
+  </div>
+  <div id="legend">
+    <h4 style="font-size: 1.2em; margin-top: 0;">Legend</h4>
+    <div id="legend-content"></div>
+  </div>
+  <script src="main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      // Handle collapsible settings panel
+      const collapsible = document.querySelector(".collapsible");
+      const content = document.querySelector(".collapsible-content");
 
-    const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
-    const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
-    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
-    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
-
-    if (opacityField === "None") {
-      opacityRangeSlider.setAttribute('disabled', true);
-      opacityRangeSlider.noUiSlider.updateOptions({
-        range: {
-          'min': 0,
-          'max': 0
-        },
-        step: 1
+      collapsible.addEventListener("click", function() {
+        this.classList.toggle("active");
+        content.style.display = content.style.display === "block" ? "none" : "block";
+        this.classList.toggle("collapsed", content.style.display === "none");
       });
-      opacityRangeSlider.noUiSlider.set([0, 0]);
-      document.getElementById('opacityRangeMin').innerText = '';
-      document.getElementById('opacityRangeMax').innerText = '';
-    } else {
-      opacityRangeSlider.removeAttribute('disabled');
-      opacityRangeSlider.noUiSlider.updateOptions({
-        range: {
-          'min': adjustedMinOpacity,
-          'max': adjustedMaxOpacity
-        },
-        step: opacityStep
+
+      // Handle collapsible panels
+      const panelHeaders = document.querySelectorAll(".panel-header");
+      panelHeaders.forEach(header => {
+        const panelContent = header.nextElementSibling;
+        header.addEventListener("click", function() {
+          // Collapse all other panels
+          panelHeaders.forEach(otherHeader => {
+            if (otherHeader !== header) {
+              otherHeader.classList.add("collapsed");
+              otherHeader.nextElementSibling.style.display = "none";
+            }
+          });
+          // Toggle the clicked panel
+          panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
+          header.classList.toggle("collapsed", panelContent.style.display === "none");
+        });
+        // Initially collapse the panel content
+        panelContent.style.display = "none";
+        header.classList.add("collapsed");
       });
-      opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      document.getElementById('opacityRangeMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
-      document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
-    }
-    if (outlineField === "None") {
-      outlineRangeSlider.setAttribute('disabled', true);
-      outlineRangeSlider.noUiSlider.updateOptions({
-        range: {
-          'min': 0,
-          'max': 0
-        },
-        step: 1
-      });
-      outlineRangeSlider.noUiSlider.set([0, 0]);
-      document.getElementById('outlineRangeMin').innerText = '';
-      document.getElementById('outlineRangeMax').innerText = '';
-    } else {
-      outlineRangeSlider.removeAttribute('disabled');
-      outlineRangeSlider.noUiSlider.updateOptions({
-        range: {
-          'min': adjustedMinOutline,
-          'max': adjustedMaxOutline
-        },
-        step: parseFloat(outlineStep.toFixed(1))
-      });
-      outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-      document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
-      document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
-    }
-  } else {
-    console.error('Selected layer not found for year:', selectedYear);
-  }
-}
 
-// Function to update layer visibility
-function updateLayerVisibility() {
-  const selectedYear = yearDropdown.value;
-  if (!selectedYear) {
-    console.error('No year selected');
-    return;
-  }
-  const selectedPurpose = purposeDropdown.value;
-  const selectedMode = modeDropdown.value;
-  const opacityField = opacityFieldDropdown.value;
-  const outlineField = outlineFieldDropdown.value;
-
-  map.eachLayer(layer => {
-    if (layer !== baseLayer) {
-      map.removeLayer(layer);
-    }
-  });
-
-  const fieldToDisplay = selectedYear.includes('-') ? `${purposeMap[selectedPurpose]}_${modeMap[selectedMode]}` : `${purposeMap[selectedPurpose]}_${modeMap[selectedMode]}_100`;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const filteredFeatures = selectedLayer.features.filter(feature => {
-      return feature.properties[fieldToDisplay] !== undefined;
+      // Initially collapse the settings content
+      content.style.display = "none";
+      collapsible.classList.add("collapsed");
     });
-
-    let minOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[0]);
-    let maxOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[1]);
-    let minOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[0]);
-    let maxOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[1]);
-
-    console.log(`Opacity range: min=${minOpacity}, max=${maxOpacity}`);
-    console.log(`Outline range: min=${minOutline}, max=${maxOutline}`);
-
-    const filteredGeoJson = {
-      type: "FeatureCollection",
-      features: filteredFeatures
-    };
-
-    const geoJsonLayer = L.geoJSON(filteredGeoJson, {
-      style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
-      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
-    }).addTo(map);
-  }
-
-  updateLegend();
-}
-
-// Function to display pop-up on feature click
-function onEachFeature(feature, layer, selectedYear) {
-  layer.on({
-    click: function (e) {
-      const properties = feature.properties;
-      const getValue = (prop) => (properties[prop] !== undefined && properties[prop] !== null) ? properties[prop] : '-';
-      const hexId = getValue('Hex_ID');
-      const scoreValue = getValue(`${purposeMap[purposeDropdown.value]}_${modeMap[modeDropdown.value]}`);
-      let score = '-';
-      let scoreLabel = 'Score';
-
-      if (scoreValue !== '-') {
-        if (selectedYear.includes('-')) {
-          score = Math.round(scoreValue * 100) + '%';
-          scoreLabel = 'Score Difference';
-        } else {
-          score = Math.round(scoreValue);
-        }
-      }
-      
-      const percentile = getValue(`${purposeMap[purposeDropdown.value]}_${modeMap[modeDropdown.value]}_100`) !== '-' ? Math.round(getValue(`${purposeMap[purposeDropdown.value]}_${modeMap[modeDropdown.value]}_100`)) : '-';
-      const population = getValue('pop') !== '-' ? Math.round(getValue('pop')) : '-';
-      const imd = population === 0 ? '-' : (getValue('imd') !== '-' ? getValue('imd').toFixed(2) : '-');
-      const carAvailability = population === 0 ? '-' : (getValue('carav') !== '-' ? getValue('carav').toFixed(2) : '-');
-      const futureDwellings = getValue('hh_fut') === 0 ? '-' : (getValue('hh_fut') !== '-' ? Math.round(getValue('hh_fut')) : '-');
-      
-      let popupContent = `<strong>Hex_ID:</strong> ${hexId}<br><strong>${scoreLabel}:</strong> ${score}<br><strong>Percentile:</strong> ${percentile}<br><strong>Population:</strong> ${population}<br><strong>IMD:</strong> ${imd}<br><strong>Car Availability:</strong> ${carAvailability}<br><strong>Future Dwellings:</strong> ${futureDwellings}`;
-      
-      L.popup()
-        .setLatLng(e.latlng)
-        .setContent(popupContent)
-        .openOn(map);
-    }
-  });
-}
-
-function getColor(value, selectedYear) {
-  if (!selectedYear) {
-    console.error('No year selected');
-    return 'transparent';
-  }
-
-  if (selectedYear.includes('-')) {
-    if (value <= -0.2) {
-      return '#FF0000'; // Red
-    } else if (value > -0.2 && value <= -0.1) {
-      return '#FF5500'; // Orange-Red
-    } else if (value > -0.1 && value < 0) {
-      return '#FFAA00'; // Orange
-    } else if (value === 0) {
-      return 'transparent'; // No colour or 100% transparency
-    } else if (value > 0 && value <= 0.1) {
-      return '#B0E200'; // Light Green
-    } else if (value >= 0.1 && value < 0.2) {
-      return '#6EC500'; // Green
-    } else {
-      return '#38A800'; // Dark Green
-    }
-  } else {
-    return value > 90 ? '#fde725' :
-           value > 80 ? '#b5de2b' :
-           value > 70 ? '#6ece58' :
-           value > 60 ? '#35b779' :
-           value > 50 ? '#1f9e89' :
-           value > 40 ? '#26828e' :
-           value > 30 ? '#31688e' :
-           value > 20 ? '#3e4989' :
-           value > 10 ? '#482777' :
-                        '#440154';
-  }
-}
-
-function updateLegend() {
-  const selectedYear = yearDropdown.value;
-  const legendContent = document.getElementById("legend-content");
-
-  legendContent.innerHTML = '';
-
-  const headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
-  const headerDiv = document.createElement("div");
-  headerDiv.innerHTML = `${headerText}`;
-  headerDiv.style.fontSize = "1.1em";
-  headerDiv.style.marginBottom = "10px";
-  legendContent.appendChild(headerDiv);
-
-  const classes = selectedYear.includes('-') ? [
-    { range: `<= -20%`, color: "#FF0000" },
-    { range: `> -20% and <= -10%`, color: "#FF5500" },
-    { range: `> -10% and < 0`, color: "#FFAA00" },
-    { range: `= 0`, color: "transparent" },
-    { range: `> 0 and <= 10%`, color: "#B0E200" },
-    { range: `>= 10% and < 20%`, color: "#6EC500" },
-    { range: `>= 20%`, color: "#38A800" }
-  ] : [
-    { range: `90-100 - 10% of region's population with best access to amenities`, color: "#fde725" },
-    { range: `80-90`, color: "#b5de2b" },
-    { range: `70-80`, color: "#6ece58" },
-    { range: `60-70`, color: "#35b779" },
-    { range: `50-60`, color: "#1f9e89" },
-    { range: `40-50`, color: "#26828e" },
-    { range: `30-40`, color: "#31688e" },
-    { range: `20-30`, color: "#3e4989" },
-    { range: `10-20`, color: "#482777" },
-    { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
-  ];
-
-  classes.forEach(c => {
-    const div = document.createElement("div");
-    div.innerHTML = `<span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
-    legendContent.appendChild(div);
-  });
-}
-
-let isInverse = false;
-
-function toggleInverseScale() {
-  isInverse = !isInverse;
-  const opacityRangeSlider = document.getElementById('opacityRangeSlider');
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-
-  if (isInverse) {
-    handles[0].classList.remove('noUi-handle-left');
-    handles[1].classList.add('noUi-handle-left');
-    connectElements[0].classList.remove('noUi-connect-right-solid');
-    connectElements[0].style.background = 'linear-gradient(to right, #767676 0%, rgba(118, 118, 118, 1) 50%, rgba(118, 118, 118, 0) 100%)';
-    connectElements[1].style.background = '#767676';
-  } else {
-    handles[1].classList.remove('noUi-handle-left');
-    handles[0].classList.add('noUi-handle-left');
-    connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 1) 50%, #767676 50%)';
-    connectElements[1].style.background = '#767676';
-  }
-}
-
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
-// Function to inverse opacity scale
-function inverseOpacityScale() {
-  opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateLayerVisibility();
-}
-
-// Function to inverse outline scale
-function inverseOutlineScale() {
-  outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateLayerVisibility();
-}
-
-// Add event listeners to inverse scale buttons
-const inverseOpacityScaleButton = document.getElementById("inverseOpacityScaleButton");
-inverseOpacityScaleButton.addEventListener("click", inverseOpacityScale);
-
-const inverseOutlineScaleButton = document.getElementById("inverseOutlineScaleButton");
-inverseOutlineScaleButton.addEventListener("click", inverseOutlineScale);
-
-// Add event listeners to dropdowns and inputs
-yearDropdown.addEventListener("change", () => {
-  updateSliderRanges();
-  updateLayerVisibility();
-});
-purposeDropdown.addEventListener("change", updateLayerVisibility);
-modeDropdown.addEventListener("change", updateLayerVisibility);
-opacityFieldDropdown.addEventListener("change", () => {
-  autoUpdateOpacity = true;
-  updateSliderRanges();
-  updateLayerVisibility();
-});
-outlineFieldDropdown.addEventListener("change", () => {
-  autoUpdateOutline = true;
-  updateSliderRanges();
-  updateLayerVisibility();
-});
-
-// Function to style features
-function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
-  const value = feature.properties[fieldToDisplay];
-  const color = getColor(value, selectedYear);
-
-  const opacity = opacityField === 'None' ? 0.75 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.05 : scaleExp(feature.properties[opacityField], minOpacityValue, maxOpacityValue, 0.05, 0.75, opacityOrder));
-  const weight = outlineField === 'None' ? 0 : (feature.properties[outlineField] === 0 || feature.properties[outlineField] === null ? 0 : scaleExp(feature.properties[outlineField], minOutlineValue, maxOutlineValue, 0, 4, outlineOrder));
-  
-  return {
-    fillColor: color,
-    weight: weight,
-    opacity: 1,
-    color: 'black',
-    fillOpacity: opacity
-  };
-}
-
-function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
-    if (value <= minVal) return order === 'low-to-high' ? minScale : maxScale;
-    if (value >= maxVal) return order === 'low-to-high' ? maxScale : minScale;
-    const normalizedValue = (value - minVal) / (maxVal - minVal);
-    const scaledValue = order === 'low-to-high' ? normalizedValue : 1 - normalizedValue;
-    return minScale + scaledValue * (maxScale - minScale);
-}
+  </script>
+</body>
+</html>
