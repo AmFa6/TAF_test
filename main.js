@@ -84,11 +84,10 @@ let opacityRangeSlider;
 let outlineRangeSlider;
 
 function initializeSliders() {
-  // Initialize noUiSlider for opacity range
   opacityRangeSlider = document.getElementById('opacityRangeSlider');
   noUiSlider.create(opacityRangeSlider, {
     start: [0, 0],
-    connect: [false, true, true], // Set left connect to false and right to true
+    connect: [false, true, true],
     range: {
       'min': 0,
       'max': 0
@@ -96,7 +95,7 @@ function initializeSliders() {
     step: 1,
     tooltips: false,
     format: {
-      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
+      to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
     }
   });
@@ -114,6 +113,7 @@ function initializeSliders() {
     connectElements[1].classList.add('noUi-connect-right-solid');
   }
 
+
   // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
@@ -126,7 +126,7 @@ function initializeSliders() {
     step: 1,
     tooltips: false,
     format: {
-      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
+      to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
     }
   });
@@ -205,6 +205,11 @@ function updateSliderRanges() {
     const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
     const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
     const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
+
+    document.getElementById('opacityRangeMinStatic').innerText = formatValue(adjustedMinOpacity, opacityStep);
+    document.getElementById('opacityRangeMaxStatic').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+    document.getElementById('outlineRangeMinStatic').innerText = formatValue(adjustedMinOutline, outlineStep);
+    document.getElementById('outlineRangeMaxStatic').innerText = formatValue(adjustedMaxOutline, outlineStep);
 
     if (opacityField === "None") {
       opacityRangeSlider.setAttribute('disabled', true);
