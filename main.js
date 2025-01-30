@@ -102,16 +102,16 @@ function initializeSliders() {
   });
 
   // Apply the class to the left handle
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  if (handles.length > 0) {
-    handles[0].classList.add('noUi-handle-left');
+  const opacityHandles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  if (opacityHandles.length > 0) {
+    opacityHandles[0].classList.add('noUi-handle-left');
   }
 
   // Apply the class to the right connect element
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-right');
-    connectElements[1].classList.add('noUi-connect-right-solid');
+  const opacityConnectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  if (opacityConnectElements.length > 1) {
+    opacityConnectElements[1].classList.add('noUi-connect-right');
+    opacityConnectElements[1].classList.add('noUi-connect-right-solid');
   }
 
   // Initialize noUiSlider for outline width range
