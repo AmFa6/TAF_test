@@ -94,7 +94,7 @@ function initializeSliders() {
       'max': 0
     },
     step: 1,
-    tooltips: true,
+    tooltips: [true, true], // Ensure tooltips are enabled for both handles
     format: {
       to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
@@ -124,7 +124,7 @@ function initializeSliders() {
       'max': 0
     },
     step: 1,
-    tooltips: true,
+    tooltips: [true, true], // Ensure tooltips are enabled for both handles
     format: {
       to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
