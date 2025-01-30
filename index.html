@@ -162,11 +162,14 @@
       display: none !important; /* Remove the additional bars */
     }
     .noUi-tooltip {
-      background: #00000000;
-      color: #000000;
+      background: rgba(0, 0, 0, 0.75); /* Tooltip background color */
+      color: #fff; /* Tooltip text color */
       border-radius: 3px;
       padding: 5px;
       font-size: 0.9em;
+      position: absolute;
+      bottom: -30px; /* Position tooltips below the handles */
+      white-space: nowrap;
     }
     /* Specific styles for the settings panel */
     .collapsible-content label,
