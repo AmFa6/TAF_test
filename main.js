@@ -1,3 +1,5 @@
+import 'https://unpkg.com/leaflet-overpass-layer@2.9.0/src/OverPassLayer.js';
+
 // Initialize the map
 const map = L.map('map').setView([51.480, -2.591], 11);
 
