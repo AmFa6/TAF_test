@@ -157,9 +157,18 @@
       border: 2px solid #767676 !important; /* Grey outline */
     }
     .noUi-handle:before,
-    .noUi-handle:after {
-      display: none !important; /* Remove the additional bars */
-    }
+    .noUi-handle::after {
+    content: attr(data-value);
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #007bff;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+  }
     .noUi-tooltip {
       background: #007bff;
       color: #fff;
