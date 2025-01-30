@@ -241,8 +241,16 @@
           <br>
           <div class="field-container">
             <div>
-              <label for="opacityRangeSlider" class="medium-font">Range: <span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
+              <label for="opacityRangeSlider" class="medium-font">Opacity Range:</label>
               <div id="opacityRangeSlider"></div>
+              <div class="range-values">
+                <span id="opacityRangeMinStatic"></span>
+                <span id="opacityRangeMaxStatic" style="float: right;"></span>
+              </div>
+              <div class="dynamic-range-values">
+                <span id="opacityRangeMin"></span>
+                <span id="opacityRangeMax" style="float: right;"></span>
+              </div>
             </div>
           </div>
           <div class="field-container">
@@ -262,8 +270,16 @@
           <br>
           <div class="field-container">
             <div>
-              <label for="outlineRangeSlider" class="medium-font">Range: <span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
+              <label for="outlineRangeSlider" class="medium-font">Outline Range:</label>
               <div id="outlineRangeSlider"></div>
+              <div class="range-values">
+                <span id="outlineRangeMinStatic"></span>
+                <span id="outlineRangeMaxStatic" style="float: right;"></span>
+              </div>
+              <div class="dynamic-range-values">
+                <span id="outlineRangeMin"></span>
+                <span id="outlineRangeMax" style="float: right;"></span>
+              </div>
             </div>
           </div>
           <div class="field-container">
@@ -290,7 +306,6 @@
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-      // Handle collapsible settings panel
       const collapsible = document.querySelector(".collapsible");
       const content = document.querySelector(".collapsible-content");
 
@@ -300,28 +315,23 @@
         this.classList.toggle("collapsed", content.style.display === "none");
       });
 
-      // Handle collapsible panels
       const panelHeaders = document.querySelectorAll(".panel-header");
       panelHeaders.forEach(header => {
         const panelContent = header.nextElementSibling;
         header.addEventListener("click", function() {
-          // Collapse all other panels
           panelHeaders.forEach(otherHeader => {
             if (otherHeader !== header) {
               otherHeader.classList.add("collapsed");
               otherHeader.nextElementSibling.style.display = "none";
             }
           });
-          // Toggle the clicked panel
           panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
           header.classList.toggle("collapsed", panelContent.style.display === "none");
         });
-        // Initially collapse the panel content
         panelContent.style.display = "none";
         header.classList.add("collapsed");
       });
 
-      // Initially collapse the settings content
       content.style.display = "none";
       collapsible.classList.add("collapsed");
     });
