@@ -1,54 +1,9 @@
-import 'https://unpkg.com/leaflet-overpass-layer@2.9.0/src/OverPassLayer.js';
-
 // Initialize the map
 const map = L.map('map').setView([51.480, -2.591], 11);
 
 // Add a base layer
 const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors & CartoDB'
-}).addTo(map);
-
-// Add rivers layer using Overpass API
-const riversLayer = new L.OverpassLayer({
-  query: `
-    [out:json];
-    (
-      way["waterway"="river"](51.3,-2.8,51.7,-2.4);
-      relation["waterway"="river"](51.3,-2.8,51.7,-2.4);
-    );
-    out body;
-    >;
-    out skel qt;
-  `,
-  minZoom: 10,
-  markerIcon: null,
-  style: {
-    color: 'blue',
-    weight: 2,
-    zIndex: 1000 // Set a high zIndex value
-  }
-}).addTo(map);
-
-// Add main roads layer using Overpass API
-const mainRoadsLayer = new L.OverpassLayer({
-  query: `
-    [out:json];
-    (
-      way["highway"="primary"](51.3,-2.8,51.7,-2.4);
-      way["highway"="secondary"](51.3,-2.8,51.7,-2.4);
-      way["highway"="tertiary"](51.3,-2.8,51.7,-2.4);
-    );
-    out body;
-    >;
-    out skel qt;
-  `,
-  minZoom: 10,
-  markerIcon: null,
-  style: {
-    color: 'red',
-    weight: 2,
-    zIndex: 1000 // Set a high zIndex value
-  }
 }).addTo(map);
 
 // List of GeoJSON files and corresponding years
@@ -319,7 +274,7 @@ function updateLayerVisibility() {
   const outlineField = outlineFieldDropdown.value;
 
   map.eachLayer(layer => {
-    if (layer !== baseLayer && layer !== riversLayer && layer !== mainRoadsLayer) {
+    if (layer !== baseLayer) {
       map.removeLayer(layer);
     }
   });
