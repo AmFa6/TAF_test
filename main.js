@@ -94,7 +94,7 @@ function initializeSliders() {
       'max': 0
     },
     step: 1,
-    tooltips: [true, true],
+    tooltips: [wNumb({ decimals: 2 }), wNumb({ decimals: 2 })],
     format: {
       to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
@@ -124,7 +124,7 @@ function initializeSliders() {
       'max': 0
     },
     step: 1,
-    tooltips: [true, true],
+    tooltips: [wNumb({ decimals: 2 }), wNumb({ decimals: 2 })],
     format: {
       to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
@@ -221,6 +221,7 @@ function updateSliderRanges() {
         step: 1
       });
       opacityRangeSlider.noUiSlider.set([0, 0]);
+      opacityRangeSlider.setAttribute('style', 'display: none;');
     } else {
       opacityRangeSlider.removeAttribute('disabled');
       opacityRangeSlider.noUiSlider.updateOptions({
@@ -231,6 +232,7 @@ function updateSliderRanges() {
         step: opacityStep
       });
       opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
+      opacityRangeSlider.removeAttribute('style');
     }
     if (outlineField === "None") {
       outlineRangeSlider.setAttribute('disabled', true);
@@ -242,6 +244,7 @@ function updateSliderRanges() {
         step: 1
       });
       outlineRangeSlider.noUiSlider.set([0, 0]);
+      outlineRangeSlider.setAttribute('style', 'display: none;');
     } else {
       outlineRangeSlider.removeAttribute('disabled');
       outlineRangeSlider.noUiSlider.updateOptions({
@@ -252,6 +255,7 @@ function updateSliderRanges() {
         step: parseFloat(outlineStep.toFixed(1))
       });
       outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
+      outlineRangeSlider.removeAttribute('style');
     }
   } else {
     console.error('Selected layer not found for year:', selectedYear);
