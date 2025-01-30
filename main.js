@@ -152,7 +152,7 @@ function initializeSliders() {
     const handleElement = handles[handle];
     handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeSlider.noUiSlider.options.step));
   });
-
+  
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
     const handleElement = outlineHandles[handle];
     handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeSlider.noUiSlider.options.step));
@@ -215,7 +215,7 @@ function updateSliderRanges() {
         },
         step: 1
       });
-      opacityRangeSlider.noUiSlider.set([0, 0]);
+      opacityRangeSlider.noUiSlider.set(['', '']);
       document.getElementById('opacityRangeMin').innerText = '';
       document.getElementById('opacityRangeMax').innerText = '';
     } else {
@@ -240,7 +240,7 @@ function updateSliderRanges() {
         },
         step: 1
       });
-      outlineRangeSlider.noUiSlider.set([0, 0]);
+      outlineRangeSlider.noUiSlider.set(['', '']);
       document.getElementById('outlineRangeMin').innerText = '';
       document.getElementById('outlineRangeMax').innerText = '';
     } else {
