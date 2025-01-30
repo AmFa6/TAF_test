@@ -160,15 +160,31 @@
     .noUi-handle::after {
     content: attr(data-value);
     position: absolute;
-    top: -25px;
+    top: -20px; /* Reduce space between handle and number */
     left: 50%;
     transform: translateX(-50%);
     background: #007bff00;
     color: #000000;
     padding: 2px 5px;
-    border: None;
+    border: none;
     font-size: 0.8em;
-  }
+    }
+    .noUi-handle-left::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .noUi-handle-right::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+    .slider-labels span {
+      font-size: 0.8em;
+    }
     .noUi-tooltip {
       background: #007bff;
       color: #fff;
@@ -251,7 +267,10 @@
           <div class="field-container">
             <div>
               <div id="opacityRangeSlider"></div>
-              <label for="opacityRangeSlider" class="medium-font"><span id="opacityRangeMin">0</span> - <span id="opacityRangeMax">1</span></label>
+              <div class="slider-labels">
+                <span id="opacityRangeMin">0</span>
+                <span id="opacityRangeMax">1</span>
+              </div>
             </div>
           </div>
           <div class="field-container">
@@ -272,7 +291,10 @@
           <div class="field-container">
             <div>
               <div id="outlineRangeSlider"></div>
-              <label for="outlineRangeSlider" class="medium-font"><span id="outlineRangeMin">0</span> - <span id="outlineRangeMax">4</span></label>
+              <div class="slider-labels">
+                <span id="outlineRangeMin">0</span>
+                <span id="outlineRangeMax">4</span>
+              </div>
             </div>
           </div>
           <div class="field-container">
