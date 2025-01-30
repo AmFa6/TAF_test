@@ -84,6 +84,7 @@ let opacityRangeSlider;
 let outlineRangeSlider;
 
 function initializeSliders() {
+  // Initialize noUiSlider for opacity range
   opacityRangeSlider = document.getElementById('opacityRangeSlider');
   noUiSlider.create(opacityRangeSlider, {
     start: [0, 0],
@@ -93,7 +94,7 @@ function initializeSliders() {
       'max': 0
     },
     step: 1,
-    tooltips: false,
+    tooltips: [true, true],
     format: {
       to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
@@ -113,7 +114,6 @@ function initializeSliders() {
     connectElements[1].classList.add('noUi-connect-right-solid');
   }
 
-
   // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
@@ -124,7 +124,7 @@ function initializeSliders() {
       'max': 0
     },
     step: 1,
-    tooltips: false,
+    tooltips: [true, true],
     format: {
       to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
@@ -146,7 +146,7 @@ function initializeSliders() {
   // Add event listeners to update map rendering when sliders are adjusted
   opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
   outlineRangeSlider.noUiSlider.on('update', updateLayerVisibility);
-
+}
   // Add event listeners to update range labels
   opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
     document.getElementById('opacityRangeMin').innerText = formatValue(values[0], opacityRangeSlider.noUiSlider.options.step);
@@ -221,8 +221,6 @@ function updateSliderRanges() {
         step: 1
       });
       opacityRangeSlider.noUiSlider.set([0, 0]);
-      document.getElementById('opacityRangeMin').innerText = '';
-      document.getElementById('opacityRangeMax').innerText = '';
     } else {
       opacityRangeSlider.removeAttribute('disabled');
       opacityRangeSlider.noUiSlider.updateOptions({
@@ -233,8 +231,6 @@ function updateSliderRanges() {
         step: opacityStep
       });
       opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      document.getElementById('opacityRangeMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
-      document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
     if (outlineField === "None") {
       outlineRangeSlider.setAttribute('disabled', true);
@@ -246,8 +242,6 @@ function updateSliderRanges() {
         step: 1
       });
       outlineRangeSlider.noUiSlider.set([0, 0]);
-      document.getElementById('outlineRangeMin').innerText = '';
-      document.getElementById('outlineRangeMax').innerText = '';
     } else {
       outlineRangeSlider.removeAttribute('disabled');
       outlineRangeSlider.noUiSlider.updateOptions({
@@ -258,8 +252,6 @@ function updateSliderRanges() {
         step: parseFloat(outlineStep.toFixed(1))
       });
       outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-      document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
-      document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   } else {
     console.error('Selected layer not found for year:', selectedYear);
