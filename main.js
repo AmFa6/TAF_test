@@ -104,14 +104,13 @@ function initializeSliders() {
   // Apply the class to the left handle
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   if (handles.length > 0) {
-    handles[0].classList.add('noUi-handle-left');
+    handles[0].classList.add('noUi-handle-transparent');
   }
 
   // Apply the class to the right connect element
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
   if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-right');
-    connectElements[1].classList.add('noUi-connect-right-solid');
+    connectElements[1].classList.add('noUi-connect-dark-slider');
   }
 
   // Initialize noUiSlider for outline width range
@@ -133,14 +132,13 @@ function initializeSliders() {
 
   const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
   if (outlineHandles.length > 0) {
-    outlineHandles[0].classList.add('noUi-handle-left');
+    outlineHandles[0].classList.add('noUi-handle-transparent');
   }
 
   // Apply the class to the right connect element
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
-    outlineConnectElements[1].classList.add('noUi-connect-right');
-    outlineConnectElements[1].classList.add('noUi-connect-right-solid');
+    connectElements[1].classList.add('noUi-connect-dark-slider');
   }
 
   // Add event listeners to update map rendering when sliders are adjusted
@@ -441,16 +439,16 @@ function toggleInverseScale() {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [false, true, true] // Set connect to false, true, true
     });
-    handles[0].classList.add('noUi-handle-left');
-    handles[1].classList.remove('noUi-handle-left');
+    handles[0].classList.add('noUi-handle-transparent');
+    handles[1].classList.remove('noUi-handle-transparent');
     connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Dark grey to transparent
     console.log('Inverse state applied. Gradient direction: to left');
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, false] // Set connect to true, true, false
     });
-    handles[0].classList.remove('noUi-handle-left');
-    handles[1].classList.add('noUi-handle-left');
+    handles[0].classList.remove('noUi-handle-transparent');
+    handles[1].classList.add('noUi-handle-transparent');
     connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
     console.log('Normal state applied. Gradient direction: to right');
   }
