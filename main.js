@@ -108,13 +108,13 @@ function initializeSliders() {
   // Apply the class to the connect elements
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
   if (connectElements.length > 0) {
-    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[0].classList.add('noUi-connect-transparent');
   }
   if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-dark-slider');
+    connectElements[1].classList.add('noUi-connect');
   }
   if (connectElements.length > 2) {
-    connectElements[2].classList.add('noUi-connect-transparent');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
   // Initialize noUiSlider for outline width range
@@ -142,7 +142,7 @@ function initializeSliders() {
   // Apply the class to the right connect element
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
-    outlineConnectElements[1].classList.add('noUi-connect-dark-slider');
+    outlineConnectElements[1].classList.add('noUi-connect-dark-grey');
   }
 
   // Add event listeners to update map rendering when sliders are adjusted
@@ -172,18 +172,18 @@ function toggleInverseScale() {
     });
     handles[1].classList.add('noUi-handle-transparent');
     handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].classList.add('noUi-connect-dark-grey');
-    connectElements[1].classList.add('noUi-connect-dark-slider');
-    connectElements[2].classList.add('noUi-connect-transparent');
+    connectElements[0].classList.add('noUi-connect-transparent');
+    connectElements[1].classList.add('noUi-connect-gradient');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, true] // Set connect to true, true, true
     });
     handles[1].classList.remove('noUi-handle-transparent');
     handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-dark-slider');
-    connectElements[2].classList.remove('noUi-connect-transparent');
+    connectElements[0].classList.remove('noUi-connect-transparent');
+    connectElements[1].classList.remove('noUi-connect-gradient');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
   }
   updateLayerVisibility();
 }
