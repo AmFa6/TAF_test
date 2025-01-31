@@ -461,7 +461,7 @@ function updateLegend() {
   legendContent.appendChild(headerDiv);
 
   const masterCheckboxDiv = document.createElement("div");
-  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <strong>Select/Deselect All</strong>`;
+  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
   legendContent.appendChild(masterCheckboxDiv);
 
   const classes = selectedYear.includes('-') ? [
