@@ -430,9 +430,9 @@ function toggleInverseScale() {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, false] // Set connect to true, true, false
     });
-    handles[0].classList.remove('noUi-handle-transparent');
-    handles[1].classList.add('noUi-handle-transparent');
-    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
   }
   updateLayerVisibility();
 }
