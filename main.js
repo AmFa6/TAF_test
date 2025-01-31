@@ -457,6 +457,13 @@ function updateLegend() {
   const selectedYear = yearDropdown.value;
   const legendContent = document.getElementById("legend-content");
 
+  // Preserve the state of the checkboxes
+  const checkboxStates = {};
+  const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
+  legendCheckboxes.forEach(checkbox => {
+    checkboxStates[checkbox.getAttribute('data-range')] = checkbox.checked;
+  });
+
   legendContent.innerHTML = '';
 
   const headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
@@ -489,13 +496,14 @@ function updateLegend() {
 
   classes.forEach(c => {
     const div = document.createElement("div");
-    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" checked> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+    const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
+    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
     legendContent.appendChild(div);
   });
 
   // Add event listeners to legend checkboxes
-  const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
-  legendCheckboxes.forEach(checkbox => {
+  const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
+  newLegendCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', updateLayerVisibility);
   });
 }
