@@ -1,12 +1,9 @@
-// Initialize the map
 const map = L.map('map').setView([51.480, -2.591], 11);
 
-// Add a base layer
 const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors & CartoDB'
 }).addTo(map);
 
-// List of GeoJSON files and corresponding years
 const geoJsonFiles = [
   { year: '2024', path: 'https://AmFa6.github.io/TAF_test/2024_connectscore.geojson' },
   { year: '2023', path: 'https://AmFa6.github.io/TAF_test/2023_connectscore.geojson' },
@@ -19,7 +16,6 @@ const geoJsonFiles = [
   { year: '2019-2022', path: 'https://AmFa6.github.io/TAF_test/2019-2022_connectscore.geojson' }
 ];
 
-// Load GeoJSON layers
 const layers = {};
 let layersLoaded = 0;
 const totalLayers = geoJsonFiles.length;
@@ -38,7 +34,6 @@ geoJsonFiles.forEach(file => {
     })
 });
 
-// Populate year dropdown
 const yearDropdown = document.getElementById("yearDropdown");
 geoJsonFiles.forEach(file => {
   const option = document.createElement("option");
@@ -47,7 +42,6 @@ geoJsonFiles.forEach(file => {
   yearDropdown.add(option);
 });
 
-// Get other dropdown elements
 const purposeDropdown = document.getElementById("purposeDropdown");
 const modeDropdown = document.getElementById("modeDropdown");
 const opacityFieldDropdown = document.getElementById("opacityFieldDropdown");
@@ -56,7 +50,6 @@ yearDropdown.value = "";
 opacityFieldDropdown.value = "None";
 outlineFieldDropdown.value = "None";
 
-// Maps for purpose and mode
 const purposeMap = {
   "Education": "Edu",
   "Employment": "Emp",
@@ -70,7 +63,7 @@ const modeMap = {
   "Cycle": "Cy",
   "Public Transport": "PT",
   "Car": "Ca",
-  "All Modes": "To" // Assuming "To" is the suffix for all modes
+  "All Modes": "To"
 };
 
 let autoUpdateOpacity = true;
@@ -130,18 +123,15 @@ function initializeSliders() {
     outlineHandles[0].classList.add('noUi-handle-transparent');
   }
 
-  // Apply the class to the right connect element
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
     outlineConnectElements[1].classList.add('noUi-connect-gradient-right');
     outlineConnectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  // Add event listeners to update map rendering when sliders are adjusted
   opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
   outlineRangeSlider.noUiSlider.on('update', updateLayerVisibility);
 
-  // Add event listeners to update range labels
   opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
     const handleElement = handles[handle];
     handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeSlider.noUiSlider.options.step));
@@ -317,7 +307,6 @@ function updateSliderRanges() {
   }
 }
 
-// Function to update layer visibility
 function updateLayerVisibility() {
   const selectedYear = yearDropdown.value;
   if (!selectedYear) {
@@ -362,7 +351,6 @@ function updateLayerVisibility() {
   updateLegend();
 }
 
-// Function to display pop-up on feature click
 function onEachFeature(feature, layer, selectedYear) {
   layer.on({
     click: function (e) {
@@ -405,19 +393,19 @@ function getColor(value, selectedYear) {
 
   if (selectedYear.includes('-')) {
     if (value <= -0.2) {
-      return '#FF0000'; // Red
+      return '#FF0000';
     } else if (value > -0.2 && value <= -0.1) {
-      return '#FF5500'; // Orange-Red
+      return '#FF5500';
     } else if (value > -0.1 && value < 0) {
-      return '#FFAA00'; // Orange
+      return '#FFAA00'; 
     } else if (value === 0) {
-      return 'transparent'; // No colour or 100% transparency
+      return 'transparent';
     } else if (value > 0 && value <= 0.1) {
-      return '#B0E200'; // Light Green
+      return '#B0E200';
     } else if (value >= 0.1 && value < 0.2) {
-      return '#6EC500'; // Green
+      return '#6EC500';
     } else {
-      return '#38A800'; // Dark Green
+      return '#38A800'; 
     }
   } else {
     return value > 90 ? '#fde725' :
@@ -457,7 +445,6 @@ function updateLegend() {
   const selectedYear = yearDropdown.value;
   const legendContent = document.getElementById("legend-content");
 
-  // Preserve the state of the checkboxes
   const checkboxStates = {};
   const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
   legendCheckboxes.forEach(checkbox => {
@@ -472,6 +459,10 @@ function updateLegend() {
   headerDiv.style.fontSize = "1.1em";
   headerDiv.style.marginBottom = "10px";
   legendContent.appendChild(headerDiv);
+
+  const masterCheckboxDiv = document.createElement("div");
+  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <strong>Select/Deselect All</strong>`;
+  legendContent.appendChild(masterCheckboxDiv);
 
   const classes = selectedYear.includes('-') ? [
     { range: `<= -20%`, color: "#FF0000" },
@@ -501,33 +492,37 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 
-  // Add event listeners to legend checkboxes
   const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
   newLegendCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', updateLayerVisibility);
   });
+
+  const masterCheckbox = document.getElementById('masterCheckbox');
+  masterCheckbox.addEventListener('change', () => {
+    const isChecked = masterCheckbox.checked;
+    newLegendCheckboxes.forEach(checkbox => {
+      checkbox.checked = isChecked;
+    });
+    updateLayerVisibility();
+  });
 }
 
-// Function to inverse opacity scale
 function inverseOpacityScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
   updateLayerVisibility();
 }
 
-// Function to inverse outline scale
 function inverseOutlineScale() {
   outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
   updateLayerVisibility();
 }
 
-// Add event listeners to inverse scale buttons
 const inverseOpacityScaleButton = document.getElementById("inverseOpacityScaleButton");
 inverseOpacityScaleButton.addEventListener("click", inverseOpacityScale);
 
 const inverseOutlineScaleButton = document.getElementById("inverseOutlineScaleButton");
 inverseOutlineScaleButton.addEventListener("click", inverseOutlineScale);
 
-// Add event listeners to dropdowns and inputs
 yearDropdown.addEventListener("change", () => {
   updateSliderRanges();
   updateLayerVisibility();
@@ -545,7 +540,6 @@ outlineFieldDropdown.addEventListener("change", () => {
   updateLayerVisibility();
 });
 
-// Function to style features
 function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
   const value = feature.properties[fieldToDisplay];
   const color = getColor(value, selectedYear);
