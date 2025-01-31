@@ -419,6 +419,9 @@ function toggleInverseScale() {
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
 
+  console.log('isInverse:', isInverse);
+  console.log('connectElements:', connectElements);
+
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, false] // Set connect to true, true, false
@@ -427,6 +430,9 @@ function toggleInverseScale() {
     handles[0].classList.remove('noUi-handle-transparent');
     connectElements[0].style.background = 'rgba(118, 118, 118, 1)'; // Dark grey to the left of the left handle
     connectElements[1].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 1) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 0) 100%)'; // Gradient from grey to transparent
+    if (connectElements.length > 2) {
+      connectElements[2].style.background = 'transparent'; // Transparent to the right of the right handle
+    }
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [false, true, true] // Set connect to false, true, true
@@ -435,6 +441,9 @@ function toggleInverseScale() {
     handles[0].classList.add('noUi-handle-transparent');
     connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Gradient from transparent to grey
     connectElements[1].style.background = 'rgba(118, 118, 118, 1)'; // Dark grey to the right of the right handle
+    if (connectElements.length > 2) {
+      connectElements[2].style.background = 'transparent'; // Transparent to the right of the right handle
+    }
   }
   updateLayerVisibility();
 }
