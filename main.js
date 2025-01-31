@@ -155,12 +155,14 @@ function initializeSliders() {
 
 let isInverse = false;
 
-function toggleInverseOpacityScale() {
-  isInverseOpacity = !isInverseOpacity;
+function toggleInverseScale() {
+  isInverse = !isInverse;
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
 
-  if (isInverseOpacity) {
+  if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
@@ -170,26 +172,7 @@ function toggleInverseOpacityScale() {
     connectElements[1].classList.remove('noUi-connect-gradient-right');
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
-  } else {
-    opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.remove('noUi-handle-transparent');
-    handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-left');
-    connectElements[1].classList.add('noUi-connect-gradient-right');
-    connectElements[2].classList.add('noUi-connect-dark-grey');
-  }
-  updateLayerVisibility();
-}
 
-function toggleInverseOutlineScale() {
-  isInverseOutline = !isInverseOutline;
-  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
-  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
-
-  if (isInverseOutline) {
     outlineRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
@@ -200,6 +183,16 @@ function toggleInverseOutlineScale() {
     outlineConnectElements[1].classList.add('noUi-connect-gradient-left');
     outlineConnectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+
     outlineRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
@@ -213,8 +206,7 @@ function toggleInverseOutlineScale() {
   updateLayerVisibility();
 }
 
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseOpacityScale);
-document.getElementById('inverseOutlineScaleButton').addEventListener('click', toggleInverseOutlineScale);
+document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 // Function to format values based on step size for display
 function formatValue(value, step) {
