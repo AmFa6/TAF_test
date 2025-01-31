@@ -339,7 +339,11 @@ function updateLayerVisibility() {
 
   if (selectedLayer) {
     const filteredFeatures = selectedLayer.features.filter(feature => {
-      return feature.properties[fieldToDisplay] !== undefined;
+      const value = feature.properties[fieldToDisplay];
+      const color = getColor(value, selectedYear);
+      const checkboxId = getCheckboxIdForColor(color);
+      const checkbox = document.getElementById(checkboxId);
+      return feature.properties[fieldToDisplay] !== undefined && checkbox && checkbox.checked;
     });
 
     let minOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[0]);
@@ -359,6 +363,29 @@ function updateLayerVisibility() {
   }
 
   updateLegend();
+}
+
+function getCheckboxIdForColor(color) {
+  switch (color) {
+    case "#FF0000": return "class1";
+    case "#FF5500": return "class2";
+    case "#FFAA00": return "class3";
+    case "transparent": return "class4";
+    case "#B0E200": return "class5";
+    case "#6EC500": return "class6";
+    case "#38A800": return "class7";
+    case "#fde725": return "class1";
+    case "#b5de2b": return "class2";
+    case "#6ece58": return "class3";
+    case "#35b779": return "class4";
+    case "#1f9e89": return "class5";
+    case "#26828e": return "class6";
+    case "#31688e": return "class7";
+    case "#3e4989": return "class8";
+    case "#482777": return "class9";
+    case "#440154": return "class10";
+    default: return null;
+  }
 }
 
 // Function to display pop-up on feature click
@@ -446,30 +473,33 @@ function updateLegend() {
   legendContent.appendChild(headerDiv);
 
   const classes = selectedYear.includes('-') ? [
-    { range: `<= -20%`, color: "#FF0000" },
-    { range: `> -20% and <= -10%`, color: "#FF5500" },
-    { range: `> -10% and < 0`, color: "#FFAA00" },
-    { range: `= 0`, color: "transparent" },
-    { range: `> 0 and <= 10%`, color: "#B0E200" },
-    { range: `>= 10% and < 20%`, color: "#6EC500" },
-    { range: `>= 20%`, color: "#38A800" }
+    { range: `<= -20%`, color: "#FF0000", id: "class1" },
+    { range: `> -20% and <= -10%`, color: "#FF5500", id: "class2" },
+    { range: `> -10% and < 0`, color: "#FFAA00", id: "class3" },
+    { range: `= 0`, color: "transparent", id: "class4" },
+    { range: `> 0 and <= 10%`, color: "#B0E200", id: "class5" },
+    { range: `>= 10% and < 20%`, color: "#6EC500", id: "class6" },
+    { range: `>= 20%`, color: "#38A800", id: "class7" }
   ] : [
-    { range: `90-100 - 10% of region's population with best access to amenities`, color: "#fde725" },
-    { range: `80-90`, color: "#b5de2b" },
-    { range: `70-80`, color: "#6ece58" },
-    { range: `60-70`, color: "#35b779" },
-    { range: `50-60`, color: "#1f9e89" },
-    { range: `40-50`, color: "#26828e" },
-    { range: `30-40`, color: "#31688e" },
-    { range: `20-30`, color: "#3e4989" },
-    { range: `10-20`, color: "#482777" },
-    { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
+    { range: `90-100 - 10% of region's population with best access to amenities`, color: "#fde725", id: "class1" },
+    { range: `80-90`, color: "#b5de2b", id: "class2" },
+    { range: `70-80`, color: "#6ece58", id: "class3" },
+    { range: `60-70`, color: "#35b779", id: "class4" },
+    { range: `50-60`, color: "#1f9e89", id: "class5" },
+    { range: `40-50`, color: "#26828e", id: "class6" },
+    { range: `30-40`, color: "#31688e", id: "class7" },
+    { range: `20-30`, color: "#3e4989", id: "class8" },
+    { range: `10-20`, color: "#482777", id: "class9" },
+    { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154", id: "class10" }
   ];
 
   classes.forEach(c => {
     const div = document.createElement("div");
-    div.innerHTML = `<span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+    div.innerHTML = `<input type="checkbox" id="${c.id}" checked> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
     legendContent.appendChild(div);
+
+    // Add event listener to update map when checkbox is toggled
+    div.querySelector('input').addEventListener('change', updateLayerVisibility);
   });
 }
 
