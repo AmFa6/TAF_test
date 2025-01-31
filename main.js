@@ -437,13 +437,6 @@ function toggleInverseScale() {
 
   console.log('Toggling inverse scale. Is inverse:', isInverse);
 
-function toggleInverseScale() {
-  isInverse = !isInverse;
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-
-  console.log('Toggling inverse scale. Is inverse:', isInverse);
-
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [false, true, true] // Set connect to false, true, true
@@ -463,6 +456,8 @@ function toggleInverseScale() {
   }
   updateLayerVisibility();
 }
+
+document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 // Function to inverse opacity scale
