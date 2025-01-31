@@ -339,7 +339,8 @@ function updateLayerVisibility() {
 
   if (selectedLayer) {
     const filteredFeatures = selectedLayer.features.filter(feature => {
-      return feature.properties[fieldToDisplay] !== undefined;
+      const value = feature.properties[fieldToDisplay];
+      return feature.properties[fieldToDisplay] !== undefined && isClassVisible(value, selectedYear);
     });
 
     let minOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[0]);
@@ -432,6 +433,26 @@ function getColor(value, selectedYear) {
   }
 }
 
+function isClassVisible(value, selectedYear) {
+  const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
+  for (const checkbox of legendCheckboxes) {
+    const range = checkbox.getAttribute('data-range');
+    const isChecked = checkbox.checked;
+    if (selectedYear.includes('-')) {
+      const [min, max] = range.split(' to ').map(parseFloat);
+      if (value >= min && value <= max && !isChecked) {
+        return false;
+      }
+    } else {
+      const [min, max] = range.split('-').map(parseFloat);
+      if (value >= min && value <= max && !isChecked) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 function updateLegend() {
   const selectedYear = yearDropdown.value;
   const legendContent = document.getElementById("legend-content");
@@ -468,8 +489,14 @@ function updateLegend() {
 
   classes.forEach(c => {
     const div = document.createElement("div");
-    div.innerHTML = `<span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" checked> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
     legendContent.appendChild(div);
+  });
+
+  // Add event listeners to legend checkboxes
+  const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
+  legendCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateLayerVisibility);
   });
 }
 
