@@ -515,7 +515,7 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
   const value = feature.properties[fieldToDisplay];
   const color = getColor(value, selectedYear);
 
-  const opacity = opacityField === 'None' ? 0.75 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.05 : scaleExp(feature.properties[opacityField], minOpacityValue, maxOpacityValue, 0.05, 0.75, opacityOrder));
+  const opacity = opacityField === 'None' ? 0.95 : (feature.properties[opacityField] === 0 || feature.properties[opacityField] === null ? 0.15 : scaleExp(feature.properties[opacityField], minOpacityValue, maxOpacityValue, 0.15, 0.95, opacityOrder));
   const weight = outlineField === 'None' ? 0 : (feature.properties[outlineField] === 0 || feature.properties[outlineField] === null ? 0 : scaleExp(feature.properties[outlineField], minOutlineValue, maxOutlineValue, 0, 4, outlineOrder));
   
   return {
