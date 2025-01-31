@@ -451,7 +451,7 @@ function toggleInverseScale() {
     });
     handles[0].classList.remove('noUi-handle-left');
     handles[1].classList.add('noUi-handle-left');
-    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)''; // Transparent to dark grey
+    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
     console.log('Normal state applied. Gradient direction: to right');
   }
   updateLayerVisibility();
