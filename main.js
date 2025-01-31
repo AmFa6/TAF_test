@@ -153,6 +153,8 @@ function initializeSliders() {
   });
 }
 
+let isInverse = false;
+
 function toggleInverseScale() {
   isInverse = !isInverse;
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
@@ -179,8 +181,6 @@ function toggleInverseScale() {
   }
   updateLayerVisibility();
 }
-
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 // Function to format values based on step size for display
 function formatValue(value, step) {
