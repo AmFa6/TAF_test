@@ -110,8 +110,7 @@ function initializeSliders() {
   // Apply the class to the right connect element
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
   if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-right');
-    connectElements[1].classList.add('noUi-connect-right-solid');
+    connectElements[1].classList.add('noUi-connect-dark-slider');
   }
 
   // Initialize noUiSlider for outline width range
@@ -133,14 +132,13 @@ function initializeSliders() {
 
   const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
   if (outlineHandles.length > 0) {
-    outlineHandles[0].classList.add('noUi-handle-left');
+    outlineHandles[0].classList.add('noUi-handle-transparent');
   }
 
   // Apply the class to the right connect element
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
-    outlineConnectElements[1].classList.add('noUi-connect-right');
-    outlineConnectElements[1].classList.add('noUi-connect-right-solid');
+    outlineconnectElements[1].classList.add('noUi-connect-dark-slider');
   }
 
   // Add event listeners to update map rendering when sliders are adjusted
