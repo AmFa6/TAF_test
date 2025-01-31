@@ -149,15 +149,17 @@ function initializeSliders() {
 
   // Add event listeners to update range labels
   opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('opacityRangeMin').innerText = formatValue(values[0], opacityRangeSlider.noUiSlider.options.step);
-    document.getElementById('opacityRangeMax').innerText = formatValue(values[1], opacityRangeSlider.noUiSlider.options.step);
+    const handleElement = handles[handle];
+    handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeSlider.noUiSlider.options.step));
   });
-
+  
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
-    document.getElementById('outlineRangeMin').innerText = formatValue(values[0], outlineRangeSlider.noUiSlider.options.step);
-    document.getElementById('outlineRangeMax').innerText = formatValue(values[1], outlineRangeSlider.noUiSlider.options.step);
+    const handleElement = outlineHandles[handle];
+    handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeSlider.noUiSlider.options.step));
   });
 }
+
+let isInverse = false;
 
 // Function to format values based on step size for display
 function formatValue(value, step) {
@@ -215,7 +217,7 @@ function updateSliderRanges() {
         },
         step: 1
       });
-      opacityRangeSlider.noUiSlider.set([0, 0]);
+      opacityRangeSlider.noUiSlider.set(['', '']);
       document.getElementById('opacityRangeMin').innerText = '';
       document.getElementById('opacityRangeMax').innerText = '';
     } else {
@@ -240,7 +242,7 @@ function updateSliderRanges() {
         },
         step: 1
       });
-      outlineRangeSlider.noUiSlider.set([0, 0]);
+      outlineRangeSlider.noUiSlider.set(['', '']);
       document.getElementById('outlineRangeMin').innerText = '';
       document.getElementById('outlineRangeMax').innerText = '';
     } else {
@@ -272,6 +274,12 @@ function updateLayerVisibility() {
   const selectedMode = modeDropdown.value;
   const opacityField = opacityFieldDropdown.value;
   const outlineField = outlineFieldDropdown.value;
+
+  console.log('Updating layer visibility. Selected year:', selectedYear);
+  console.log('Selected purpose:', selectedPurpose);
+  console.log('Selected mode:', selectedMode);
+  console.log('Opacity field:', opacityField);
+  console.log('Outline field:', outlineField);
 
   map.eachLayer(layer => {
     if (layer !== baseLayer) {
@@ -422,27 +430,34 @@ function updateLegend() {
   });
 }
 
-let isInverse = false;
-
 function toggleInverseScale() {
   isInverse = !isInverse;
-  const opacityRangeSlider = document.getElementById('opacityRangeSlider');
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
 
+  console.log('Toggling inverse scale. Is inverse:', isInverse);
+
   if (isInverse) {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [false, true, true] // Set connect to false, true, true
+    });
+    handles[0].classList.add('noUi-handle-left');
+    handles[1].classList.remove('noUi-handle-left');
+    connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Dark grey to transparent
+    console.log('Inverse state applied. Gradient direction: to left');
+  } else {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, false] // Set connect to true, true, false
+    });
     handles[0].classList.remove('noUi-handle-left');
     handles[1].classList.add('noUi-handle-left');
-    connectElements[0].classList.remove('noUi-connect-right-solid');
-    connectElements[0].style.background = 'linear-gradient(to right, #767676 0%, rgba(118, 118, 118, 1) 50%, rgba(118, 118, 118, 0) 100%)';
-    connectElements[1].style.background = '#767676';
-  } else {
-    handles[1].classList.remove('noUi-handle-left');
-    handles[0].classList.add('noUi-handle-left');
-    connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 1) 50%, #767676 50%)';
-    connectElements[1].style.background = '#767676';
+    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
+    console.log('Normal state applied. Gradient direction: to right');
   }
+  updateLayerVisibility();
 }
+
+document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 // Function to inverse opacity scale
