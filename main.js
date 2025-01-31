@@ -461,7 +461,7 @@ function updateLegend() {
   legendContent.appendChild(headerDiv);
 
   const masterCheckboxDiv = document.createElement("div");
-  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <strong>Select/Deselect All</strong>`;
   legendContent.appendChild(masterCheckboxDiv);
 
   const classes = selectedYear.includes('-') ? [
@@ -509,12 +509,16 @@ function updateLegend() {
     updateLayerVisibility();
   });
 
-  function updateMasterCheckbox() {
-    const allChecked = Array.from(newLegendCheckboxes).every(checkbox => checkbox.checked);
-    const noneChecked = Array.from(newLegendCheckboxes).every(checkbox => !checkbox.checked);
-    masterCheckbox.checked = allChecked;
-    masterCheckbox.indeterminate = !allChecked && !noneChecked;
-  }
+  updateMasterCheckbox();
+}
+
+function updateMasterCheckbox() {
+  const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
+  const allChecked = Array.from(newLegendCheckboxes).every(checkbox => checkbox.checked);
+  const noneChecked = Array.from(newLegendCheckboxes).every(checkbox => !checkbox.checked);
+  const masterCheckbox = document.getElementById('masterCheckbox');
+  masterCheckbox.checked = allChecked;
+  masterCheckbox.indeterminate = !allChecked && !noneChecked;
 }
 
 function inverseOpacityScale() {
