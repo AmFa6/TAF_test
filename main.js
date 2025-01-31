@@ -421,24 +421,28 @@ function toggleInverseScale() {
 
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, false, true] // Connect left to dark grey, right to gradient
+      connect: [true, true, true] // Left connected, middle not connected, right connected
     });
-    handles[0].classList.remove('noUi-handle-transparent'); // Left handle visible
-    handles[1].classList.add('noUi-handle-transparent'); // Right handle transparent
+    
+    // Left handle visible, right handle transparent
+    handles[0].classList.remove('noUi-handle-transparent'); 
+    handles[1].classList.add('noUi-handle-transparent'); 
 
-    // Set dark grey for the left and gradient for the middle
+    // Set styles
     connectElements[0].style.background = 'darkgrey'; // Left side dark grey
-    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Middle gradient
+    connectElements[2].style.background = 'transparent'; // Middle not connected, should be transparent
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [false, true, true] // Connect middle and right
+      connect: [false, true, true] // Middle and right connected
     });
-    handles[0].classList.add('noUi-handle-transparent'); // Left handle transparent
-    handles[1].classList.remove('noUi-handle-transparent'); // Right handle visible
 
-    // Reset to normal state
+    // Reset handles visibility
+    handles[0].classList.add('noUi-handle-transparent'); 
+    handles[1].classList.remove('noUi-handle-transparent'); 
+
+    // Reset styles
     connectElements[0].style.background = 'transparent'; // Left side transparent
-    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Right side gradient
+    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Gradient for middle
   }
 
   updateLayerVisibility();
