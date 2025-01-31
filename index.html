@@ -9,12 +9,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
   <style>
+    /* Existing styles */
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
       font-family: 'Trebuchet MS', sans-serif;
-      font-weight: normal; /* Ensure font is not bold */
+      font-weight: normal;
     }
     #map {
       height: 100%;
@@ -24,7 +25,7 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      z-index: 1000; /* Ensure the controls are always on top */
+      z-index: 1000;
       background: white;
       padding: 10px;
       border-radius: 5px;
@@ -37,10 +38,10 @@
     }
     .panel label, .panel select, .panel input {
       display: block;
-      margin-bottom: 5px; /* Reduce space between elements */
+      margin-bottom: 5px;
       font-family: 'Trebuchet MS', sans-serif;
-      font-size: 1.1em; /* Large font size */
-      font-weight: normal; /* Ensure font is not bold */
+      font-size: 1.1em;
+      font-weight: normal;
     }
     .panel select, .panel input {
       width: 100%;
@@ -50,7 +51,7 @@
       background-color: white;
       color: black;
       box-sizing: border-box;
-      font-size: 1em; /* Medium font size */
+      font-size: 1em;
     }
     .panel select:focus, .panel input:focus {
       outline: none;
@@ -89,7 +90,7 @@
       border: none;
       text-align: left;
       outline: none;
-      font-size: 1em; /* Larger font size for Settings */
+      font-size: 1em;
       background: #f0f0f0;
       margin-bottom: 10px;
       display: flex;
@@ -98,7 +99,7 @@
       padding: 10px;
       border-radius: 5px;
       font-family: 'Trebuchet MS', sans-serif;
-      font-weight: normal; /* Ensure font is not bold */
+      font-weight: normal;
     }
     .collapsible:after {
       content: '\25BC';
@@ -114,7 +115,7 @@
       background-color: #f0f0f0;
       padding: 10px;
       border-radius: 5px;
-      font-size: 0.9em; /* Small font size */
+      font-size: 0.9em;
     }
     #legend {
       position: absolute;
@@ -129,7 +130,7 @@
       word-wrap: break-word;
     }
     .noUi-target {
-      background: #f0f0f0; /* Background of the slider */
+      background: #f0f0f0;
       border-radius: 5px;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
       height: 0.5em;
@@ -139,22 +140,22 @@
       height: 0.5em;
     }
     .noUi-connect-right-solid {
-      background: #767676 !important; /* Solid grey fill */
+      background: #767676 !important;
     }
     .noUi-handle {
-      background: #767676 !important; /* Handle color */
+      background: #767676 !important;
       border: none !important;
       border-radius: 50% !important;
       box-shadow: none !important;
-      width: 14px !important; /* Adjust this value if needed */
-      height: 14px !important; /* Adjust this value if needed */
+      width: 14px !important;
+      height: 14px !important;
       cursor: pointer !important;
-      top: 50%; /* Vertically center the handle */
-      transform: translate(-50%, 5%) !important; /* Center the handle over its position */
+      top: 50%;
+      transform: translate(-50%, 5%) !important;
     }
     .noUi-handle-left {
-      background: rgba(255, 255, 255, 0.0) !important; /* Transparent inside */
-      border: 0.5px solid #767676 !important; /* Grey outline */
+      background: rgba(255, 255, 255, 0.0) !important;
+      border: 0.5px solid #767676 !important;
     }
     .noUi-handle::after {
       content: attr(data-value);
@@ -186,16 +187,16 @@
     .collapsible-content label,
     .collapsible-content select,
     .collapsible-content input {
-      font-size: 0.8em; /* Small font size */
+      font-size: 0.8em;
       font-family: 'Trebuchet MS', sans-serif;
-      font-weight: normal; /* Ensure font is not bold */
+      font-weight: normal;
     }
     .panel-header {
       cursor: pointer;
       border: none;
       text-align: left;
       outline: none;
-      font-size: 1.2em; /* Font size for Connectivity Scores */
+      font-size: 1.2em;
       background: white;
       margin-bottom: 10px;
       display: flex;
@@ -204,7 +205,7 @@
       padding: 10px;
       border-radius: 5px;
       font-family: 'Trebuchet MS', sans-serif;
-      font-weight: normal; /* Ensure font is not bold */
+      font-weight: normal;
     }
     .panel-header:after {
       content: '\25BC';
@@ -213,6 +214,16 @@
     }
     .panel-header.collapsed:after {
       content: '\25B6';
+    }
+
+    /* New styles for handle colors */
+    .noUi-handle-darkgrey {
+      background: #767676 !important; /* Dark grey handle */
+      border: none !important;
+    }
+    .noUi-handle-transparent {
+      background: rgba(255, 255, 255, 0.0) !important; /* Transparent handle */
+      border: 0.5px solid #767676 !important; /* Grey outline */
     }
   </style>
 </head>
