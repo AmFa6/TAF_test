@@ -423,8 +423,8 @@ function toggleInverseScale() {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [false, true, true] // Set connect to false, true, true
     });
-    handles[0].classList.add('noUi-handle-transparent');
-    handles[1].classList.remove('noUi-handle-transparent');
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
     connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Dark grey to transparent
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
