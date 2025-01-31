@@ -223,6 +223,14 @@
     .medium-font {
       font-size: 1em; /* Medium font size */
     }
+    .amenity-checkbox-label {
+      display: flex;
+      align-items: center;
+      font-size: 1em; /* Medium font size */
+    }
+    .amenity-checkbox-label input {
+      margin-right: 10px;
+    }
   </style>
 </head>
 <body>
@@ -307,17 +315,17 @@
     <div id="panel-amenities" class="panel">
       <button class="panel-header">Journey Time Catchments - Amenities</button>
       <div id="panel-amenities-content">
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="Primary School" checked> Primary School</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="Secondary School" checked> Secondary School</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="Further Education" checked> Further Education</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="Employment (500+ jobs)" checked> Employment (500+ jobs)</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="Employment (5000+ jobs)" checked> Employment (5000+ jobs)</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="Strategic Employment" checked> Strategic Employment</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="City Centre" checked> City Centre</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="Major Centre" checked> Major Centre</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="District Centre" checked> District Centre</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="General Practice" checked> General Practice</label>
-        <label class="medium-font"><input type="checkbox" class="amenity-checkbox" value="Hospital" checked> Hospital</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="Primary School" checked> Primary School</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="Secondary School" checked> Secondary School</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="Further Education" checked> Further Education</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="Employment (500+ jobs)" checked> Employment (500+ jobs)</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="Employment (5000+ jobs)" checked> Employment (5000+ jobs)</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="Strategic Employment" checked> Strategic Employment</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="City Centre" checked> City Centre</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="Major Centre" checked> Major Centre</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="District Centre" checked> District Centre</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="General Practice" checked> General Practice</label>
+        <label class="amenity-checkbox-label"><input type="checkbox" class="amenity-checkbox" value="Hospital" checked> Hospital</label>
       </div>
     </div>
     <div id="panel-hexagons" class="panel">
