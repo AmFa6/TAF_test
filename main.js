@@ -86,7 +86,7 @@ function initializeSliders() {
   opacityRangeSlider = document.getElementById('opacityRangeSlider');
   noUiSlider.create(opacityRangeSlider, {
     start: [0, 0],
-    connect: [true, true, true], // Set left connect to false and right to true
+    connect: [true, true, true], // Set left connect to true, middle to true, and right to true
     range: {
       'min': 0,
       'max': 0
@@ -105,10 +105,16 @@ function initializeSliders() {
     handles[0].classList.add('noUi-handle-transparent');
   }
 
-  // Apply the class to the right connect element
+  // Apply the class to the connect elements
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  if (connectElements.length > 0) {
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+  }
   if (connectElements.length > 1) {
-    connectElements[2].classList.add('noUi-connect-dark-slider');
+    connectElements[1].classList.add('noUi-connect-dark-slider');
+  }
+  if (connectElements.length > 2) {
+    connectElements[2].classList.add('noUi-connect-transparent');
   }
 
   // Initialize noUiSlider for outline width range
@@ -136,7 +142,7 @@ function initializeSliders() {
   // Apply the class to the right connect element
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-dark-slider');
+    outlineConnectElements[1].classList.add('noUi-connect-dark-slider');
   }
 
   // Add event listeners to update map rendering when sliders are adjusted
@@ -155,7 +161,34 @@ function initializeSliders() {
   });
 }
 
-let isInverse = false;
+function toggleInverseScale() {
+  isInverse = !isInverse;
+  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+
+  if (isInverse) {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, true] // Set connect to true, true, true
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.add('noUi-connect-dark-slider');
+    connectElements[2].classList.add('noUi-connect-transparent');
+  } else {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, true] // Set connect to true, true, true
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-dark-slider');
+    connectElements[2].classList.remove('noUi-connect-transparent');
+  }
+  updateLayerVisibility();
+}
+
+document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 // Function to format values based on step size for display
 function formatValue(value, step) {
@@ -413,32 +446,6 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 }
-
-function toggleInverseScale() {
-  isInverse = !isInverse;
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-
-  if (isInverse) {
-    opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, false] // Set connect to false, true, true
-    });
-    handles[1].classList.add('noUi-handle-transparent');
-    handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Dark grey to transparent
-    connectElements[1].classList.remove('noUi-connect-dark-slider');
-  } else {
-    opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, false] // Set connect to true, true, false
-    });
-    handles[1].classList.remove('noUi-handle-transparent');
-    handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
-  }
-  updateLayerVisibility();
-}
-
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 // Function to inverse opacity scale
 function inverseOpacityScale() {
