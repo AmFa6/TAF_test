@@ -494,7 +494,10 @@ function updateLegend() {
 
   const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
   newLegendCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateLayerVisibility);
+    checkbox.addEventListener('change', () => {
+      updateMasterCheckbox();
+      updateLayerVisibility();
+    });
   });
 
   const masterCheckbox = document.getElementById('masterCheckbox');
@@ -505,6 +508,12 @@ function updateLegend() {
     });
     updateLayerVisibility();
   });
+  function updateMasterCheckbox() {
+    const allChecked = Array.from(newLegendCheckboxes).every(checkbox => checkbox.checked);
+    const noneChecked = Array.from(newLegendCheckboxes).every(checkbox => !checkbox.checked);
+    masterCheckbox.checked = allChecked;
+    masterCheckbox.indeterminate = !allChecked && !noneChecked;
+  }
 }
 
 function inverseOpacityScale() {
