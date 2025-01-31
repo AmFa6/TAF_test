@@ -29,7 +29,6 @@ geoJsonFiles.forEach(file => {
     .then(response => response.json())
     .then(geoJson => {
       layers[file.year] = geoJson;
-      console.log(`Loaded GeoJSON for year ${file.year}`);
       layersLoaded++;
       if (layersLoaded === totalLayers) {
         initializeSliders();
@@ -37,7 +36,6 @@ geoJsonFiles.forEach(file => {
         updateLayerVisibility();
       }
     })
-    .catch(error => console.error(`Error loading GeoJSON: ${error.message}`));
 });
 
 // Populate year dropdown
@@ -257,7 +255,6 @@ function updateSliderRanges() {
       document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   } else {
-    console.error('Selected layer not found for year:', selectedYear);
   }
 }
 
@@ -265,19 +262,12 @@ function updateSliderRanges() {
 function updateLayerVisibility() {
   const selectedYear = yearDropdown.value;
   if (!selectedYear) {
-    console.error('No year selected');
     return;
   }
   const selectedPurpose = purposeDropdown.value;
   const selectedMode = modeDropdown.value;
   const opacityField = opacityFieldDropdown.value;
   const outlineField = outlineFieldDropdown.value;
-
-  console.log('Updating layer visibility. Selected year:', selectedYear);
-  console.log('Selected purpose:', selectedPurpose);
-  console.log('Selected mode:', selectedMode);
-  console.log('Opacity field:', opacityField);
-  console.log('Outline field:', outlineField);
 
   map.eachLayer(layer => {
     if (layer !== baseLayer) {
@@ -297,9 +287,6 @@ function updateLayerVisibility() {
     let maxOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[1]);
     let minOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[0]);
     let maxOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[1]);
-
-    console.log(`Opacity range: min=${minOpacity}, max=${maxOpacity}`);
-    console.log(`Outline range: min=${minOutline}, max=${maxOutline}`);
 
     const filteredGeoJson = {
       type: "FeatureCollection",
@@ -353,7 +340,6 @@ function onEachFeature(feature, layer, selectedYear) {
 
 function getColor(value, selectedYear) {
   if (!selectedYear) {
-    console.error('No year selected');
     return 'transparent';
   }
 
@@ -433,8 +419,6 @@ function toggleInverseScale() {
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
 
-  console.log('Toggling inverse scale. Is inverse:', isInverse);
-
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [false, true, true] // Set connect to false, true, true
@@ -442,7 +426,6 @@ function toggleInverseScale() {
     handles[0].classList.add('noUi-handle-transparent');
     handles[1].classList.remove('noUi-handle-transparent');
     connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Dark grey to transparent
-    console.log('Inverse state applied. Gradient direction: to left');
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, false] // Set connect to true, true, false
@@ -450,7 +433,6 @@ function toggleInverseScale() {
     handles[0].classList.remove('noUi-handle-transparent');
     handles[1].classList.add('noUi-handle-transparent');
     connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
-    console.log('Normal state applied. Gradient direction: to right');
   }
   updateLayerVisibility();
 }
