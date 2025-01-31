@@ -82,11 +82,10 @@ let opacityRangeSlider;
 let outlineRangeSlider;
 
 function initializeSliders() {
-  // Initialize noUiSlider for opacity range
   opacityRangeSlider = document.getElementById('opacityRangeSlider');
   noUiSlider.create(opacityRangeSlider, {
     start: [0, 0],
-    connect: [true, true, true], // Set left connect to true, middle to true, and right to true
+    connect: [true, true, true],
     range: {
       'min': 0,
       'max': 0
@@ -94,32 +93,26 @@ function initializeSliders() {
     step: 1,
     tooltips: false,
     format: {
-      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
+      to: value => parseFloat(value).toFixed(2), 
       from: value => parseFloat(value)
     }
   });
 
-  // Apply the class to the left handle
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   if (handles.length > 0) {
     handles[0].classList.add('noUi-handle-transparent');
   }
 
-  // Apply the class to the connect elements
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  console.log('Number of connect elements:', connectElements.length); // Print the number of connect elements
-  if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-gradient');
-  }
   if (connectElements.length > 2) {
+    connectElements[1].classList.add('noUi-connect-gradient');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
     start: [0, 0],
-    connect: [false, true, true],
+    connect: [true, true, true],
     range: {
       'min': 0,
       'max': 0
@@ -127,7 +120,7 @@ function initializeSliders() {
     step: 1,
     tooltips: false,
     format: {
-      to: value => parseFloat(value).toFixed(2), // Ensure two decimal places
+      to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
     }
   });
@@ -140,7 +133,8 @@ function initializeSliders() {
   // Apply the class to the right connect element
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
-    outlineConnectElements[1].classList.add('noUi-connect-dark-grey');
+    outlineConnectElements[1].classList.add('noUi-connect-gradient');
+    outlineConnectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
   // Add event listeners to update map rendering when sliders are adjusted
@@ -166,22 +160,22 @@ function toggleInverseScale() {
 
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, true] // Set connect to true, true, true
+      connect: [true, true, true]
     });
     handles[1].classList.add('noUi-handle-transparent');
     handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].classList.add('noUi-connect-transparent');
-    connectElements[1].classList.add('noUi-connect-gradient');
-    connectElements[2].classList.add('noUi-connect-dark-grey');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 1) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 0) 100%)';
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, true] // Set connect to true, true, true
+      connect: [true, true, true]
     });
     handles[1].classList.remove('noUi-handle-transparent');
     handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-transparent');
-    connectElements[1].classList.remove('noUi-connect-gradient');
-    connectElements[2].classList.remove('noUi-connect-dark-grey');
+    connectElements[0].classList.remove('noUi-connect-darl-grey');
+    connectElements[1].classList.add('noUi-connect-gradient');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
   }
   updateLayerVisibility();
 }
