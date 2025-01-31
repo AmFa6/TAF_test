@@ -439,7 +439,6 @@ function toggleInverseScale() {
 
 document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 // Function to inverse opacity scale
 function inverseOpacityScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
