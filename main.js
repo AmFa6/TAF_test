@@ -134,44 +134,32 @@ function initializeSliders() {
   });
 }
 
-function applyDefaultClasses() {
-  const opacityHandles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  const opacityConnectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
-  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
-
-  if (!isInverse) {
-    // Default classes
-    opacityHandles[0].classList.add('noui-handle-transparent');
-    opacityHandles[1].classList.add('nouihandle-dark');
-    opacityConnectElements[0].classList.add('nui-connect-transparent-slider');
-    opacityConnectElements[1].classList.add('noui-connect-dark-slider');
-    opacityConnectElements[2].classList.add('nui-connect-gradient-right');
-
-    outlineHandles[0].classList.add('noui-handle-transparent');
-    outlineHandles[1].classList.add('nouihandle-dark');
-    outlineConnectElements[0].classList.add('nui-connect-transparent-slider');
-    outlineConnectElements[1].classList.add('noui-connect-dark-slider');
-    outlineConnectElements[2].classList.add('nui-connect-gradient-right');
-  } else {
-    // Inverse classes
-    opacityHandles[0].classList.add('nouihandle-dark');
-    opacityHandles[1].classList.add('noui-handle-transparent');
-    opacityConnectElements[0].classList.add('noui-connect-dark-slider');
-    opacityConnectElements[1].classList.add('nui-connect-transparent-slider');
-    opacityConnectElements[2].classList.add('nui-connect-gradient-left');
-
-    outlineHandles[0].classList.add('nouihandle-dark');
-    outlineHandles[1].classList.add('noui-handle-transparent');
-    outlineConnectElements[0].classList.add('noui-connect-dark-slider');
-    outlineConnectElements[1].classList.add('nui-connect-transparent-slider');
-    outlineConnectElements[2].classList.add('nui-connect-gradient-left');
-  }
-}
-
 function toggleInverseScale() {
   isInverse = !isInverse;
-  applyDefaultClasses();
+  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+
+  if (isInverse) {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, false] // Set connect to true, true, false
+    });
+    handles[0].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-dark');
+    handles[1].classList.remove('noUi-handle-dark');
+    handles[1].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-gradient-right');
+    connectElements[0].classList.add('noUi-connect-gradient-left');
+  } else {
+    opacityRangeSlider.noUiSlider.updateOptions({
+      connect: [false, true, true] // Set connect to false, true, true
+    });
+    handles[0].classList.remove('noUi-handle-dark');
+    handles[0].classList.add('noUi-handle-transparent');
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[1].classList.add('noUi-handle-dark');
+    connectElements[0].classList.remove('noUi-connect-gradient-left');
+    connectElements[0].classList.add('noUi-connect-gradient-right');
+  }
   updateLayerVisibility();
 }
 
