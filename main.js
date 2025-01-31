@@ -105,7 +105,7 @@ function initializeSliders() {
 
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
   if (connectElements.length > 2) {
-    connectElements[1].classList.add('noUi-connect-gradient');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
@@ -133,7 +133,7 @@ function initializeSliders() {
   // Apply the class to the right connect element
   const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
-    outlineConnectElements[1].classList.add('noUi-connect-gradient');
+    outlineConnectElements[1].classList.add('noUi-connect-gradient-right');
     outlineConnectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
