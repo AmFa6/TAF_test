@@ -107,13 +107,8 @@ function initializeSliders() {
 
   // Apply the class to the connect elements
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  if (connectElements.length > 0) {
-    connectElements[0].classList.add('noUi-connect-transparent');
-  }
-  if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect');
-  }
   if (connectElements.length > 2) {
+    connectElements[1].classList.add('noUi-connect-gradient');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
