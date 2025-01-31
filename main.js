@@ -29,6 +29,7 @@ geoJsonFiles.forEach(file => {
     .then(response => response.json())
     .then(geoJson => {
       layers[file.year] = geoJson;
+      console.log(`Loaded GeoJSON for year ${file.year}`);
       layersLoaded++;
       if (layersLoaded === totalLayers) {
         initializeSliders();
@@ -36,6 +37,7 @@ geoJsonFiles.forEach(file => {
         updateLayerVisibility();
       }
     })
+    .catch(error => console.error(`Error loading GeoJSON: ${error.message}`));
 });
 
 // Populate year dropdown
@@ -99,6 +101,19 @@ function initializeSliders() {
     }
   });
 
+  // Apply the class to the left handle
+  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  if (handles.length > 0) {
+    handles[0].classList.add('noUi-handle-left');
+  }
+
+  // Apply the class to the right connect element
+  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  if (connectElements.length > 1) {
+    connectElements[1].classList.add('noUi-connect-right');
+    connectElements[1].classList.add('noUi-connect-right-solid');
+  }
+
   // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
@@ -116,7 +131,17 @@ function initializeSliders() {
     }
   });
 
-  applyDefaultClasses();
+  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+  if (outlineHandles.length > 0) {
+    outlineHandles[0].classList.add('noUi-handle-left');
+  }
+
+  // Apply the class to the right connect element
+  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
+  if (outlineConnectElements.length > 1) {
+    outlineConnectElements[1].classList.add('noUi-connect-right');
+    outlineConnectElements[1].classList.add('noUi-connect-right-solid');
+  }
 
   // Add event listeners to update map rendering when sliders are adjusted
   opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
@@ -124,46 +149,15 @@ function initializeSliders() {
 
   // Add event listeners to update range labels
   opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
-    const handleElement = opacityRangeSlider.querySelectorAll('.noUi-handle')[handle];
-    handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeSlider.noUiSlider.options.step));
+    document.getElementById('opacityRangeMin').innerText = formatValue(values[0], opacityRangeSlider.noUiSlider.options.step);
+    document.getElementById('opacityRangeMax').innerText = formatValue(values[1], opacityRangeSlider.noUiSlider.options.step);
   });
 
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
-    const handleElement = outlineRangeSlider.querySelectorAll('.noUi-handle')[handle];
-    handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeSlider.noUiSlider.options.step));
+    document.getElementById('outlineRangeMin').innerText = formatValue(values[0], outlineRangeSlider.noUiSlider.options.step);
+    document.getElementById('outlineRangeMax').innerText = formatValue(values[1], outlineRangeSlider.noUiSlider.options.step);
   });
 }
-
-function toggleInverseScale() {
-  isInverse = !isInverse;
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-
-  if (isInverse) {
-    opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, false] // Set connect to true, true, false
-    });
-    handles[0].classList.remove('noUi-handle-transparent');
-    handles[0].classList.add('noUi-handle-dark');
-    handles[1].classList.remove('noUi-handle-dark');
-    handles[1].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-gradient-right');
-    connectElements[0].classList.add('noUi-connect-gradient-left');
-  } else {
-    opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [false, true, true] // Set connect to false, true, true
-    });
-    handles[0].classList.remove('noUi-handle-dark');
-    handles[0].classList.add('noUi-handle-transparent');
-    handles[1].classList.remove('noUi-handle-transparent');
-    handles[1].classList.add('noUi-handle-dark');
-    connectElements[0].classList.remove('noUi-connect-gradient-left');
-    connectElements[0].classList.add('noUi-connect-gradient-right');
-  }
-  updateLayerVisibility();
-}
-
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 // Function to format values based on step size for display
 function formatValue(value, step) {
@@ -221,7 +215,7 @@ function updateSliderRanges() {
         },
         step: 1
       });
-      opacityRangeSlider.noUiSlider.set(['', '']);
+      opacityRangeSlider.noUiSlider.set([0, 0]);
       document.getElementById('opacityRangeMin').innerText = '';
       document.getElementById('opacityRangeMax').innerText = '';
     } else {
@@ -246,7 +240,7 @@ function updateSliderRanges() {
         },
         step: 1
       });
-      outlineRangeSlider.noUiSlider.set(['', '']);
+      outlineRangeSlider.noUiSlider.set([0, 0]);
       document.getElementById('outlineRangeMin').innerText = '';
       document.getElementById('outlineRangeMax').innerText = '';
     } else {
@@ -263,6 +257,7 @@ function updateSliderRanges() {
       document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   } else {
+    console.error('Selected layer not found for year:', selectedYear);
   }
 }
 
@@ -270,6 +265,7 @@ function updateSliderRanges() {
 function updateLayerVisibility() {
   const selectedYear = yearDropdown.value;
   if (!selectedYear) {
+    console.error('No year selected');
     return;
   }
   const selectedPurpose = purposeDropdown.value;
@@ -295,6 +291,9 @@ function updateLayerVisibility() {
     let maxOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[1]);
     let minOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[0]);
     let maxOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[1]);
+
+    console.log(`Opacity range: min=${minOpacity}, max=${maxOpacity}`);
+    console.log(`Outline range: min=${minOutline}, max=${maxOutline}`);
 
     const filteredGeoJson = {
       type: "FeatureCollection",
@@ -348,6 +347,7 @@ function onEachFeature(feature, layer, selectedYear) {
 
 function getColor(value, selectedYear) {
   if (!selectedYear) {
+    console.error('No year selected');
     return 'transparent';
   }
 
@@ -422,6 +422,29 @@ function updateLegend() {
   });
 }
 
+let isInverse = false;
+
+function toggleInverseScale() {
+  isInverse = !isInverse;
+  const opacityRangeSlider = document.getElementById('opacityRangeSlider');
+  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+
+  if (isInverse) {
+    handles[0].classList.remove('noUi-handle-left');
+    handles[1].classList.add('noUi-handle-left');
+    connectElements[0].classList.remove('noUi-connect-right-solid');
+    connectElements[0].style.background = 'linear-gradient(to right, #767676 0%, rgba(118, 118, 118, 1) 50%, rgba(118, 118, 118, 0) 100%)';
+    connectElements[1].style.background = '#767676';
+  } else {
+    handles[1].classList.remove('noUi-handle-left');
+    handles[0].classList.add('noUi-handle-left');
+    connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 1) 50%, #767676 50%)';
+    connectElements[1].style.background = '#767676';
+  }
+}
+
+document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 // Function to inverse opacity scale
 function inverseOpacityScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
