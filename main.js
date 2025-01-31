@@ -425,13 +425,18 @@ function toggleInverseScale() {
     });
     handles[1].classList.add('noUi-handle-transparent');
     handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Dark grey to transparent
+    
+    // Set the left side to dark grey and right side to transparent
+    connectElements[0].style.background = 'darkgrey'; // Dark grey for the left side
+    connectElements[1].style.background = 'transparent'; // Transparent for the right side
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, false] // Set connect to true, true, false
     });
     handles[1].classList.remove('noUi-handle-transparent');
     handles[0].classList.add('noUi-handle-transparent');
+    
+    // Reset to normal gradient
     connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
   }
   updateLayerVisibility();
