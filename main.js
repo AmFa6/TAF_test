@@ -107,6 +107,7 @@ function initializeSliders() {
 
   // Apply the class to the connect elements
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  console.log('Number of connect elements:', connectElements.length); // Print the number of connect elements
   if (connectElements.length > 2) {
     connectElements[1].classList.add('noUi-connect-gradient');
     connectElements[2].classList.add('noUi-connect-dark-grey');
