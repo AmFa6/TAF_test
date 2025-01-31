@@ -86,7 +86,7 @@ function initializeSliders() {
   opacityRangeSlider = document.getElementById('opacityRangeSlider');
   noUiSlider.create(opacityRangeSlider, {
     start: [0, 0],
-    connect: [false, true, true], // Set left connect to false and right to true
+    connect: [true, true, true], // Set left connect to false and right to true
     range: {
       'min': 0,
       'max': 0
