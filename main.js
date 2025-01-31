@@ -153,16 +153,15 @@ function initializeSliders() {
   });
 }
 
-let isInverse = false;
+let isInverseOpacity = false;
+let isInverseOutline = false;
 
-function toggleInverseScale() {
-  isInverse = !isInverse;
+function toggleInverseOpacityScale() {
+  isInverseOpacity = !isInverseOpacity;
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
-  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
 
-  if (isInverse) {
+  if (isInverseOpacity) {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
@@ -172,16 +171,6 @@ function toggleInverseScale() {
     connectElements[1].classList.remove('noUi-connect-gradient-right');
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
-
-    outlineRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    outlineHandles[1].classList.add('noUi-handle-transparent');
-    outlineHandles[0].classList.remove('noUi-handle-transparent');
-    outlineConnectElements[0].classList.add('noUi-connect-dark-grey');
-    outlineConnectElements[1].classList.remove('noUi-connect-gradient-right');
-    outlineConnectElements[1].classList.add('noUi-connect-gradient-left');
-    outlineConnectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
@@ -192,23 +181,42 @@ function toggleInverseScale() {
     connectElements[1].classList.remove('noUi-connect-gradient-left');
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
-
-    outlineRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    outlineHandles[1].classList.remove('noUi-handle-transparent');
-    outlineHandles[0].classList.add('noUi-handle-transparent');
-    outlineConnectElements[0].classList.remove('noUi-connect-dark-grey');
-    outlineConnectElements[1].classList.remove('noUi-connect-gradient-left');
-    outlineConnectElements[1].classList.add('noUi-connect-gradient-right');
-    outlineConnectElements[2].classList.add('noUi-connect-dark-grey');
   }
   updateLayerVisibility();
 }
 
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
+function toggleInverseOutlineScale() {
+  isInverseOutline = !isInverseOutline;
+  const handles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+  const connectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
 
-// Function to format values based on step size for display
+  if (isInverseOutline) {
+    outlineRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    outlineRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
+  updateLayerVisibility();
+}
+
+document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseOpacityScale);
+document.getElementById('inverseOutlineScaleButton').addEventListener('click', toggleInverseOutlineScale);
+
 function formatValue(value, step) {
   if (step >= 1) {
     return parseFloat(value).toFixed(0);
