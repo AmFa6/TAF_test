@@ -439,24 +439,6 @@ function toggleInverseScale() {
 
 document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
-function updateSliderStyle() {
-  let connects = document.querySelectorAll('.noUi-connect');
-  if (isInverse) {
-      connects[0].style.background = "darkgray";  // Leftmost section dark grey
-      if (connects.length > 1) {
-          connects[1].style.background = "transparent";  // Rightmost section transparent
-      }
-  } else {
-      connects.forEach(conn => conn.style.background = "gray"); // Default color
-  }
-}
-
-// Toggle inverse mode
-document.getElementById("inverseButton").addEventListener("click", function() {
-  isInverse = !isInverse;
-  updateSliderStyle();
-});
-
 // Function to inverse opacity scale
 function inverseOpacityScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
