@@ -421,23 +421,24 @@ function toggleInverseScale() {
 
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [false, true, true] // Set connect to false, true, true
+      connect: [true, false, false] // Set connect to true for left, false for middle and right
     });
-    handles[1].classList.add('noUi-handle-transparent');
-    handles[0].classList.remove('noUi-handle-transparent');
-    
-    // Set the left side to dark grey and right side to transparent
-    connectElements[0].style.background = 'darkgrey'; // Dark grey for the left side
-    connectElements[1].style.background = 'transparent'; // Transparent for the right side
+    handles[0].classList.remove('noUi-handle-transparent'); // Left handle is visible
+    handles[1].classList.add('noUi-handle-transparent'); // Right handle is transparent
+
+    // Set the left side to dark grey and the right side to transparent
+    connectElements[0].style.background = 'darkgrey'; // Left side dark grey
+    connectElements[1].style.background = 'transparent'; // Right side transparent
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, false] // Set connect to true, true, false
+      connect: [false, true, true] // Set connect to false for left, true for middle and right
     });
-    handles[1].classList.remove('noUi-handle-transparent');
-    handles[0].classList.add('noUi-handle-transparent');
-    
+    handles[0].classList.add('noUi-handle-transparent'); // Left handle is transparent
+    handles[1].classList.remove('noUi-handle-transparent'); // Right handle is visible
+
     // Reset to normal gradient
-    connectElements[0].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
+    connectElements[0].style.background = 'transparent'; // Left side transparent
+    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Right side gradient
   }
   updateLayerVisibility();
 }
