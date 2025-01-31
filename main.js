@@ -421,25 +421,26 @@ function toggleInverseScale() {
 
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, false, false] // Set connect to true for left, false for middle and right
+      connect: [true, false, true] // Connect left to dark grey, right to gradient
     });
-    handles[0].classList.remove('noUi-handle-transparent'); // Left handle is visible
-    handles[1].classList.add('noUi-handle-transparent'); // Right handle is transparent
+    handles[0].classList.remove('noUi-handle-transparent'); // Left handle visible
+    handles[1].classList.add('noUi-handle-transparent'); // Right handle transparent
 
-    // Set the left side to dark grey and the right side to transparent
+    // Set dark grey for the left and gradient for the middle
     connectElements[0].style.background = 'darkgrey'; // Left side dark grey
-    connectElements[1].style.background = 'transparent'; // Right side transparent
+    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Middle gradient
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [false, true, true] // Set connect to false for left, true for middle and right
+      connect: [false, true, true] // Connect middle and right
     });
-    handles[0].classList.add('noUi-handle-transparent'); // Left handle is transparent
-    handles[1].classList.remove('noUi-handle-transparent'); // Right handle is visible
+    handles[0].classList.add('noUi-handle-transparent'); // Left handle transparent
+    handles[1].classList.remove('noUi-handle-transparent'); // Right handle visible
 
-    // Reset to normal gradient
+    // Reset to normal state
     connectElements[0].style.background = 'transparent'; // Left side transparent
     connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Right side gradient
   }
+
   updateLayerVisibility();
 }
 
