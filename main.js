@@ -99,18 +99,6 @@ function initializeSliders() {
     }
   });
 
-  // Apply the class to the left handle
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  if (handles.length > 0) {
-    handles[0].classList.add('noUi-handle-transparent');
-  }
-
-  // Apply the class to the right connect element
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-  if (connectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-dark-slider');
-  }
-
   // Initialize noUiSlider for outline width range
   outlineRangeSlider = document.getElementById('outlineRangeSlider');
   noUiSlider.create(outlineRangeSlider, {
@@ -128,16 +116,7 @@ function initializeSliders() {
     }
   });
 
-  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
-  if (outlineHandles.length > 0) {
-    outlineHandles[0].classList.add('noUi-handle-transparent');
-  }
-
-  // Apply the class to the right connect element
-  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
-  if (outlineConnectElements.length > 1) {
-    connectElements[1].classList.add('noUi-connect-dark-slider');
-  }
+  applyDefaultClasses();
 
   // Add event listeners to update map rendering when sliders are adjusted
   opacityRangeSlider.noUiSlider.on('update', updateLayerVisibility);
@@ -145,17 +124,58 @@ function initializeSliders() {
 
   // Add event listeners to update range labels
   opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
-    const handleElement = handles[handle];
+    const handleElement = opacityRangeSlider.querySelectorAll('.noUi-handle')[handle];
     handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeSlider.noUiSlider.options.step));
   });
-  
+
   outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
-    const handleElement = outlineHandles[handle];
+    const handleElement = outlineRangeSlider.querySelectorAll('.noUi-handle')[handle];
     handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeSlider.noUiSlider.options.step));
   });
 }
 
-let isInverse = false;
+function applyDefaultClasses() {
+  const opacityHandles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  const opacityConnectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
+
+  if (!isInverse) {
+    // Default classes
+    opacityHandles[0].classList.add('noui-handle-transparent');
+    opacityHandles[1].classList.add('nouihandle-dark');
+    opacityConnectElements[0].classList.add('nui-connect-transparent-slider');
+    opacityConnectElements[1].classList.add('noui-connect-dark-slider');
+    opacityConnectElements[2].classList.add('nui-connect-gradient-right');
+
+    outlineHandles[0].classList.add('noui-handle-transparent');
+    outlineHandles[1].classList.add('nouihandle-dark');
+    outlineConnectElements[0].classList.add('nui-connect-transparent-slider');
+    outlineConnectElements[1].classList.add('noui-connect-dark-slider');
+    outlineConnectElements[2].classList.add('nui-connect-gradient-right');
+  } else {
+    // Inverse classes
+    opacityHandles[0].classList.add('nouihandle-dark');
+    opacityHandles[1].classList.add('noui-handle-transparent');
+    opacityConnectElements[0].classList.add('noui-connect-dark-slider');
+    opacityConnectElements[1].classList.add('nui-connect-transparent-slider');
+    opacityConnectElements[2].classList.add('nui-connect-gradient-left');
+
+    outlineHandles[0].classList.add('nouihandle-dark');
+    outlineHandles[1].classList.add('noui-handle-transparent');
+    outlineConnectElements[0].classList.add('noui-connect-dark-slider');
+    outlineConnectElements[1].classList.add('nui-connect-transparent-slider');
+    outlineConnectElements[2].classList.add('nui-connect-gradient-left');
+  }
+}
+
+function toggleInverseScale() {
+  isInverse = !isInverse;
+  applyDefaultClasses();
+  updateLayerVisibility();
+}
+
+document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 // Function to format values based on step size for display
 function formatValue(value, step) {
@@ -413,32 +433,6 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 }
-
-function toggleInverseScale() {
-  isInverse = !isInverse;
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
-
-  if (isInverse) {
-    opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [true, true, false]
-    });
-    handles[1].classList.add('noUi-handle-transparent');
-    handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].style.background = 'noUi-connect-dark-slider';
-    connectElements[1].style.background = 'linear-gradient(to left, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Dark grey to transparent
-  } else {
-    opacityRangeSlider.noUiSlider.updateOptions({
-      connect: [false, true, true]
-    });
-    handles[0].classList.remove('noUi-handle-transparent');
-    handles[1].classList.add('noUi-handle-transparent');
-    connectElements[1].style.background = 'linear-gradient(to right, rgba(118, 118, 118, 0) 0%, rgba(118, 118, 118, 0.5) 50%, rgba(118, 118, 118, 1) 100%)'; // Transparent to dark grey
-  }
-  updateLayerVisibility();
-}
-
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', toggleInverseScale);
 
 // Function to inverse opacity scale
 function inverseOpacityScale() {
