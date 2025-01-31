@@ -159,6 +159,8 @@ function toggleInverseScale() {
   isInverse = !isInverse;
   const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
 
   if (isInverse) {
     opacityRangeSlider.noUiSlider.updateOptions({
@@ -170,6 +172,16 @@ function toggleInverseScale() {
     connectElements[1].classList.remove('noUi-connect-gradient-right');
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
+
+    outlineRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    outlineHandles[1].classList.add('noUi-handle-transparent');
+    outlineHandles[0].classList.remove('noUi-handle-transparent');
+    outlineConnectElements[0].classList.add('noUi-connect-dark-grey');
+    outlineConnectElements[1].classList.remove('noUi-connect-gradient-right');
+    outlineConnectElements[1].classList.add('noUi-connect-gradient-left');
+    outlineConnectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
     opacityRangeSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
@@ -180,6 +192,16 @@ function toggleInverseScale() {
     connectElements[1].classList.remove('noUi-connect-gradient-left');
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
+
+    outlineRangeSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    outlineHandles[1].classList.remove('noUi-handle-transparent');
+    outlineHandles[0].classList.add('noUi-handle-transparent');
+    outlineConnectElements[0].classList.remove('noUi-connect-dark-grey');
+    outlineConnectElements[1].classList.remove('noUi-connect-gradient-left');
+    outlineConnectElements[1].classList.add('noUi-connect-gradient-right');
+    outlineConnectElements[2].classList.add('noUi-connect-dark-grey');
   }
   updateLayerVisibility();
 }
