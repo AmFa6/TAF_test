@@ -432,8 +432,6 @@ function getColor(value, selectedYear) {
   }
 }
 
-let visibleClasses = new Set();
-
 function updateLegend() {
   const selectedYear = yearDropdown.value;
   const legendContent = document.getElementById("legend-content");
@@ -470,22 +468,7 @@ function updateLegend() {
 
   classes.forEach(c => {
     const div = document.createElement("div");
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = true;
-    checkbox.style.marginRight = "5px";
-    checkbox.addEventListener('change', () => {
-      if (checkbox.checked) {
-        visibleClasses.add(c.color);
-      } else {
-        visibleClasses.delete(c.color);
-      }
-      updateLayerVisibility();
-    });
-    visibleClasses.add(c.color);
-
-    div.appendChild(checkbox);
-    div.innerHTML += `<span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+    div.innerHTML = `<span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
     legendContent.appendChild(div);
   });
 }
@@ -531,10 +514,6 @@ outlineFieldDropdown.addEventListener("change", () => {
 function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
   const value = feature.properties[fieldToDisplay];
   const color = getColor(value, selectedYear);
-
-  if (!visibleClasses.has(color)) {
-    return { opacity: 0, fillOpacity: 0 };
-  }
 
   let opacity;
   if (opacityField === 'None') {
