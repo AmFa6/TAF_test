@@ -220,14 +220,18 @@
     .panel-header.collapsed:after {
       content: '\25B6';
     }
-    .medium-font {
-      font-size: 1em; /* Medium font size */
-    }
     .checkbox-label {
-      display: flex !important;
-      align-items: left !important;
-      font-size: 0.9em !important; /* Adjust font size as needed */
-      margin: 2px 0 !important; /* Reduce space around the checkbox */
+      display: flex;
+      align-items: center;
+      font-size: 0.9em; /* Adjust font size as needed */
+      margin: 2px 0;    /* Reduce space around the checkbox */
+      padding: 0;       /* Remove padding if any */
+    }
+    .medium-font {
+      display: flex;
+      flex-direction: column; /* Stack items vertically */
+      margin: 0;             /* Remove margin around the checkbox container */
+      padding: 0;            /* Remove padding around the checkbox container */
     }
   </style>
 </head>
