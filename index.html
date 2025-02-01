@@ -223,6 +223,14 @@
     .medium-font {
       font-size: 1em; /* Medium font size */
     }
+    .checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em; /* Adjust font size as needed */
+    }
+    .checkbox-label input {
+      margin-right: 10px; /* Space between checkbox and text */
+    }
   </style>
 </head>
 <body>
@@ -309,17 +317,17 @@
       <div id="panel-content">
         <label class="large-font">Amenities:</label>
         <div class="medium-font">
-          <label><input type="checkbox" value="Primary School"> Primary School</label><br>
-          <label><input type="checkbox" value="Secondary School"> Secondary School</label><br>
-          <label><input type="checkbox" value="Further Education"> Further Education</label><br>
-          <label><input type="checkbox" value="Employment (500+ jobs)"> Employment (500+ jobs)</label><br>
-          <label><input type="checkbox" value="Employment (5000+ jobs)"> Employment (5000+ jobs)</label><br>
-          <label><input type="checkbox" value="Strategic Employment"> Strategic Employment</label><br>
-          <label><input type="checkbox" value="City Centre"> City Centre</label><br>
-          <label><input type="checkbox" value="Major Centre"> Major Centre</label><br>
-          <label><input type="checkbox" value="District Centre"> District Centre</label><br>
-          <label><input type="checkbox" value="General Practice"> General Practice</label><br>
-          <label><input type="checkbox" value="Hospital"> Hospital</label>
+          <label class="checkbox-label"><input type="checkbox" value="PriSch"> Primary School</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="SecSch"> Secondary School</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="FurEd"> Further Education</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="Em500"> Employment (500+ jobs)</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="Em5000"> Employment (5000+ jobs)</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="StrEmp"> Strategic Employment</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="CitCtr"> City Centre</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="MajCtr"> Major Centre</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="DisCtr"> District Centre</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="GP"> General Practice</label><br>
+          <label class="checkbox-label"><input type="checkbox" value="Hos"> Hospital</label>
         </div>
       </div>
     </div>
