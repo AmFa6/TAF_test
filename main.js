@@ -548,23 +548,25 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
     opacity = 0.8;
   } else {
     const opacityValue = feature.properties[opacityField];
-    if (opacityValue === 0 || opacityValue === null) {
-      opacity = isInverseOpacity ? 0.8 : 0.1;
+    if (opacityValue === 0 || opacityValue === null || opacityValue === undefined || opacityValue === '') {
+      opacity = 0.1;
     } else {
       opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
     }
   }
+
   let weight;
   if (outlineField === 'None') {
     weight = 0;
   } else {
     const outlineValue = feature.properties[outlineField];
-    if (outlineValue === 0 || outlineValue === null) {
-      weight = isInverseOutline ? 4 : 0;
+    if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
+      weight = 0;
     } else {
       weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
     }
   }
+
   return {
     fillColor: color,
     weight: weight,
