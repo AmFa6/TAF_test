@@ -591,29 +591,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
 });
 
-function zoomToFirstColoredHex(geoJsonLayer) {
-  let found = false;
-  geoJsonLayer.eachLayer(layer => {
-    if (!found && layer.feature && layer.options.fillColor !== 'transparent') {
-      map.fitBounds(layer.getBounds());
-      found = true;
-    }
-  });
-}
-
 function updateAmenitiesLayer() {
-  console.log("Draw Map button clicked"); // Debug log
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
 
-  console.log("Selected Amenities:", selectedAmenities); // Debug log
-
-  const selectedYear = yearSelector.value; // Get the selected year
-  const selectedMode = document.querySelector('#modeDropdownAmenities').value; // Get the selected mode
-
-  console.log("Selected Year:", selectedYear); // Debug log
-  console.log("Selected Mode:", selectedMode); // Debug log
+  const selectedYear = yearSelector.value;
+  const selectedMode = document.querySelector('#modeDropdownAmenities').value;
 
   if (selectedAmenities.length === 0) {
     map.eachLayer(layer => {
@@ -624,10 +608,8 @@ function updateAmenitiesLayer() {
     return;
   }
 
-  const selectedAmenity = selectedAmenities[0]; // Assuming only one amenity is selected at a time
+  const selectedAmenity = selectedAmenities[0];
   const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
-
-  console.log("CSV Path:", csvPath); // Debug log
 
   fetch(csvPath)
     .then(response => response.text())
@@ -636,8 +618,8 @@ function updateAmenitiesLayer() {
       const hexTimeMap = {};
 
       csvData.forEach(row => {
-        if (row.Mode === selectedMode) { // Filter by mode
-          const hexId = row.OriginName; // Use OriginName instead of Hex_ID
+        if (row.Mode === selectedMode) {
+          const hexId = row.OriginName;
           const time = parseFloat(row.Time);
           if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
             hexTimeMap[hexId] = time;
@@ -645,12 +627,9 @@ function updateAmenitiesLayer() {
         }
       });
 
-      console.log("Hex Time Map:", hexTimeMap); // Debug log
-
       fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
         .then(response => response.json())
         .then(geoJson => {
-          console.log("GeoJSON Data:", geoJson); // Debug log
           const geoJsonLayer = L.geoJSON(geoJson, {
             style: feature => {
               const hexId = feature.properties.Hex_ID;
@@ -665,9 +644,6 @@ function updateAmenitiesLayer() {
                 else if (time <= 25) color = '#414387';
                 else if (time <= 30) color = '#440154';
               }
-
-              console.log(`Hex_ID: ${hexId}, Time: ${time}, Color: ${color}`); // Debug log
-
               return {
                 fillColor: color,
                 weight: 1,
@@ -678,12 +654,7 @@ function updateAmenitiesLayer() {
             },
             onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedAmenity and selectedMode
           });
-
-          console.log("Adding GeoJSON Layer to Map"); // Debug log
           geoJsonLayer.addTo(map);
-
-          // Zoom to the first hexagon with a valid color
-          zoomToFirstColoredHex(geoJsonLayer);
         });
     });
 }
