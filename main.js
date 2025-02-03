@@ -599,29 +599,23 @@ function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
     return minScale + scaledValue * (maxScale - minScale);
 }
 
-const amenitiesMap = {
-  "PriSch": "PriSch.csv",
-  "SecSch": "SecSch.csv",
-  "FurEd": "FurEd.csv",
-  "Em500": "Em500.csv",
-  "Em5000": "Em5000.csv",
-  "StrEmp": "StrEmp.csv",
-  "CitCtr": "CitCtr.csv",
-  "MajCtr": "MajCtr.csv",
-  "DisCtr": "DisCtr.csv",
-  "GP": "GP.csv",
-  "Hospital": "Hospital.csv"
-};
+// ...existing code...
 
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
+const yearSelector = document.querySelector('#year-selector'); // Assuming you have a year selector element
+
 amenitiesCheckboxes.forEach(checkbox => {
   checkbox.addEventListener('change', updateAmenitiesLayer);
 });
+
+yearSelector.addEventListener('change', updateAmenitiesLayer); // Update map when year changes
 
 function updateAmenitiesLayer() {
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
+
+  const selectedYear = yearSelector.value; // Get the selected year
 
   if (selectedAmenities.length === 0) {
     map.eachLayer(layer => {
@@ -633,7 +627,7 @@ function updateAmenitiesLayer() {
   }
 
   const selectedAmenity = selectedAmenities[0]; // Assuming only one amenity is selected at a time
-  const csvPath = `https://AmFa6.github.io/TAF_test/${amenitiesMap[selectedAmenity]}`;
+  const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}.csv`;
 
   fetch(csvPath)
     .then(response => response.text())
