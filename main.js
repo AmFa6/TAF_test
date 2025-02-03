@@ -698,8 +698,8 @@ function updateSliderAmenitiesRange() {
         step: 1
       });
       opacityRangeAmenitiesSlider.noUiSlider.set(['', '']);
-      document.getElementById('opacityRangeScoresMinAmenities').innerText = '';
-      document.getElementById('opacityRangeScoresMaxAmenities').innerText = '';
+      document.getElementById('opacityRangeAmenitiesMin').innerText = '';
+      document.getElementById('opacityRangeAmenitiesMax').innerText = '';
     } else {
       opacityRangeAmenitiesSlider.removeAttribute('disabled');
       opacityRangeAmenitiesSlider.noUiSlider.updateOptions({
@@ -710,8 +710,8 @@ function updateSliderAmenitiesRange() {
         step: opacityStep
       });
       opacityRangeAmenitiesSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      document.getElementById('opacityRangeScoresMinAmenities').innerText = formatValue(adjustedMinOpacity, opacityStep);
-      document.getElementById('opacityRangeScoresMaxAmenities').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+      document.getElementById('opacityRangeAmenitiesMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
+      document.getElementById('opacityRangeAmenitiesMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
     if (outlineField === "None") {
       outlineRangeAmenitiesSlider.setAttribute('disabled', true);
