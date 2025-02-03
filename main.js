@@ -350,7 +350,7 @@ function updateScoresLayer() {
 
     const geoJsonLayer = L.geoJSON(filteredGeoJson, {
       style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
-      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode) // Pass selectedPurpose and selectedMode
+      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
   }
 
@@ -552,7 +552,6 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
       opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
     }
   }
-
   let weight;
   if (outlineField === 'None') {
     weight = 0;
@@ -822,7 +821,7 @@ function updateAmenitiesLayer() {
                 fillOpacity: opacity
               };
             },
-            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedAmenity and selectedMode
+            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
           });
 
           if (currentAmenitiesLayer) {
