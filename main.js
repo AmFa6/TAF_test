@@ -27,8 +27,8 @@ geoJsonFiles.forEach(file => {
       layers[file.year] = geoJson;
       layersLoaded++;
       if (layersLoaded === totalLayers) {
-        initializeSliders();
-        updateSliderRanges();
+        initializeScoreSliders();
+        updateSliderScoresRanges();
         updateScoresLayer();
       }
     })
@@ -60,25 +60,25 @@ let outlineRangeScoresSlider;
 let isInverseOpacity = false;
 let isInverseOutline = false;
 
-document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScale);
-document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScale);
-const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
-inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScale);
+document.getElementById('inverseOpacityScoresScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
+document.getElementById('inverseOutlineScoresScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
+const inverseOpacityScoresScaleScoresButton = document.getElementById("inverseOpacityScoresScaleScoresButton");
+inverseOpacityScoresScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
 
 yearScoresDropdown.addEventListener("change", () => {
-  updateSliderRanges();
+  updateSliderScoresRanges();
   updateScoresLayer();
 });
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
 opacityFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
-  updateSliderRanges();
+  updateSliderScoresRanges();
   updateScoresLayer();
 });
 outlineFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
-  updateSliderRanges();
+  updateSliderScoresRanges();
   updateScoresLayer();
 });
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
@@ -95,48 +95,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  initializeAmenitiesSlider();
+  const drawMapButton = document.getElementById('drawAmenitiesMap');
+  drawMapButton.addEventListener('click', updateAmenitiesLayer);
 
-  document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
-  document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
+  initializeAmenitiesSliders();
+
+  document.getElementById('inverseOpacityScoresScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
+  document.getElementById('inverseOutlineScoresScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
 
   document.getElementById('opacityFieldAmenitiesDropdown').addEventListener('change', updateSliderAmenitiesRange);
   document.getElementById('outlineFieldAmenitiesDropdown').addEventListener('change', updateSliderAmenitiesRange);
-
-  const drawMapButton = document.getElementById('drawAmenitiesMap');
-  drawMapButton.addEventListener('click', updateAmenitiesLayer);
 });
 
-function initializeSliders() {
-  opacityRangeScoresSlider = document.getElementById('opacityRangeScoresSlider');
-  noUiSlider.create(opacityRangeScoresSlider, {
-    start: [0, 0],
-    connect: [true, true, true],
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2), 
-      from: value => parseFloat(value)
-    }
-  });
-
-  const handles = opacityRangeScoresSlider.querySelectorAll('.noUi-handle');
-  if (handles.length > 0) {
-    handles[0].classList.add('noUi-handle-transparent');
-  }
-
-  const connectElements = opacityRangeScoresSlider.querySelectorAll('.noUi-connect');
-  if (connectElements.length > 2) {
-    connectElements[1].classList.add('noUi-connect-gradient-right');
-    connectElements[2].classList.add('noUi-connect-dark-grey');
-  }
-
-  outlineRangeScoresSlider = document.getElementById('outlineRangeScoresSlider');
-  noUiSlider.create(outlineRangeScoresSlider, {
+function initializeSliders(sliderElement, updateCallback) {
+  noUiSlider.create(sliderElement, {
     start: [0, 0],
     connect: [true, true, true],
     range: {
@@ -151,32 +123,40 @@ function initializeSliders() {
     }
   });
 
-  const outlineHandles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
-  if (outlineHandles.length > 0) {
-    outlineHandles[0].classList.add('noUi-handle-transparent');
+  const handles = sliderElement.querySelectorAll('.noUi-handle');
+  if (handles.length > 0) {
+    handles[0].classList.add('noUi-handle-transparent');
   }
 
-  const outlineConnectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
-  if (outlineConnectElements.length > 1) {
-    outlineConnectElements[1].classList.add('noUi-connect-gradient-right');
-    outlineConnectElements[2].classList.add('noUi-connect-dark-grey');
+  const connectElements = sliderElement.querySelectorAll('.noUi-connect');
+  if (connectElements.length > 2) {
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  opacityRangeScoresSlider.noUiSlider.on('update', updateScoresLayer);
-  outlineRangeScoresSlider.noUiSlider.on('update', updateScoresLayer);
+  sliderElement.noUiSlider.on('update', updateCallback);
 
-  opacityRangeScoresSlider.noUiSlider.on('update', function(values, handle) {
+  sliderElement.noUiSlider.on('update', function(values, handle) {
     const handleElement = handles[handle];
-    handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeScoresSlider.noUiSlider.options.step));
+    handleElement.setAttribute('data-value', formatValue(values[handle], sliderElement.noUiSlider.options.step));
   });
-  
-  outlineRangeScoresSlider.noUiSlider.on('update', function(values, handle) {
-    const handleElement = outlineHandles[handle];
-    handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeScoresSlider.noUiSlider.options.step));
-  });
-};
+}
 
-function toggleInverseOpacityScale() {
+function initializeScoreSliders() {
+  opacityRangeScoresSlider = document.getElementById('opacityRangeScoresSlider');
+  outlineRangeScoresSlider = document.getElementById('outlineRangeScoresSlider');
+  initializeSliders(opacityRangeScoresSlider, updateScoresLayer);
+  initializeSliders(outlineRangeScoresSlider, updateScoresLayer);
+}
+
+function initializeAmenitiesSliders() {
+  opacityRangeAmenitiesSlider = document.getElementById('opacityRangeAmenitiesSlider');
+  outlineRangeAmenitiesSlider = document.getElementById('outlineRangeAmenitiesSlider');
+  initializeSliders(opacityRangeAmenitiesSlider, updateAmenitiesLayer);
+  initializeSliders(outlineRangeAmenitiesSlider, updateAmenitiesLayer);
+}
+
+function toggleInverseOpacityScoresScale() {
   isInverseOpacity = !isInverseOpacity;
   const handles = opacityRangeScoresSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeScoresSlider.querySelectorAll('.noUi-connect');
@@ -205,7 +185,7 @@ function toggleInverseOpacityScale() {
   updateScoresLayer();
 }
 
-function toggleInverseOutlineScale() {
+function toggleInverseOutlineScoresScale() {
   isInverseOutline = !isInverseOutline;
   const handles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
   const connectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
@@ -246,7 +226,7 @@ function formatValue(value, step) {
   }
 }
 
-function updateSliderRanges() {
+function updateSliderScoresRanges() {
   const opacityField = opacityFieldScoresDropdown.value;
   const outlineField = outlineFieldScoresDropdown.value;
 
@@ -547,12 +527,12 @@ function updateMasterCheckbox() {
   masterCheckbox.indeterminate = !allChecked && !noneChecked;
 }
 
-function inverseOpacityScale() {
+function inverseOpacityScoresScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
   updateScoresLayer();
 }
 
-function inverseOutlineScale() {
+function inverseOutlineScoresScale() {
   outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
   updateScoresLayer();
 }
@@ -601,50 +581,61 @@ function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
     return minScale + scaledValue * (maxScale - minScale);
 }
 
-function initializeAmenitiesSlider() {
-  opacityRangeAmenitiesSlider = document.getElementById('opacityRangeAmenitiesSlider');
-  noUiSlider.create(opacityRangeAmenitiesSlider, {
-    start: [0, 0],
-    connect: [true, true, true],
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2),
-      from: value => parseFloat(value)
-    }
-  });
-
-  outlineRangeAmenitiesSlider = document.getElementById('outlineRangeAmenitiesSlider');
-  noUiSlider.create(outlineRangeAmenitiesSlider, {
-    start: [0, 0],
-    connect: [true, true, true],
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2),
-      from: value => parseFloat(value)
-    }
-  });
-
-  opacityRangeAmenitiesSlider.noUiSlider.on('update', updateAmenitiesLayer);
-  outlineRangeAmenitiesSlider.noUiSlider.on('update', updateAmenitiesLayer);
-}
-
 function toggleInverseOpacityAmenitiesScale() {
   isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
+  const handles = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
+  const connectElements = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
+
+  if (isInverseAmenitiesOpacity) {
+    opacityRangeAmenitiesSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    opacityRangeAmenitiesSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
   updateAmenitiesLayer();
 }
 
 function toggleInverseOutlineAmenitiesScale() {
   isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
+  const handles = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
+  const connectElements = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
+
+  if (isInverseAmenitiesOutline) {
+    outlineRangeAmenitiesSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    outlineRangeAmenitiesSlider.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
   updateAmenitiesLayer();
 }
 
