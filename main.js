@@ -60,10 +60,10 @@ let outlineRangeScoresSlider;
 let isInverseOpacity = false;
 let isInverseOutline = false;
 
-document.getElementById('inverseOpacityScoresScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
-document.getElementById('inverseOutlineScoresScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
-const inverseOpacityScoresScaleScoresButton = document.getElementById("inverseOpacityScoresScaleScoresButton");
-inverseOpacityScoresScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
+document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
+document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
+const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
+inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
 
 yearScoresDropdown.addEventListener("change", () => {
   updateSliderScoresRanges();
@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   initializeAmenitiesSliders();
 
-  document.getElementById('inverseOpacityScoresScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
-  document.getElementById('inverseOutlineScoresScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
+  document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
+  document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
 
   document.getElementById('opacityFieldAmenitiesDropdown').addEventListener('change', updateSliderAmenitiesRange);
   document.getElementById('outlineFieldAmenitiesDropdown').addEventListener('change', updateSliderAmenitiesRange);
