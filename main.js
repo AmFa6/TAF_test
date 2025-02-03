@@ -50,22 +50,6 @@ yearDropdown.value = "";
 opacityFieldDropdown.value = "None";
 outlineFieldDropdown.value = "None";
 
-const purposeMap = {
-  "Education": "Edu",
-  "Employment": "Emp",
-  "Health": "Hth",
-  "High Street": "HSt",
-  "All Amenities": "All"
-};
-
-const modeMap = {
-  "Walk": "Wa",
-  "Cycle": "Cy",
-  "Public Transport": "PT",
-  "Car": "Ca",
-  "All Modes": "To"
-};
-
 let autoUpdateOpacity = true;
 let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
@@ -323,7 +307,7 @@ function updateLayerVisibility() {
     }
   });
 
-  const fieldToDisplay = selectedYear.includes('-') ? `${purposeMap[selectedPurpose]}_${modeMap[selectedMode]}` : `${purposeMap[selectedPurpose]}_${modeMap[selectedMode]}_100`;
+  const fieldToDisplay = selectedYear.includes('-') ? `${selectedPurpose}_${selectedMode}` : `${selectedPurpose}_${selectedMode}_100`;
   const selectedLayer = layers[selectedYear];
 
   if (selectedLayer) {
@@ -357,7 +341,7 @@ function onEachFeature(feature, layer, selectedYear) {
       const properties = feature.properties;
       const getValue = (prop) => (properties[prop] !== undefined && properties[prop] !== null) ? properties[prop] : '-';
       const hexId = getValue('Hex_ID');
-      const scoreValue = getValue(`${purposeMap[purposeDropdown.value]}_${modeMap[modeDropdown.value]}`);
+      const scoreValue = getValue(`${selectedPurpose}_${selectedMode}`);
       let score = '-';
       let scoreLabel = 'Score';
 
@@ -370,7 +354,7 @@ function onEachFeature(feature, layer, selectedYear) {
         }
       }
       
-      const percentile = getValue(`${purposeMap[purposeDropdown.value]}_${modeMap[modeDropdown.value]}_100`) !== '-' ? Math.round(getValue(`${purposeMap[purposeDropdown.value]}_${modeMap[modeDropdown.value]}_100`)) : '-';
+      const percentile = getValue(`${selectedPurpose}_${selectedMode}_100`) !== '-' ? Math.round(getValue(`${selectedPurpose}_${selectedMode}_100`)) : '-';
       const population = getValue('pop') !== '-' ? Math.round(getValue('pop')) : '-';
       const imd = population === 0 ? '-' : (getValue('imd') !== '-' ? getValue('imd').toFixed(2) : '-');
       const carAvailability = population === 0 ? '-' : (getValue('carav') !== '-' ? getValue('carav').toFixed(2) : '-');
