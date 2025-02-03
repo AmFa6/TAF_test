@@ -587,7 +587,7 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
   return {
     fillColor: color,
     weight: weight,
-    opacity: 0,
+    opacity: 1,
     color: 'black',
     fillOpacity: opacity
   };
