@@ -640,7 +640,8 @@ function updateAmenitiesLayer() {
       fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
         .then(response => response.json())
         .then(geoJson => {
-          L.geoJSON(geoJson, {
+          console.log("GeoJSON Data:", geoJson); // Debug log
+          const geoJsonLayer = L.geoJSON(geoJson, {
             style: feature => {
               const hexId = feature.properties.Hex_ID;
               const time = hexTimeMap[hexId];
@@ -672,7 +673,10 @@ function updateAmenitiesLayer() {
                 }
               });
             }
-          }).addTo(map);
+          });
+
+          console.log("Adding GeoJSON Layer to Map"); // Debug log
+          geoJsonLayer.addTo(map);
         });
     });
 }
