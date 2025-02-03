@@ -272,8 +272,8 @@ function updateSliderRanges() {
         step: 1
       });
       outlineRangeScoresSlider.noUiSlider.set(['', '']);
-      document.getElementById('outlineRangeMin').innerText = '';
-      document.getElementById('outlineRangeMax').innerText = '';
+      document.getElementById('outlineRangeScoresMin').innerText = '';
+      document.getElementById('outlineRangeScoresMax').innerText = '';
     } else {
       outlineRangeScoresSlider.removeAttribute('disabled');
       outlineRangeScoresSlider.noUiSlider.updateOptions({
@@ -284,8 +284,8 @@ function updateSliderRanges() {
         step: parseFloat(outlineStep.toFixed(1))
       });
       outlineRangeScoresSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-      document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
-      document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
+      document.getElementById('outlineRangeScoresMin').innerText = formatValue(adjustedMinOutline, outlineStep);
+      document.getElementById('outlineRangeScoresMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   } else {
   }
@@ -723,8 +723,8 @@ function updateSliderAmenitiesRange() {
         step: 1
       });
       outlineRangeAmenitiesSlider.noUiSlider.set(['', '']);
-      document.getElementById('outlineRangeMinAmenities').innerText = '';
-      document.getElementById('outlineRangeMaxAmenities').innerText = '';
+      document.getElementById('outlineRangeAmenitiesMin').innerText = '';
+      document.getElementById('outlineRangeAmenitiesMax').innerText = '';
     } else {
       outlineRangeAmenitiesSlider.removeAttribute('disabled');
       outlineRangeAmenitiesSlider.noUiSlider.updateOptions({
@@ -735,8 +735,8 @@ function updateSliderAmenitiesRange() {
         step: parseFloat(outlineStep.toFixed(1))
       });
       outlineRangeAmenitiesSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-      document.getElementById('outlineRangeMinAmenities').innerText = formatValue(adjustedMinOutline, outlineStep);
-      document.getElementById('outlineRangeMaxAmenities').innerText = formatValue(adjustedMaxOutline, outlineStep);
+      document.getElementById('outlineRangeAmenitiesMin').innerText = formatValue(adjustedMinOutline, outlineStep);
+      document.getElementById('outlineRangeAmenitiesMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   } else {
     // Handle case when selectedLayer is not available
