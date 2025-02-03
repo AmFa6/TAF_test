@@ -599,10 +599,8 @@ function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
     return minScale + scaledValue * (maxScale - minScale);
 }
 
-// ...existing code...
-
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
-const yearSelector = document.querySelector('#year-selector'); // Assuming you have a year selector element
+const yearSelector = document.querySelector('#yearDropdownAmenities'); // Corrected ID
 
 amenitiesCheckboxes.forEach(checkbox => {
   checkbox.addEventListener('change', updateAmenitiesLayer);
