@@ -429,18 +429,25 @@
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-      const collapsible = document.querySelector(".collapsible");
-      const content = document.querySelector(".collapsible-content");
-
-      collapsible.addEventListener("click", function() {
-        this.classList.toggle("active");
-        content.style.display = content.style.display === "block" ? "none" : "block";
-        this.classList.toggle("collapsed", content.style.display === "none");
+      const collapsibleButtons = document.querySelectorAll(".collapsible");
+      collapsibleButtons.forEach(button => {
+        const content = button.nextElementSibling;
+        content.style.display = "none";
+        button.classList.add("collapsed");
+  
+        button.addEventListener("click", function() {
+          this.classList.toggle("active");
+          content.style.display = content.style.display === "block" ? "none" : "block";
+          this.classList.toggle("collapsed", content.style.display === "none");
+        });
       });
-
+  
       const panelHeaders = document.querySelectorAll(".panel-header");
       panelHeaders.forEach(header => {
         const panelContent = header.nextElementSibling;
+        panelContent.style.display = "none";
+        header.classList.add("collapsed");
+  
         header.addEventListener("click", function() {
           panelHeaders.forEach(otherHeader => {
             if (otherHeader !== header) {
@@ -451,11 +458,7 @@
           panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
           header.classList.toggle("collapsed", panelContent.style.display === "none");
         });
-        panelContent.style.display = "none";
-        header.classList.add("collapsed");
       });
-      content.style.display = "none";
-      collapsible.classList.add("collapsed");
     });
   </script>
 </body>
