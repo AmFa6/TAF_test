@@ -64,6 +64,8 @@ document.getElementById('inverseOpacityScaleScoresButton').addEventListener('cli
 document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
 const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
 inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
+const inverseOutlineScaleScoresButton = document.getElementById("inverseOutlineScaleScoresButton");
+inverseOutlineScaleScoresButton.addEventListener("click", inverseOutlineScoresScale);
 
 yearScoresDropdown.addEventListener("change", () => {
   updateSliderScoresRanges();
@@ -304,7 +306,7 @@ function updateSliderScoresRanges() {
           'min': adjustedMinOutline,
           'max': adjustedMaxOutline
         },
-        step: parseFloat(outlineStep.toFixed(1))
+        step: outlineStep
       });
       outlineRangeScoresSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
       document.getElementById('outlineRangeScoresMin').innerText = formatValue(adjustedMinOutline, outlineStep);
@@ -716,14 +718,12 @@ function updateSliderAmenitiesRange() {
           'min': adjustedMinOutline,
           'max': adjustedMaxOutline
         },
-        step: parseFloat(outlineStep.toFixed(1))
+        step: outlineStep
       });
       outlineRangeAmenitiesSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
       document.getElementById('outlineRangeAmenitiesMin').innerText = formatValue(adjustedMinOutline, outlineStep);
       document.getElementById('outlineRangeAmenitiesMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
-  } else {
-    // Handle case when selectedLayer is not available
   }
 }
 
@@ -800,7 +800,6 @@ function updateAmenitiesLayer() {
                   opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
                 }
               }
-
               let weight;
               if (outlineField === 'None') {
                 weight = 0;
