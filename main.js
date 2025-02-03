@@ -591,6 +591,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
 });
 
+function zoomToFirstColoredHex(geoJsonLayer) {
+  let found = false;
+  geoJsonLayer.eachLayer(layer => {
+    if (!found && layer.feature && layer.options.fillColor !== 'transparent') {
+      map.fitBounds(layer.getBounds());
+      found = true;
+    }
+  });
+}
+
 function updateAmenitiesLayer() {
   console.log("Draw Map button clicked"); // Debug log
   const selectedAmenities = Array.from(amenitiesCheckboxes)
@@ -677,6 +687,9 @@ function updateAmenitiesLayer() {
 
           console.log("Adding GeoJSON Layer to Map"); // Debug log
           geoJsonLayer.addTo(map);
+
+          // Zoom to the first hexagon with a valid color
+          zoomToFirstColoredHex(geoJsonLayer);
         });
     });
 }
