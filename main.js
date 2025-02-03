@@ -591,6 +591,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
 });
 
+let currentAmenitiesLayer = null;
+
 function updateAmenitiesLayer() {
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
@@ -654,6 +656,10 @@ function updateAmenitiesLayer() {
             },
             onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedAmenity and selectedMode
           });
+          if (currentAmenitiesLayer) {
+            map.removeLayer(currentAmenitiesLayer);
+          }
+          currentAmenitiesLayer = geoJsonLayer;
           geoJsonLayer.addTo(map);
         });
     });
