@@ -597,8 +597,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 document.addEventListener('DOMContentLoaded', (event) => {
   initializeAmenitiesSlider();
 
-  document.getElementById('inverseOpacityScaleScoresButtonAmenities').addEventListener('click', toggleInverseOpacityAmenitiesScale);
-  document.getElementById('inverseOutlineScaleScoresButtonAmenities').addEventListener('click', toggleInverseOutlineAmenitiesScale);
+  document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
+  document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
 
   document.getElementById('opacityFieldAmenitiesDropdown').addEventListener('change', updateSliderAmenitiesRange);
   document.getElementById('outlineFieldAmenitiesDropdown').addEventListener('change', updateSliderAmenitiesRange);
