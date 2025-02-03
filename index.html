@@ -316,7 +316,19 @@
     <div id="panel-amenities" class="panel">
       <button class="panel-header">Journey Time Catchments - Amenities</button>
       <div id="panel-content">
-      <label class="large-font">Amenities:</label>
+        <label for="yearDropdownAmenities" class="large-font">Year:</label>
+        <select id="yearDropdownAmenities" class="medium-font"></select>
+        <br>
+        <label for="modeDropdownAmenities" class="large-font">Mode of Travel:</label>
+        <select id="modeDropdownAmenities" class="medium-font">
+          <option value="All Modes">All Modes</option>
+          <option value="Walk">Walk</option>
+          <option value="Cycle">Cycle</option>
+          <option value="Public Transport">Public Transport</option>
+          <option value="Car">Car</option>
+        </select>
+        <br>
+        <label class="large-font">Amenities:</label>
         <label class="checkbox-label"><input type="checkbox" value="PriSch"> <span>Primary School</span></label>
         <label class="checkbox-label"><input type="checkbox" value="SecSch"> <span>Secondary School</span></label>
         <label class="checkbox-label"><input type="checkbox" value="FurEd"> <span>Further Education</span></label>
@@ -332,7 +344,19 @@
     </div>
     <div id="panel-hexagons" class="panel">
       <button class="panel-header">Journey Time Catchments - Hexagons</button>
-      <div id="panel-hexagons-content"></div>
+      <div id="panel-hexagons-content">
+        <label for="yearDropdownHexagons" class="large-font">Year:</label>
+        <select id="yearDropdownHexagons" class="medium-font"></select>
+        <br>
+        <label for="modeDropdownHexagons" class="large-font">Mode of Travel:</label>
+        <select id="modeDropdownHexagons" class="medium-font">
+          <option value="All Modes">All Modes</option>
+          <option value="Walk">Walk</option>
+          <option value="Cycle">Cycle</option>
+          <option value="Public Transport">Public Transport</option>
+          <option value="Car">Car</option>
+        </select>
+      </div>
     </div>
   </div>
   <div id="legend">
