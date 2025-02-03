@@ -247,8 +247,8 @@ function updateSliderRanges() {
         step: 1
       });
       opacityRangeScoresSlider.noUiSlider.set(['', '']);
-      document.getElementById('opacityRangeMin').innerText = '';
-      document.getElementById('opacityRangeMax').innerText = '';
+      document.getElementById('opacityRangeScoresMin').innerText = '';
+      document.getElementById('opacityRangeScoresMax').innerText = '';
     } else {
       opacityRangeScoresSlider.removeAttribute('disabled');
       opacityRangeScoresSlider.noUiSlider.updateOptions({
@@ -259,8 +259,8 @@ function updateSliderRanges() {
         step: opacityStep
       });
       opacityRangeScoresSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      document.getElementById('opacityRangeMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
-      document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+      document.getElementById('opacityRangeScoresMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
+      document.getElementById('opacityRangeScoresMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
     if (outlineField === "None") {
       outlineRangeScoresSlider.setAttribute('disabled', true);
@@ -698,8 +698,8 @@ function updateSliderAmenitiesRange() {
         step: 1
       });
       opacityRangeAmenitiesSlider.noUiSlider.set(['', '']);
-      document.getElementById('opacityRangeMinAmenities').innerText = '';
-      document.getElementById('opacityRangeMaxAmenities').innerText = '';
+      document.getElementById('opacityRangeScoresMinAmenities').innerText = '';
+      document.getElementById('opacityRangeScoresMaxAmenities').innerText = '';
     } else {
       opacityRangeAmenitiesSlider.removeAttribute('disabled');
       opacityRangeAmenitiesSlider.noUiSlider.updateOptions({
@@ -710,8 +710,8 @@ function updateSliderAmenitiesRange() {
         step: opacityStep
       });
       opacityRangeAmenitiesSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      document.getElementById('opacityRangeMinAmenities').innerText = formatValue(adjustedMinOpacity, opacityStep);
-      document.getElementById('opacityRangeMaxAmenities').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+      document.getElementById('opacityRangeScoresMinAmenities').innerText = formatValue(adjustedMinOpacity, opacityStep);
+      document.getElementById('opacityRangeScoresMaxAmenities').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
     if (outlineField === "None") {
       outlineRangeAmenitiesSlider.setAttribute('disabled', true);
