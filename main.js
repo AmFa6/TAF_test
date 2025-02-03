@@ -328,14 +328,14 @@ function updateLayerVisibility() {
 
     const geoJsonLayer = L.geoJSON(filteredGeoJson, {
       style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
-      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear) // Ensure onEachFeature is applied
+      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode) // Pass selectedPurpose and selectedMode
     }).addTo(map);
   }
 
   updateLegend();
 }
 
-function onEachFeature(feature, layer, selectedYear) {
+function onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode) {
   layer.on({
     click: function (e) {
       const properties = feature.properties;
@@ -676,7 +676,7 @@ function updateAmenitiesLayer() {
                 fillOpacity: 0.7
               };
             },
-            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear) // Ensure onEachFeature is applied
+            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedAmenity and selectedMode
           });
 
           console.log("Adding GeoJSON Layer to Map"); // Debug log
