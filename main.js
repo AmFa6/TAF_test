@@ -592,6 +592,8 @@ amenitiesCheckboxes.forEach(checkbox => {
 
 yearSelector.addEventListener('change', updateAmenitiesLayer); // Update map when year changes
 
+document.getElementById('drawMapButton').addEventListener('click', updateAmenitiesLayer);
+
 function updateAmenitiesLayer() {
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
