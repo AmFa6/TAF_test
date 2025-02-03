@@ -592,15 +592,24 @@ amenitiesCheckboxes.forEach(checkbox => {
 
 yearSelector.addEventListener('change', updateAmenitiesLayer); // Update map when year changes
 
-document.getElementById('drawMapButton').addEventListener('click', updateAmenitiesLayer);
+document.addEventListener('DOMContentLoaded', (event) => {
+  const drawMapButton = document.getElementById('drawMapButton');
+  drawMapButton.addEventListener('click', updateAmenitiesLayer);
+});
 
 function updateAmenitiesLayer() {
+  console.log("Draw Map button clicked"); // Debug log
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
 
+  console.log("Selected Amenities:", selectedAmenities); // Debug log
+
   const selectedYear = yearSelector.value; // Get the selected year
   const selectedMode = document.querySelector('#modeDropdownAmenities').value; // Get the selected mode
+
+  console.log("Selected Year:", selectedYear); // Debug log
+  console.log("Selected Mode:", selectedMode); // Debug log
 
   if (selectedAmenities.length === 0) {
     map.eachLayer(layer => {
@@ -613,6 +622,8 @@ function updateAmenitiesLayer() {
 
   const selectedAmenity = selectedAmenities[0]; // Assuming only one amenity is selected at a time
   const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
+
+  console.log("CSV Path:", csvPath); // Debug log
 
   fetch(csvPath)
     .then(response => response.text())
@@ -629,6 +640,8 @@ function updateAmenitiesLayer() {
           }
         }
       });
+
+      console.log("Hex Time Map:", hexTimeMap); // Debug log
 
       fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
         .then(response => response.json())
