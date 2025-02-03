@@ -55,12 +55,12 @@ let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
 let outlineOrder = 'low-to-high';
 
-let opacityRangeSlider;
-let outlineRangeSlider;
+let opacityRangeScoresSlider;
+let outlineRangeScoresSlider;
 
 function initializeSliders() {
-  opacityRangeSlider = document.getElementById('opacityRangeSlider');
-  noUiSlider.create(opacityRangeSlider, {
+  opacityRangeScoresSlider = document.getElementById('opacityRangeScoresSlider');
+  noUiSlider.create(opacityRangeScoresSlider, {
     start: [0, 0],
     connect: [true, true, true],
     range: {
@@ -75,19 +75,19 @@ function initializeSliders() {
     }
   });
 
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
+  const handles = opacityRangeScoresSlider.querySelectorAll('.noUi-handle');
   if (handles.length > 0) {
     handles[0].classList.add('noUi-handle-transparent');
   }
 
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  const connectElements = opacityRangeScoresSlider.querySelectorAll('.noUi-connect');
   if (connectElements.length > 2) {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  outlineRangeSlider = document.getElementById('outlineRangeSlider');
-  noUiSlider.create(outlineRangeSlider, {
+  outlineRangeScoresSlider = document.getElementById('outlineRangeScoresSlider');
+  noUiSlider.create(outlineRangeScoresSlider, {
     start: [0, 0],
     connect: [true, true, true],
     range: {
@@ -102,28 +102,28 @@ function initializeSliders() {
     }
   });
 
-  const outlineHandles = outlineRangeSlider.querySelectorAll('.noUi-handle');
+  const outlineHandles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
   if (outlineHandles.length > 0) {
     outlineHandles[0].classList.add('noUi-handle-transparent');
   }
 
-  const outlineConnectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
+  const outlineConnectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
   if (outlineConnectElements.length > 1) {
     outlineConnectElements[1].classList.add('noUi-connect-gradient-right');
     outlineConnectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  opacityRangeSlider.noUiSlider.on('update', updateScoresLayer);
-  outlineRangeSlider.noUiSlider.on('update', updateScoresLayer);
+  opacityRangeScoresSlider.noUiSlider.on('update', updateScoresLayer);
+  outlineRangeScoresSlider.noUiSlider.on('update', updateScoresLayer);
 
-  opacityRangeSlider.noUiSlider.on('update', function(values, handle) {
+  opacityRangeScoresSlider.noUiSlider.on('update', function(values, handle) {
     const handleElement = handles[handle];
-    handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeSlider.noUiSlider.options.step));
+    handleElement.setAttribute('data-value', formatValue(values[handle], opacityRangeScoresSlider.noUiSlider.options.step));
   });
   
-  outlineRangeSlider.noUiSlider.on('update', function(values, handle) {
+  outlineRangeScoresSlider.noUiSlider.on('update', function(values, handle) {
     const handleElement = outlineHandles[handle];
-    handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeSlider.noUiSlider.options.step));
+    handleElement.setAttribute('data-value', formatValue(values[handle], outlineRangeScoresSlider.noUiSlider.options.step));
   });
 }
 
@@ -132,11 +132,11 @@ let isInverseOutline = false;
 
 function toggleInverseOpacityScale() {
   isInverseOpacity = !isInverseOpacity;
-  const handles = opacityRangeSlider.querySelectorAll('.noUi-handle');
-  const connectElements = opacityRangeSlider.querySelectorAll('.noUi-connect');
+  const handles = opacityRangeScoresSlider.querySelectorAll('.noUi-handle');
+  const connectElements = opacityRangeScoresSlider.querySelectorAll('.noUi-connect');
 
   if (isInverseOpacity) {
-    opacityRangeSlider.noUiSlider.updateOptions({
+    opacityRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.add('noUi-handle-transparent');
@@ -146,7 +146,7 @@ function toggleInverseOpacityScale() {
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
-    opacityRangeSlider.noUiSlider.updateOptions({
+    opacityRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.remove('noUi-handle-transparent');
@@ -161,11 +161,11 @@ function toggleInverseOpacityScale() {
 
 function toggleInverseOutlineScale() {
   isInverseOutline = !isInverseOutline;
-  const handles = outlineRangeSlider.querySelectorAll('.noUi-handle');
-  const connectElements = outlineRangeSlider.querySelectorAll('.noUi-connect');
+  const handles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
+  const connectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
 
   if (isInverseOutline) {
-    outlineRangeSlider.noUiSlider.updateOptions({
+    outlineRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.add('noUi-handle-transparent');
@@ -175,7 +175,7 @@ function toggleInverseOutlineScale() {
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
-    outlineRangeSlider.noUiSlider.updateOptions({
+    outlineRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.remove('noUi-handle-transparent');
@@ -238,52 +238,52 @@ function updateSliderRanges() {
     const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
 
     if (opacityField === "None") {
-      opacityRangeSlider.setAttribute('disabled', true);
-      opacityRangeSlider.noUiSlider.updateOptions({
+      opacityRangeScoresSlider.setAttribute('disabled', true);
+      opacityRangeScoresSlider.noUiSlider.updateOptions({
         range: {
           'min': 0,
           'max': 0
         },
         step: 1
       });
-      opacityRangeSlider.noUiSlider.set(['', '']);
+      opacityRangeScoresSlider.noUiSlider.set(['', '']);
       document.getElementById('opacityRangeMin').innerText = '';
       document.getElementById('opacityRangeMax').innerText = '';
     } else {
-      opacityRangeSlider.removeAttribute('disabled');
-      opacityRangeSlider.noUiSlider.updateOptions({
+      opacityRangeScoresSlider.removeAttribute('disabled');
+      opacityRangeScoresSlider.noUiSlider.updateOptions({
         range: {
           'min': adjustedMinOpacity,
           'max': adjustedMaxOpacity
         },
         step: opacityStep
       });
-      opacityRangeSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
+      opacityRangeScoresSlider.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
       document.getElementById('opacityRangeMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
       document.getElementById('opacityRangeMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
     if (outlineField === "None") {
-      outlineRangeSlider.setAttribute('disabled', true);
-      outlineRangeSlider.noUiSlider.updateOptions({
+      outlineRangeScoresSlider.setAttribute('disabled', true);
+      outlineRangeScoresSlider.noUiSlider.updateOptions({
         range: {
           'min': 0,
           'max': 0
         },
         step: 1
       });
-      outlineRangeSlider.noUiSlider.set(['', '']);
+      outlineRangeScoresSlider.noUiSlider.set(['', '']);
       document.getElementById('outlineRangeMin').innerText = '';
       document.getElementById('outlineRangeMax').innerText = '';
     } else {
-      outlineRangeSlider.removeAttribute('disabled');
-      outlineRangeSlider.noUiSlider.updateOptions({
+      outlineRangeScoresSlider.removeAttribute('disabled');
+      outlineRangeScoresSlider.noUiSlider.updateOptions({
         range: {
           'min': adjustedMinOutline,
           'max': adjustedMaxOutline
         },
         step: parseFloat(outlineStep.toFixed(1))
       });
-      outlineRangeSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
+      outlineRangeScoresSlider.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
       document.getElementById('outlineRangeMin').innerText = formatValue(adjustedMinOutline, outlineStep);
       document.getElementById('outlineRangeMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
@@ -316,10 +316,10 @@ function updateScoresLayer() {
       return feature.properties[fieldToDisplay] !== undefined && isClassVisible(value, selectedYear);
     });
 
-    let minOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[0]);
-    let maxOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[1]);
-    let minOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[0]);
-    let maxOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[1]);
+    let minOpacity = parseFloat(opacityRangeScoresSlider.noUiSlider.get()[0]);
+    let maxOpacity = parseFloat(opacityRangeScoresSlider.noUiSlider.get()[1]);
+    let minOutline = parseFloat(outlineRangeScoresSlider.noUiSlider.get()[0]);
+    let maxOutline = parseFloat(outlineRangeScoresSlider.noUiSlider.get()[1]);
 
     const filteredGeoJson = {
       type: "FeatureCollection",
