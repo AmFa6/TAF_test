@@ -598,3 +598,91 @@ function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
     const scaledValue = order === 'low-to-high' ? normalizedValue : 1 - normalizedValue;
     return minScale + scaledValue * (maxScale - minScale);
 }
+
+const amenitiesMap = {
+  "PriSch": "PriSch.csv",
+  "SecSch": "SecSch.csv",
+  "FurEd": "FurEd.csv",
+  "Em500": "Em500.csv",
+  "Em5000": "Em5000.csv",
+  "StrEmp": "StrEmp.csv",
+  "CitCtr": "CitCtr.csv",
+  "MajCtr": "MajCtr.csv",
+  "DisCtr": "DisCtr.csv",
+  "GP": "GP.csv",
+  "Hospital": "Hospital.csv"
+};
+
+const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
+amenitiesCheckboxes.forEach(checkbox => {
+  checkbox.addEventListener('change', updateAmenitiesLayer);
+});
+
+function updateAmenitiesLayer() {
+  const selectedAmenities = Array.from(amenitiesCheckboxes)
+    .filter(checkbox => checkbox.checked)
+    .map(checkbox => checkbox.value);
+
+  if (selectedAmenities.length === 0) {
+    map.eachLayer(layer => {
+      if (layer.feature && layer.feature.properties.Hex_ID) {
+        map.removeLayer(layer);
+      }
+    });
+    return;
+  }
+
+  const selectedAmenity = selectedAmenities[0]; // Assuming only one amenity is selected at a time
+  const csvPath = `https://AmFa6.github.io/TAF_test/${amenitiesMap[selectedAmenity]}`;
+
+  fetch(csvPath)
+    .then(response => response.text())
+    .then(csvText => {
+      const csvData = Papa.parse(csvText, { header: true }).data;
+      const hexTimeMap = {};
+
+      csvData.forEach(row => {
+        const hexId = row.Hex_ID;
+        const time = parseFloat(row.Time);
+        if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
+          hexTimeMap[hexId] = time;
+        }
+      });
+
+      fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
+        .then(response => response.json())
+        .then(geoJson => {
+          L.geoJSON(geoJson, {
+            style: feature => {
+              const hexId = feature.properties.Hex_ID;
+              const time = hexTimeMap[hexId];
+              let color = 'transparent';
+
+              if (time !== undefined) {
+                if (time <= 5) color = '#440154';
+                else if (time <= 10) color = '#482777';
+                else if (time <= 15) color = '#3e4989';
+                else if (time <= 20) color = '#31688e';
+                else if (time <= 25) color = '#26828e';
+                else if (time <= 30) color = '#1f9e89';
+              }
+
+              return {
+                fillColor: color,
+                weight: 1,
+                opacity: 1,
+                color: 'black',
+                fillOpacity: 0.7
+              };
+            },
+            onEachFeature: (feature, layer) => {
+              layer.on({
+                click: function (e) {
+                  // Handle click event if needed
+                }
+              });
+            }
+          }).addTo(map);
+        });
+    });
+}
