@@ -27,11 +27,11 @@ geoJsonFiles.forEach(file => {
       layers[file.year] = geoJson;
       layersLoaded++;
       if (layersLoaded === totalLayers) {
-        initializeSliderScores();
-        updateSliderRangeScores();
+        initializeSliders();
+        updateSliderRanges(layers[yearDropdown.value], opacityFieldDropdown.value, outlineFieldDropdown.value, opacityRangeScoresSlider, outlineRangeScoresSlider, 'opacityRangeMin', 'opacityRangeMax', 'outlineRangeMin', 'outlineRangeMax');
         updateLayerVisibility();
       }
-    })
+    });
 });
 
 const yearDropdown = document.getElementById("yearDropdown");
@@ -54,17 +54,83 @@ let autoUpdateOpacity = true;
 let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
 let outlineOrder = 'low-to-high';
+let opacityRangeScoresSlider;
+let outlineRangeScoresSlider;
+let opacityRangeAmenitiesSlider;
+let outlineRangeAmenitiesSlider;
+let isInverseOpacity = false;
+let isInverseOutline = false;
 
-let opacityRangeSlider;
-let outlineRangeSlider;
-
-function initializeSliderScores() {
-  initializeSliderScores('opacityRangeSlider', opacityRangeSlider, updateLayerVisibility);
-  initializeSliderScores('outlineRangeSlider', outlineRangeSlider, updateLayerVisibility);
+function addInverseScaleEventListeners() {
+  document.getElementById('inverseOpacityScaleButton').addEventListener('click', () => toggleInverseScale(opacityRangeScoresSlider, isInverseOpacity, opacityOrder, updateLayerVisibility));
+  document.getElementById('inverseOutlineScaleButton').addEventListener('click', () => toggleInverseScale(outlineRangeScoresSlider, isInverseOutline, outlineOrder, updateLayerVisibility));
+  document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', () => toggleInverseScale(opacityRangeAmenitiesSlider, isInverseOpacity, opacityOrder, updateAmenitiesLayer));
+  document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', () => toggleInverseScale(outlineRangeAmenitiesSlider, isInverseOutline, outlineOrder, updateAmenitiesLayer));
 }
 
-function initializeSliderScores(sliderId, slider, updateFunction) {
-  slider = document.getElementById(sliderId);
+function addDropdownEventListeners() {
+  yearDropdown.addEventListener("change", () => {
+    updateSliderRanges(layers[yearDropdown.value], opacityFieldDropdown.value, outlineFieldDropdown.value, opacityRangeScoresSlider, outlineRangeScoresSlider, 'opacityRangeMin', 'opacityRangeMax', 'outlineRangeMin', 'outlineRangeMax');
+    updateLayerVisibility();
+  });
+  purposeDropdown.addEventListener("change", updateLayerVisibility);
+  modeDropdown.addEventListener("change", updateLayerVisibility);
+  opacityFieldDropdown.addEventListener("change", () => {
+    autoUpdateOpacity = true;
+    updateSliderRanges(layers[yearDropdown.value], opacityFieldDropdown.value, outlineFieldDropdown.value, opacityRangeScoresSlider, outlineRangeScoresSlider, 'opacityRangeMin', 'opacityRangeMax', 'outlineRangeMin', 'outlineRangeMax');
+    updateLayerVisibility();
+  });
+  outlineFieldDropdown.addEventListener("change", () => {
+    autoUpdateOutline = true;
+    updateSliderRanges(layers[yearDropdown.value], opacityFieldDropdown.value, outlineFieldDropdown.value, opacityRangeScoresSlider, outlineRangeScoresSlider, 'opacityRangeMin', 'opacityRangeMax', 'outlineRangeMin', 'outlineRangeMax');
+    updateLayerVisibility();
+  });
+}
+
+const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
+const yearSelector = document.querySelector('#yearDropdownAmenities'); // Corrected ID
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  const drawMapButton = document.getElementById('drawMapAmenities');
+  drawMapButton.addEventListener('click', updateAmenitiesLayer);
+});
+
+let currentAmenitiesLayer = null;
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  initializeSliders();
+  addInverseScaleEventListeners();
+  addDropdownEventListeners();
+
+  yearSelector.addEventListener("change", () => {
+    updateSliderRanges(layers[yearSelector.value], document.getElementById('opacityFieldAmenitiesDropdown').value, document.getElementById('outlineFieldAmenitiesDropdown').value, opacityRangeAmenitiesSlider, outlineRangeAmenitiesSlider, 'opacityRangeAmenitiesMin', 'opacityRangeAmenitiesMax', 'outlineRangeAmenitiesMin', 'outlineRangeAmenitiesMax');
+    updateAmenitiesLayer();
+  });
+  document.getElementById('modeDropdownAmenities').addEventListener("change", updateAmenitiesLayer);
+  document.getElementById('opacityFieldAmenitiesDropdown').addEventListener("change", () => {
+    autoUpdateOpacity = true;
+    updateSliderRanges(layers[yearSelector.value], document.getElementById('opacityFieldAmenitiesDropdown').value, document.getElementById('outlineFieldAmenitiesDropdown').value, opacityRangeAmenitiesSlider, outlineRangeAmenitiesSlider, 'opacityRangeAmenitiesMin', 'opacityRangeAmenitiesMax', 'outlineRangeAmenitiesMin', 'outlineRangeAmenitiesMax');
+    updateAmenitiesLayer();
+  });
+  document.getElementById('outlineFieldAmenitiesDropdown').addEventListener("change", () => {
+    autoUpdateOutline = true;
+    updateSliderRanges(layers[yearSelector.value], document.getElementById('opacityFieldAmenitiesDropdown').value, document.getElementById('outlineFieldAmenitiesDropdown').value, opacityRangeAmenitiesSlider, outlineRangeAmenitiesSlider, 'opacityRangeAmenitiesMin', 'opacityRangeAmenitiesMax', 'outlineRangeAmenitiesMin', 'outlineRangeAmenitiesMax');
+    updateAmenitiesLayer();
+  });
+
+  const drawMapButton = document.getElementById('drawMapAmenities');
+  drawMapButton.addEventListener('click', updateAmenitiesLayer);
+});
+
+function initializeSliders() {
+  opacityRangeScoresSlider = initializeSlider('opacityRangeScoresSlider', updateLayerVisibility);
+  outlineRangeScoresSlider = initializeSlider('outlineRangeScoresSlider', updateLayerVisibility);
+  opacityRangeAmenitiesSlider = initializeSlider('opacityRangeAmenitiesSlider', updateAmenitiesLayer);
+  outlineRangeAmenitiesSlider = initializeSlider('outlineRangeAmenitiesSlider', updateAmenitiesLayer);
+}
+
+function initializeSlider(sliderId, updateCallback) {
+  const slider = document.getElementById(sliderId);
   noUiSlider.create(slider, {
     start: [0, 0],
     connect: [true, true, true],
@@ -75,7 +141,7 @@ function initializeSliderScores(sliderId, slider, updateFunction) {
     step: 1,
     tooltips: false,
     format: {
-      to: value => parseFloat(value).toFixed(2), 
+      to: value => parseFloat(value).toFixed(2),
       from: value => parseFloat(value)
     }
   });
@@ -91,18 +157,17 @@ function initializeSliderScores(sliderId, slider, updateFunction) {
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  slider.noUiSlider.on('update', updateFunction);
+  slider.noUiSlider.on('update', updateCallback);
 
   slider.noUiSlider.on('update', function(values, handle) {
     const handleElement = handles[handle];
     handleElement.setAttribute('data-value', formatValue(values[handle], slider.noUiSlider.options.step));
   });
+
+  return slider;
 }
 
-let isInverseOpacity = false;
-let isInverseOutline = false;
-
-function toggleInverseScale(isInverse, slider, updateFunction) {
+function toggleInverseScale(slider, isInverse, order, updateCallback) {
   isInverse = !isInverse;
   const handles = slider.querySelectorAll('.noUi-handle');
   const connectElements = slider.querySelectorAll('.noUi-connect');
@@ -128,11 +193,8 @@ function toggleInverseScale(isInverse, slider, updateFunction) {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
-  updateFunction();
+  updateCallback();
 }
-
-document.getElementById('inverseOpacityScaleButton').addEventListener('click', () => toggleInverseScale(isInverseOpacity, opacityRangeSlider, updateLayerVisibility));
-document.getElementById('inverseOutlineScaleButton').addEventListener('click', () => toggleInverseScale(isInverseOutline, outlineRangeSlider, updateLayerVisibility));
 
 function formatValue(value, step) {
   if (step >= 1) {
@@ -146,16 +208,10 @@ function formatValue(value, step) {
   }
 }
 
-function updateSliderRangeScores() {
-  const opacityField = opacityFieldDropdown.value;
-  const outlineField = outlineFieldDropdown.value;
-
-  const selectedYear = yearDropdown.value;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
-    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
+function updateSliderRanges(layer, opacityField, outlineField, opacitySlider, outlineSlider, minOpacityId, maxOpacityId, minOutlineId, maxOutlineId) {
+  if (layer) {
+    const opacityValues = opacityField !== "None" ? layer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
+    const outlineValues = outlineField !== "None" ? layer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
 
     const minOpacity = Math.min(...opacityValues);
     const maxOpacity = Math.max(...opacityValues);
@@ -180,12 +236,12 @@ function updateSliderRangeScores() {
     const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
     const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
 
-    updateSlider(opacityField, opacityRangeSlider, adjustedMinOpacity, adjustedMaxOpacity, opacityStep, 'opacityRangeMin', 'opacityRangeMax');
-    updateSlider(outlineField, outlineRangeSlider, adjustedMinOutline, adjustedMaxOutline, outlineStep, 'outlineRangeMin', 'outlineRangeMax');
+    updateSlider(opacityField, opacitySlider, adjustedMinOpacity, adjustedMaxOpacity, opacityStep, minOpacityId, maxOpacityId);
+    updateSlider(outlineField, outlineSlider, adjustedMinOutline, adjustedMaxOutline, outlineStep, minOutlineId, maxOutlineId);
   }
 }
 
-function updateSlider(field, slider, min, max, step, minElementId, maxElementId) {
+function updateSlider(field, slider, min, max, step, minId, maxId) {
   if (field === "None") {
     slider.setAttribute('disabled', true);
     slider.noUiSlider.updateOptions({
@@ -196,8 +252,8 @@ function updateSlider(field, slider, min, max, step, minElementId, maxElementId)
       step: 1
     });
     slider.noUiSlider.set(['', '']);
-    document.getElementById(minElementId).innerText = '';
-    document.getElementById(maxElementId).innerText = '';
+    document.getElementById(minId).innerText = '';
+    document.getElementById(maxId).innerText = '';
   } else {
     slider.removeAttribute('disabled');
     slider.noUiSlider.updateOptions({
@@ -208,8 +264,8 @@ function updateSlider(field, slider, min, max, step, minElementId, maxElementId)
       step: step
     });
     slider.noUiSlider.set([min, max]);
-    document.getElementById(minElementId).innerText = formatValue(min, step);
-    document.getElementById(maxElementId).innerText = formatValue(max, step);
+    document.getElementById(minId).innerText = formatValue(min, step);
+    document.getElementById(maxId).innerText = formatValue(max, step);
   }
 }
 
@@ -238,10 +294,10 @@ function updateLayerVisibility() {
       return feature.properties[fieldToDisplay] !== undefined && isClassVisible(value, selectedYear);
     });
 
-    let minOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[0]);
-    let maxOpacity = parseFloat(opacityRangeSlider.noUiSlider.get()[1]);
-    let minOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[0]);
-    let maxOutline = parseFloat(outlineRangeSlider.noUiSlider.get()[1]);
+    let minOpacity = parseFloat(opacityRangeScoresSlider.noUiSlider.get()[0]);
+    let maxOpacity = parseFloat(opacityRangeScoresSlider.noUiSlider.get()[1]);
+    let minOutline = parseFloat(outlineRangeScoresSlider.noUiSlider.get()[0]);
+    let maxOutline = parseFloat(outlineRangeScoresSlider.noUiSlider.get()[1]);
 
     const filteredGeoJson = {
       type: "FeatureCollection",
@@ -437,29 +493,6 @@ function inverseOutlineScale() {
   updateLayerVisibility();
 }
 
-const inverseOpacityScaleButton = document.getElementById("inverseOpacityScaleButton");
-inverseOpacityScaleButton.addEventListener("click", inverseOpacityScale);
-
-const inverseOutlineScaleButton = document.getElementById("inverseOutlineScaleButton");
-inverseOutlineScaleButton.addEventListener("click", inverseOutlineScale);
-
-yearDropdown.addEventListener("change", () => {
-  updateSliderRangeScores();
-  updateLayerVisibility();
-});
-purposeDropdown.addEventListener("change", updateLayerVisibility);
-modeDropdown.addEventListener("change", updateLayerVisibility);
-opacityFieldDropdown.addEventListener("change", () => {
-  autoUpdateOpacity = true;
-  updateSliderRangeScores();
-  updateLayerVisibility();
-});
-outlineFieldDropdown.addEventListener("change", () => {
-  autoUpdateOutline = true;
-  updateSliderRangeScores();
-  updateLayerVisibility();
-});
-
 function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
   const value = feature.properties[fieldToDisplay];
   const color = getColor(value, selectedYear);
@@ -487,13 +520,14 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
       weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
     }
   }
+
   return {
     fillColor: color,
     weight: weight,
-    opacity: 0,
+    opacity: 1,
     color: 'black',
     fillOpacity: opacity
-  };
+  }
 }
 
 function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
@@ -502,134 +536,6 @@ function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
     const normalizedValue = (value - minVal) / (maxVal - minVal);
     const scaledValue = order === 'low-to-high' ? normalizedValue : 1 - normalizedValue;
     return minScale + scaledValue * (maxScale - minScale);
-}
-
-const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
-const yearSelector = document.querySelector('#yearDropdownAmenities'); // Corrected ID
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  const drawMapButton = document.getElementById('drawMapAmenities');
-  drawMapButton.addEventListener('click', updateAmenitiesLayer);
-});
-
-let currentAmenitiesLayer = null;
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  initializeSlidersAmenities();
-
-  document.getElementById('inverseOpacityScaleButtonAmenities').addEventListener('click', toggleInverseOpacityScaleAmenities);
-  document.getElementById('inverseOutlineScaleButtonAmenities').addEventListener('click', toggleInverseOutlineScaleAmenities);
-
-  document.getElementById('opacityFieldDropdownAmenities').addEventListener('change', () => {
-    autoUpdateOpacity = true;
-    updateSliderRangesAmenities();
-    updateAmenitiesLayer();
-  });
-  document.getElementById('outlineFieldDropdownAmenities').addEventListener('change', () => {
-    autoUpdateOutline = true;
-    updateSliderRangesAmenities();
-    updateAmenitiesLayer();
-  });
-
-  const drawMapButton = document.getElementById('drawMapAmenities');
-  drawMapButton.addEventListener('click', updateAmenitiesLayer);
-});
-
-let opacityRangeSliderAmenities;
-let outlineRangeSliderAmenities;
-
-function initializeSlidersAmenities() {
-  opacityRangeSliderAmenities = document.getElementById('opacityRangeSliderAmenities');
-  noUiSlider.create(opacityRangeSliderAmenities, {
-    start: [0, 0],
-    connect: [true, true, true],
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2),
-      from: value => parseFloat(value)
-    }
-  });
-
-  outlineRangeSliderAmenities = document.getElementById('outlineRangeSliderAmenities');
-  noUiSlider.create(outlineRangeSliderAmenities, {
-    start: [0, 0],
-    connect: [true, true, true],
-    range: {
-      'min': 0,
-      'max': 0
-    },
-    step: 1,
-    tooltips: false,
-    format: {
-      to: value => parseFloat(value).toFixed(2),
-      from: value => parseFloat(value)
-    }
-  });
-
-  opacityRangeSliderAmenities.noUiSlider.on('update', updateAmenitiesLayer);
-  outlineRangeSliderAmenities.noUiSlider.on('update', updateAmenitiesLayer);
-}
-
-let isInverseOpacityAmenities = false;
-let isInverseOutlineAmenities = false;
-
-function toggleInverseOpacityScaleAmenities() {
-  isInverseOpacityAmenities = !isInverseOpacityAmenities;
-  updateAmenitiesLayer();
-}
-
-function toggleInverseOutlineScaleAmenities() {
-  isInverseOutlineAmenities = !isInverseOutlineAmenities;
-  updateAmenitiesLayer();
-}
-
-function initializeSlidersAmenities() {
-  initializeSlider('opacityRangeSliderAmenities', opacityRangeSliderAmenities, updateAmenitiesLayer);
-  initializeSlider('outlineRangeSliderAmenities', outlineRangeSliderAmenities, updateAmenitiesLayer);
-}
-
-function updateSliderRangesAmenities() {
-  const opacityField = document.getElementById('opacityFieldDropdownAmenities').value;
-  const outlineField = document.getElementById('outlineFieldDropdownAmenities').value;
-
-  const selectedYear = yearSelector.value;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
-    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
-
-    const minOpacity = Math.min(...opacityValues);
-    const maxOpacity = Math.max(...opacityValues);
-    const minOutline = Math.min(...outlineValues);
-    const maxOutline = Math.max(...outlineValues);
-
-    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
-    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
-
-    let opacityStep = roundedMaxOpacity / 100;
-    let outlineStep = roundedMaxOutline / 100;
-
-    if (isNaN(opacityStep) || opacityStep <= 0) {
-      opacityStep = 1;
-    }
-    if (isNaN(outlineStep) || outlineStep <= 0) {
-      outlineStep = 1;
-    }
-
-    const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
-    const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
-    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
-    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
-
-    updateSlider(opacityField, opacityRangeSliderAmenities, adjustedMinOpacity, adjustedMaxOpacity, opacityStep, 'opacityRangeMinAmenities', 'opacityRangeMaxAmenities');
-    updateSlider(outlineField, outlineRangeSliderAmenities, adjustedMinOutline, adjustedMaxOutline, outlineStep, 'outlineRangeMinAmenities', 'outlineRangeMaxAmenities');
-  }
 }
 
 function updateAmenitiesLayer() {
@@ -671,14 +577,6 @@ function updateAmenitiesLayer() {
       fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
         .then(response => response.json())
         .then(geoJson => {
-          const opacityField = document.getElementById('opacityFieldDropdownAmenities').value;
-          const outlineField = document.getElementById('outlineFieldDropdownAmenities').value;
-
-          const minOpacityValue = parseFloat(opacityRangeSliderAmenities.noUiSlider.get()[0]);
-          const maxOpacityValue = parseFloat(opacityRangeSliderAmenities.noUiSlider.get()[1]);
-          const minOutlineValue = parseFloat(outlineRangeSliderAmenities.noUiSlider.get()[0]);
-          const maxOutlineValue = parseFloat(outlineRangeSliderAmenities.noUiSlider.get()[1]);
-
           const geoJsonLayer = L.geoJSON(geoJson, {
             style: feature => {
               const hexId = feature.properties.Hex_ID;
@@ -693,42 +591,16 @@ function updateAmenitiesLayer() {
                 else if (time <= 25) color = '#414387';
                 else if (time <= 30) color = '#440154';
               }
-
-              let opacity;
-              if (opacityField === 'None') {
-                opacity = 0.7;
-              } else {
-                const opacityValue = feature.properties[opacityField];
-                if (opacityValue === 0 || opacityValue === null) {
-                  opacity = isInverseOpacityAmenities ? 0.8 : 0.1;
-                } else {
-                  opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
-                }
-              }
-
-              let weight;
-              if (outlineField === 'None') {
-                weight = 1;
-              } else {
-                const outlineValue = feature.properties[outlineField];
-                if (outlineValue === 0 || outlineValue === null) {
-                  weight = isInverseOutlineAmenities ? 4 : 0;
-                } else {
-                  weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
-                }
-              }
-
               return {
                 fillColor: color,
-                weight: weight,
-                opacity: 0,
+                weight: 1,
+                opacity: 1,
                 color: 'black',
-                fillOpacity: opacity
+                fillOpacity: 0.7
               };
             },
             onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedAmenity and selectedMode
           });
-
           if (currentAmenitiesLayer) {
             map.removeLayer(currentAmenitiesLayer);
           }
