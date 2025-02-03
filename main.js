@@ -801,7 +801,7 @@ function updateAmenitiesLayer() {
 
               let opacity;
               if (opacityField === 'None') {
-                opacity = 0.7;
+                opacity = 0.8;
               } else {
                 const opacityValue = feature.properties[opacityField];
                 if (opacityValue === 0 || opacityValue === null) {
@@ -813,7 +813,7 @@ function updateAmenitiesLayer() {
 
               let weight;
               if (outlineField === 'None') {
-                weight = 1;
+                weight = 0;
               } else {
                 const outlineValue = feature.properties[outlineField];
                 if (outlineValue === 0 || outlineValue === null) {
@@ -826,7 +826,7 @@ function updateAmenitiesLayer() {
               return {
                 fillColor: color,
                 weight: weight,
-                opacity: 0,
+                opacity: 1,
                 color: 'black',
                 fillOpacity: opacity
               };
