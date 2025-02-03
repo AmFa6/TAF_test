@@ -593,100 +593,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 let currentAmenitiesLayer = null;
 
-function updateAmenitiesLayer() {
-  const selectedAmenities = Array.from(amenitiesCheckboxes)
-    .filter(checkbox => checkbox.checked)
-    .map(checkbox => checkbox.value);
-
-  const selectedYear = yearSelector.value;
-  const selectedMode = document.querySelector('#modeDropdownAmenities').value;
-
-  if (selectedAmenities.length === 0) {
-    map.eachLayer(layer => {
-      if (layer.feature && layer.feature.properties.Hex_ID) {
-        map.removeLayer(layer);
-      }
-    });
-    return;
-  }
-
-  const selectedAmenity = selectedAmenities[0];
-  const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
-
-  fetch(csvPath)
-    .then(response => response.text())
-    .then(csvText => {
-      const csvData = Papa.parse(csvText, { header: true }).data;
-      const hexTimeMap = {};
-
-      csvData.forEach(row => {
-        if (row.Mode === selectedMode) {
-          const hexId = row.OriginName;
-          const time = parseFloat(row.Time);
-          if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
-            hexTimeMap[hexId] = time;
-          }
-        }
-      });
-
-      fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
-        .then(response => response.json())
-        .then(geoJson => {
-          const opacityField = document.getElementById('opacityFieldDropdownAmenities').value;
-          const outlineField = document.getElementById('outlineFieldDropdownAmenities').value;        
-          const geoJsonLayer = L.geoJSON(geoJson, {
-            style: feature => {
-              const hexId = feature.properties.Hex_ID;
-              const time = hexTimeMap[hexId];
-              let color = 'transparent';
-        
-              if (time !== undefined) {
-                if (time <= 5) color = '#fde725';
-                else if (time <= 10) color = '#7ad151';
-                else if (time <= 15) color = '#23a884';
-                else if (time <= 20) color = '#2a788e';
-                else if (time <= 25) color = '#414387';
-                else if (time <= 30) color = '#440154';
-              }
-              let opacity;
-              if (opacityField === 'None') {
-                opacity = 0.7;
-              } else {
-                const opacityValue = feature.properties[opacityField];
-                if (opacityValue === 0 || opacityValue === null) {
-                  opacity = isInverseOpacityAmenities ? 0.7 : 0.1;
-                } else {
-                  opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.7, opacityOrder);
-                }
-              }
-        
-              let weight;
-              if (outlineField === 'None') {
-                weight = 1;
-              } else {
-                const outlineValue = feature.properties[outlineField];
-                if (outlineValue === 0 || outlineValue === null) {
-                  weight = isInverseOutlineAmenities ? 4 : 1;
-                } else {
-                  weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 1, 4, outlineOrder);
-                }
-              }
-              return {
-                opacity: 0,
-                fillOpacity: 0
-              };
-            },
-            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedAmenity and selectedMode
-          });
-          if (currentAmenitiesLayer) {
-            map.removeLayer(currentAmenitiesLayer);
-          }
-          currentAmenitiesLayer = geoJsonLayer;
-          geoJsonLayer.addTo(map);
-        });
-    });
-}
-
 document.addEventListener('DOMContentLoaded', (event) => {
   initializeSlidersAmenities();
 
@@ -695,6 +601,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   document.getElementById('opacityFieldDropdownAmenities').addEventListener('change', updateSliderRangesAmenities);
   document.getElementById('outlineFieldDropdownAmenities').addEventListener('change', updateSliderRangesAmenities);
+
+  const drawMapButton = document.getElementById('drawMapAmenities');
+  drawMapButton.addEventListener('click', updateAmenitiesLayer);
 });
 
 let opacityRangeSliderAmenities;
@@ -837,4 +746,110 @@ function updateSliderRangesAmenities() {
   } else {
     // Handle case when selectedLayer is not available
   }
+}
+
+function updateAmenitiesLayer() {
+  const selectedAmenities = Array.from(amenitiesCheckboxes)
+    .filter(checkbox => checkbox.checked)
+    .map(checkbox => checkbox.value);
+
+  const selectedYear = yearSelector.value;
+  const selectedMode = document.querySelector('#modeDropdownAmenities').value;
+
+  if (selectedAmenities.length === 0) {
+    map.eachLayer(layer => {
+      if (layer.feature && layer.feature.properties.Hex_ID) {
+        map.removeLayer(layer);
+      }
+    });
+    return;
+  }
+
+  const selectedAmenity = selectedAmenities[0];
+  const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
+
+  fetch(csvPath)
+    .then(response => response.text())
+    .then(csvText => {
+      const csvData = Papa.parse(csvText, { header: true }).data;
+      const hexTimeMap = {};
+
+      csvData.forEach(row => {
+        if (row.Mode === selectedMode) {
+          const hexId = row.OriginName;
+          const time = parseFloat(row.Time);
+          if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
+            hexTimeMap[hexId] = time;
+          }
+        }
+      });
+
+      fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
+        .then(response => response.json())
+        .then(geoJson => {
+          const opacityField = document.getElementById('opacityFieldDropdownAmenities').value;
+          const outlineField = document.getElementById('outlineFieldDropdownAmenities').value;
+
+          const minOpacityValue = parseFloat(opacityRangeSliderAmenities.noUiSlider.get()[0]);
+          const maxOpacityValue = parseFloat(opacityRangeSliderAmenities.noUiSlider.get()[1]);
+          const minOutlineValue = parseFloat(outlineRangeSliderAmenities.noUiSlider.get()[0]);
+          const maxOutlineValue = parseFloat(outlineRangeSliderAmenities.noUiSlider.get()[1]);
+
+          const geoJsonLayer = L.geoJSON(geoJson, {
+            style: feature => {
+              const hexId = feature.properties.Hex_ID;
+              const time = hexTimeMap[hexId];
+              let color = 'transparent';
+
+              if (time !== undefined) {
+                if (time <= 5) color = '#fde725';
+                else if (time <= 10) color = '#7ad151';
+                else if (time <= 15) color = '#23a884';
+                else if (time <= 20) color = '#2a788e';
+                else if (time <= 25) color = '#414387';
+                else if (time <= 30) color = '#440154';
+              }
+
+              let opacity;
+              if (opacityField === 'None') {
+                opacity = 0.7;
+              } else {
+                const opacityValue = feature.properties[opacityField];
+                if (opacityValue === 0 || opacityValue === null) {
+                  opacity = isInverseOpacityAmenities ? 0.7 : 0.1;
+                } else {
+                  opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.7, opacityOrder);
+                }
+              }
+
+              let weight;
+              if (outlineField === 'None') {
+                weight = 1;
+              } else {
+                const outlineValue = feature.properties[outlineField];
+                if (outlineValue === 0 || outlineValue === null) {
+                  weight = isInverseOutlineAmenities ? 4 : 1;
+                } else {
+                  weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 1, 4, outlineOrder);
+                }
+              }
+
+              return {
+                fillColor: color,
+                weight: weight,
+                opacity: 1,
+                color: 'black',
+                fillOpacity: opacity
+              };
+            },
+            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedAmenity and selectedMode
+          });
+
+          if (currentAmenitiesLayer) {
+            map.removeLayer(currentAmenitiesLayer);
+          }
+          currentAmenitiesLayer = geoJsonLayer;
+          geoJsonLayer.addTo(map);
+        });
+    });
 }
