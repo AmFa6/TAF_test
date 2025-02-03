@@ -625,7 +625,7 @@ function updateAmenitiesLayer() {
   }
 
   const selectedAmenity = selectedAmenities[0]; // Assuming only one amenity is selected at a time
-  const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}.csv`;
+  const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
 
   fetch(csvPath)
     .then(response => response.text())
