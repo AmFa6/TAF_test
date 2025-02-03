@@ -586,12 +586,6 @@ function scaleExp(value, minVal, maxVal, minScale, maxScale, order) {
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
 const yearSelector = document.querySelector('#yearDropdownAmenities'); // Corrected ID
 
-amenitiesCheckboxes.forEach(checkbox => {
-  checkbox.addEventListener('change', updateAmenitiesLayer);
-});
-
-yearSelector.addEventListener('change', updateAmenitiesLayer); // Update map when year changes
-
 document.addEventListener('DOMContentLoaded', (event) => {
   const drawMapButton = document.getElementById('drawMapButton');
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
@@ -660,6 +654,8 @@ function updateAmenitiesLayer() {
                 else if (time <= 25) color = '#414387';
                 else if (time <= 30) color = '#440154';
               }
+
+              console.log(`Hex_ID: ${hexId}, Time: ${time}, Color: ${color}`); // Debug log
 
               return {
                 fillColor: color,
