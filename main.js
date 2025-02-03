@@ -187,11 +187,11 @@ function toggleInverseOpacityScoresScale() {
 
 function toggleInverseOutlineScoresScale() {
   isInverseOutline = !isInverseOutline;
-  const handles = OutlineRangeScoresSlider.querySelectorAll('.noUi-handle');
-  const connectElements = OutlineRangeScoresSlider.querySelectorAll('.noUi-connect');
+  const handles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
+  const connectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
 
   if (isInverseOutline) {
-    OutlineRangeScoresSlider.noUiSlider.updateOptions({
+    outlineRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.add('noUi-handle-transparent');
@@ -201,7 +201,7 @@ function toggleInverseOutlineScoresScale() {
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
-    OutlineRangeScoresSlider.noUiSlider.updateOptions({
+    outlineRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.remove('noUi-handle-transparent');
