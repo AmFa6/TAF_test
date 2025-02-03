@@ -633,7 +633,7 @@ function updateAmenitiesLayer() {
 
       csvData.forEach(row => {
         if (row.Mode === selectedMode) { // Filter by mode
-          const hexId = row.Hex_ID;
+          const hexId = row.OriginName; // Use OriginName instead of Hex_ID
           const time = parseFloat(row.Time);
           if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
             hexTimeMap[hexId] = time;
