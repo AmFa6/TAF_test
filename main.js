@@ -328,7 +328,7 @@ function updateLayerVisibility() {
 
     const geoJsonLayer = L.geoJSON(filteredGeoJson, {
       style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
-      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear)
+      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear) // Ensure onEachFeature is applied
     }).addTo(map);
   }
 
@@ -587,7 +587,7 @@ const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[typ
 const yearSelector = document.querySelector('#yearDropdownAmenities'); // Corrected ID
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  const drawMapButton = document.getElementById('drawMapAmenities');
+  const drawMapButton = document.getElementById('drawMapButton');
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
 });
 
@@ -676,13 +676,7 @@ function updateAmenitiesLayer() {
                 fillOpacity: 0.7
               };
             },
-            onEachFeature: (feature, layer) => {
-              layer.on({
-                click: function (e) {
-                  // Handle click event if needed
-                }
-              });
-            }
+            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear) // Ensure onEachFeature is applied
           });
 
           console.log("Adding GeoJSON Layer to Map"); // Debug log
