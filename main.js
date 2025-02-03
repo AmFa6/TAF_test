@@ -565,11 +565,10 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
       weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
     }
   }
-
   return {
     fillColor: color,
     weight: weight,
-    opacity: 1,
+    opacity: 0,
     color: 'black',
     fillOpacity: opacity
   };
@@ -837,7 +836,7 @@ function updateAmenitiesLayer() {
               return {
                 fillColor: color,
                 weight: weight,
-                opacity: 1,
+                opacity: 0,
                 color: 'black',
                 fillOpacity: opacity
               };
