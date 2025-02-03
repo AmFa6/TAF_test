@@ -587,7 +587,7 @@ const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[typ
 const yearSelector = document.querySelector('#yearDropdownAmenities'); // Corrected ID
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  const drawMapButton = document.getElementById('drawMapButton');
+  const drawMapButton = document.getElementById('drawMapAmenities');
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
 });
 
