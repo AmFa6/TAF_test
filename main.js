@@ -187,11 +187,11 @@ function toggleInverseOpacityScoresScale() {
 
 function toggleInverseOutlineScoresScale() {
   isInverseOutline = !isInverseOutline;
-  const handles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
-  const connectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
+  const handles = OutlineRangeScoresSlider.querySelectorAll('.noUi-handle');
+  const connectElements = OutlineRangeScoresSlider.querySelectorAll('.noUi-connect');
 
   if (isInverseOutline) {
-    outlineRangeScoresSlider.noUiSlider.updateOptions({
+    OutlineRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.add('noUi-handle-transparent');
@@ -201,7 +201,7 @@ function toggleInverseOutlineScoresScale() {
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
-    outlineRangeScoresSlider.noUiSlider.updateOptions({
+    OutlineRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.remove('noUi-handle-transparent');
@@ -210,7 +210,7 @@ function toggleInverseOutlineScoresScale() {
     connectElements[1].classList.remove('noUi-connect-gradient-left');
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
-  };
+  }
   updateScoresLayer();
 }
 
