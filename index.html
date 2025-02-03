@@ -224,8 +224,12 @@
       display: flex !important;
       align-items: center !important;
       font-size: 1em !important;
-      margin: 0px !important;
-      padding: 0px !important;
+      margin: 0 !important; /* Remove margin */
+      padding: 0 !important; /* Remove padding */
+      padding-left: 0 !important; /* Remove left padding */
+    }
+    .checkbox-label span {
+      margin-left: 5px; /* Add a small left margin to the text */
     }
   </style>
 </head>
@@ -312,17 +316,17 @@
       <button class="panel-header">Journey Time Catchments - Amenities</button>
       <div id="panel-content">
       <label class="large-font">Amenities:</label>
-        <label class="checkbox-label"><input type="checkbox" value="PriSch"> Primary School</label>
-        <label class="checkbox-label"><input type="checkbox" value="SecSch"> Secondary School</label>
-        <label class="checkbox-label"><input type="checkbox" value="FurEd"> Further Education</label>
-        <label class="checkbox-label"><input type="checkbox" value="Em500"> Employment (500+ jobs)</label>
-        <label class="checkbox-label"><input type="checkbox" value="Em5000"> Employment (5000+ jobs)</label>
-        <label class="checkbox-label"><input type="checkbox" value="StrEmp"> Strategic Employment</label>
-        <label class="checkbox-label"><input type="checkbox" value="CitCtr"> City Centre</label>
-        <label class="checkbox-label"><input type="checkbox" value="MajCtr"> Major Centre</label>
-        <label class="checkbox-label"><input type="checkbox" value="DisCtr"> District Centre</label>
-        <label class="checkbox-label"><input type="checkbox" value="GP"> General Practice</label>
-        <label class="checkbox-label"><input type="checkbox" value="Hospital"> Hospital</label>
+        <label class="checkbox-label"><input type="checkbox" value="PriSch"> <span>Primary School</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="SecSch"> <span>Secondary School</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="FurEd"> <span>Further Education</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="Em500"> <span>Employment (500+ jobs)</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="Em5000"> <span>Employment (5000+ jobs)</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="StrEmp"> <span>Strategic Employment</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="CitCtr"> <span>City Centre</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="MajCtr"> <span>Major Centre</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="DisCtr"> <span>District Centre</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="GP"> <span>General Practice</span></label>
+        <label class="checkbox-label"><input type="checkbox" value="Hospital"> <span>Hospital</span></label>
       </div>
     </div>
     <div id="panel-hexagons" class="panel">
