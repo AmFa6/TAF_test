@@ -598,6 +598,7 @@ function updateAmenitiesLayer() {
     .map(checkbox => checkbox.value);
 
   const selectedYear = yearSelector.value; // Get the selected year
+  const selectedMode = document.querySelector('#modeDropdownAmenities').value; // Get the selected mode
 
   if (selectedAmenities.length === 0) {
     map.eachLayer(layer => {
@@ -618,10 +619,12 @@ function updateAmenitiesLayer() {
       const hexTimeMap = {};
 
       csvData.forEach(row => {
-        const hexId = row.Hex_ID;
-        const time = parseFloat(row.Time);
-        if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
-          hexTimeMap[hexId] = time;
+        if (row.Mode === selectedMode) { // Filter by mode
+          const hexId = row.Hex_ID;
+          const time = parseFloat(row.Time);
+          if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
+            hexTimeMap[hexId] = time;
+          }
         }
       });
 
@@ -635,12 +638,12 @@ function updateAmenitiesLayer() {
               let color = 'transparent';
 
               if (time !== undefined) {
-                if (time <= 5) color = '#440154';
-                else if (time <= 10) color = '#482777';
-                else if (time <= 15) color = '#3e4989';
-                else if (time <= 20) color = '#31688e';
-                else if (time <= 25) color = '#26828e';
-                else if (time <= 30) color = '#1f9e89';
+                if (time <= 5) color = '#fde725';
+                else if (time <= 10) color = '#7ad151';
+                else if (time <= 15) color = '#23a884';
+                else if (time <= 20) color = '#2a788e';
+                else if (time <= 25) color = '#414387';
+                else if (time <= 30) color = '#440154';
               }
 
               return {
