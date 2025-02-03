@@ -816,9 +816,9 @@ function updateAmenitiesLayer() {
               } else {
                 const opacityValue = feature.properties[opacityField];
                 if (opacityValue === 0 || opacityValue === null) {
-                  opacity = isInverseOpacityAmenities ? 0.7 : 0.1;
+                  opacity = isInverseOpacityAmenities ? 0.8 : 0.1;
                 } else {
-                  opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.7, opacityOrder);
+                  opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
                 }
               }
 
@@ -828,9 +828,9 @@ function updateAmenitiesLayer() {
               } else {
                 const outlineValue = feature.properties[outlineField];
                 if (outlineValue === 0 || outlineValue === null) {
-                  weight = isInverseOutlineAmenities ? 4 : 1;
+                  weight = isInverseOutlineAmenities ? 4 : 0;
                 } else {
-                  weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 1, 4, outlineOrder);
+                  weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
                 }
               }
 
