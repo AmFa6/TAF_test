@@ -346,6 +346,57 @@
         <label class="checkbox-label"><input type="checkbox" value="Hospital"> <span>Hospital</span></label>
         <br>
         <button id="drawMapAmenities" class="medium-font">Draw Map</button>
+        <br>
+        <button type="button" class="collapsible">Settings</button>
+        <div class="collapsible-content">
+          <label for="opacityFieldDropdownAmenities" class="medium-font">Link Hexagon Transparency to:</label>
+          <select id="opacityFieldDropdownAmenities" class="small-font">
+            <option value="None">None</option>
+            <option value="pop">Population</option>
+            <option value="imd">Index of Multiple Deprivation</option>
+            <option value="carav">Car Availability</option>
+            <option value="hh_fut">Future Dwellings</option>
+          </select>
+          <br>
+          <div class="field-container">
+            <div>
+              <div id="opacityRangeSliderAmenities"></div>
+              <div class="slider-labels">
+                <span id="opacityRangeMinAmenities">0</span>
+                <span id="opacityRangeMaxAmenities">1</span>
+              </div>
+            </div>
+          </div>
+          <div class="field-container">
+            <div class="button-container">
+              <button id="inverseOpacityScaleButtonAmenities" class="small-font">Inverse Scale</button>
+            </div>
+          </div>
+          <br>
+          <label for="outlineFieldDropdownAmenities" class="medium-font">Link Hexagon Outline to:</label>
+          <select id="outlineFieldDropdownAmenities" class="small-font">
+            <option value="None">None</option>
+            <option value="imd">Index of Multiple Deprivation</option>
+            <option value="pop">Population</option>
+            <option value="carav">Car Availability</option>
+            <option value="hh_fut">Future Dwellings</option>
+          </select>
+          <br>
+          <div class="field-container">
+            <div>
+              <div id="outlineRangeSliderAmenities"></div>
+              <div class="slider-labels">
+                <span id="outlineRangeMinAmenities">0</span>
+                <span id="outlineRangeMaxAmenities">4</span>
+              </div>
+            </div>
+          </div>
+          <div class="field-container">
+            <div class="button-container">
+              <button id="inverseOutlineScaleButtonAmenities" class="small-font">Inverse Scale</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div id="panel-hexagons" class="panel">
