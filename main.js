@@ -737,6 +737,11 @@ function updateAmenitiesLayer() {
   const selectedYear = yearSelector.value;
   const selectedMode = document.querySelector('#modeAmenitiesDropdown').value;
 
+  if (!selectedYear || selectedAmenities.length === 0 || !selectedMode) {
+    console.error('Year, amenities, or mode not selected properly.');
+    return;
+  }
+
   map.eachLayer(layer => {
     if (layer !== baseLayer) {
       map.removeLayer(layer);
@@ -745,6 +750,8 @@ function updateAmenitiesLayer() {
 
   const selectedAmenity = selectedAmenities[0];
   const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
+
+  console.log(`Fetching CSV from: ${csvPath}`);
 
   fetch(csvPath)
     .then(response => response.text())
