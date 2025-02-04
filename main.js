@@ -37,13 +37,12 @@ ScoresFiles.forEach(file => {
     .then(response => response.json())
     .then(ScoresLayer => {
       layers[file.year] = ScoresLayer;
-      layersLoaded++;
-      if (layersLoaded === totalLayers) {
+      if (Object.keys(layers).length === totalLayers) {
         initializeScoreSliders();
         updateSliderScoresRanges();
         updateScoresLayer();
       }
-    })
+    });
   const option = document.createElement("option");
   option.value = file.year;
   option.text = file.year;
@@ -53,58 +52,26 @@ ScoresFiles.forEach(file => {
 yearScoresDropdown.value = "";
 opacityFieldScoresDropdown.value = "None";
 outlineFieldScoresDropdown.value = "None";
-opacityFieldAmenitiesDropdown.value = "None";
-outlineFieldAmenitiesDropdown.value = "None";
-let autoUpdateOpacity = true;
-let autoUpdateOutline = true;
 let opacityScoresOrder = 'low-to-high';
 let outlineScoresOrder = 'low-to-high';
 let opacityAmenitiesOrder = 'low-to-high';
 let outlineAmenitiesOrder = 'low-to-high';
-let layersLoaded = 0;
-let opacityRangeScoresSlider;
-let outlineRangeScoresSlider;
-let opacityRangeAmenitiesSlider;
-let outlineRangeAmenitiesSlider;
-let isInverseScoresOpacity = false;
-let isInverseScoresOutline = false;
-let isInverseAmenitiesOpacity = false;
-let isInverseAmenitiesOutline = false;
-let currentAmenitiesLayer = null;
-let hexTimeMap = {};
-let csvDataCache = {};
 
 document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
 document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
-inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
-inverseOutlineScaleScoresButton.addEventListener("click", inverseOutlineScoresScale);
 document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
 document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
-inverseOpacityScaleAmenitiesButton.addEventListener("click", inverseOpacityAmenitiesScale);
-inverseOutlineScaleAmenitiesButton.addEventListener("click", inverseOutlineAmenitiesScale);
 
-yearScoresDropdown.addEventListener("change", updateScoresLayer)
+yearScoresDropdown.addEventListener("change", updateScoresLayer);
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
 opacityFieldScoresDropdown.addEventListener("change", () => {
-  autoUpdateOpacity = true;
   updateSliderScoresRanges();
   updateScoresLayer();
 });
 outlineFieldScoresDropdown.addEventListener("change", () => {
-  autoUpdateOutline = true;
   updateSliderScoresRanges();
   updateScoresLayer();
-});
-opacityFieldAmenitiesDropdown.addEventListener("change", () => {
-  autoUpdateOpacity = true;
-  updateSliderAmenitiesRanges();
-  updateAmenitiesLayer();
-});
-outlineFieldAmenitiesDropdown.addEventListener("change", () => {
-  autoUpdateOutline = true;
-  updateSliderAmenitiesRanges();
-  updateAmenitiesLayer();
 });
 document.addEventListener('DOMContentLoaded', (event) => {
   const drawMapButton = document.getElementById('drawAmenitiesMap');
@@ -375,8 +342,8 @@ function updateMasterCheckbox() {
 }
 
 function initializeScoreSliders() {
-  opacityRangeScoresSlider = document.getElementById('opacityRangeScoresSlider');
-  outlineRangeScoresSlider = document.getElementById('outlineRangeScoresSlider');
+  const opacityRangeScoresSlider = document.getElementById('opacityRangeScoresSlider');
+  const outlineRangeScoresSlider = document.getElementById('outlineRangeScoresSlider');
   initializeSliders(opacityRangeScoresSlider, updateScoresLayer);
   initializeSliders(outlineRangeScoresSlider, updateScoresLayer);
 }
