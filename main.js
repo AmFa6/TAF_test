@@ -385,6 +385,7 @@ function initializeScoreSliders() {
 
 function toggleInverseOpacityScoresScale() {
   isInverseScoresOpacity = !isInverseScoresOpacity;
+  console.log(`Inverse Opacity Scores Scale: ${isInverseScoresOpacity}`);
   const handles = opacityRangeScoresSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeScoresSlider.querySelectorAll('.noUi-connect');
 
@@ -415,6 +416,7 @@ function toggleInverseOpacityScoresScale() {
 
 function toggleInverseOutlineScoresScale() {
   isInverseScoresOutline = !isInverseScoresOutline;
+  console.log(`Inverse Outline Scores Scale: ${isInverseScoresOutline}`);
   const handles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
   const connectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
 
@@ -445,11 +447,13 @@ function toggleInverseOutlineScoresScale() {
 
 function inverseOpacityScoresScale() {
   opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  console.log(`Opacity Order Scores Scale: ${opacityOrder}`);
   updateScoresLayer();
 }
 
 function inverseOutlineScoresScale() {
   outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  console.log(`Outline Order Scores Scale: ${outlineOrder}`);
   updateScoresLayer();
 }
 
