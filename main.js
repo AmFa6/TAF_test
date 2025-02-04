@@ -832,8 +832,8 @@ function updateAmenitiesLayer() {
               weight = 0;
             } else {
               const outlineValue = feature.properties[outlineField];
-              if (outlineValue === 0 || outlineValue === null) {
-                weight = isInverseAmenitiesOutline ? 4 : 0;
+              if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
+                weight = 0;
               } else {
                 weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
               }
@@ -890,8 +890,8 @@ function updateAmenitiesLayer() {
               weight = 0;
             } else {
               const outlineValue = feature.properties[outlineField];
-              if (outlineValue === 0 || outlineValue === null) {
-                weight = isInverseAmenitiesOutline ? 4 : 0;
+              if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
+                weight = 0;
               } else {
                 weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
               }
