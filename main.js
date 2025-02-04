@@ -735,26 +735,23 @@ function updateSliderAmenitiesRange() {
   }
 }
 
-function fetchCSVData(selectedYear, selectedAmenity, selectedMode) {
+async function fetchCSVData(selectedYear, selectedAmenity, selectedMode) {
   const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
   console.log(`Fetching CSV from: ${csvPath}`);
 
-  return fetch(csvPath)
-    .then(response => response.text())
-    .then(csvText => {
-      const csvData = Papa.parse(csvText, { header: true }).data;
-      hexTimeMap = {};
-
-      csvData.forEach(row => {
-        if (row.Mode === selectedMode) {
-          const hexId = row.OriginName;
-          const time = parseFloat(row.Time);
-          if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
-            hexTimeMap[hexId] = time;
-          }
-        }
-      });
-    });
+  const response = await fetch(csvPath);
+  const csvText = await response.text();
+  const csvData = Papa.parse(csvText, { header: true }).data;
+  hexTimeMap = {};
+  csvData.forEach(row => {
+    if (row.Mode === selectedMode) {
+      const hexId = row.OriginName;
+      const time = parseFloat(row.Time);
+      if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
+        hexTimeMap[hexId] = time;
+      }
+    }
+  });
 }
 
 function updateAmenitiesLayerStyle() {
