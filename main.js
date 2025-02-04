@@ -339,10 +339,10 @@ function updateScoresLayer() {
       return feature.properties[fieldToDisplay] !== undefined && isClassVisible(value, selectedYear);
     });
 
-    let minOpacity = parseFloat(opacityRangeScoresSlider.noUiSlider.get()[0]);
-    let maxOpacity = parseFloat(opacityRangeScoresSlider.noUiSlider.get()[1]);
-    let minOutline = parseFloat(outlineRangeScoresSlider.noUiSlider.get()[0]);
-    let maxOutline = parseFloat(outlineRangeScoresSlider.noUiSlider.get()[1]);
+    let minOpacity = opacityRangeScoresSlider && opacityRangeScoresSlider.noUiSlider ? parseFloat(opacityRangeScoresSlider.noUiSlider.get()[0]) : 0;
+    let maxOpacity = opacityRangeScoresSlider && opacityRangeScoresSlider.noUiSlider ? parseFloat(opacityRangeScoresSlider.noUiSlider.get()[1]) : 0;
+    let minOutline = outlineRangeScoresSlider && outlineRangeScoresSlider.noUiSlider ? parseFloat(outlineRangeScoresSlider.noUiSlider.get()[0]) : 0;
+    let maxOutline = outlineRangeScoresSlider && outlineRangeScoresSlider.noUiSlider ? parseFloat(outlineRangeScoresSlider.noUiSlider.get()[1]) : 0;
 
     const filteredScoresLayer = {
       type: "FeatureCollection",
