@@ -25,6 +25,8 @@ const opacityFieldScoresDropdown = document.getElementById("opacityFieldScoresDr
 const outlineFieldScoresDropdown = document.getElementById("outlineFieldScoresDropdown");
 const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
 const inverseOutlineScaleScoresButton = document.getElementById("inverseOutlineScaleScoresButton");
+const inverseOpacityScaleAmenitiesButton = document.getElementById("inverseOpacityScaleAmenitiesButton");
+const inverseOutlineScaleAmenitiesButton = document.getElementById("inverseOutlineScaleAmenitiesButton");
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
 const yearSelector = document.querySelector('#yearAmenitiesDropdown');
 
