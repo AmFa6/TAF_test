@@ -799,86 +799,66 @@ function updateAmenitiesLayerStyle() {
   }
 }
 
-function updateAmenitiesLayer() {
-  const selectedAmenities = Array.from(amenitiesCheckboxes)
-    .filter(checkbox => checkbox.checked)
-    .map(checkbox => checkbox.value);
+function updateAmenitiesLayerStyle() {
+  const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
+  const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
 
-  const selectedYear = yearSelector.value;
-  const selectedMode = document.querySelector('#modeAmenitiesDropdown').value;
-
-  if (!selectedYear || selectedAmenities.length === 0 || !selectedMode) {
+  if (!opacityRangeAmenitiesSlider || !outlineRangeAmenitiesSlider) {
+    console.error('Sliders are not initialized.');
     return;
   }
 
-  const selectedAmenity = selectedAmenities[0];
+  const minOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[0]);
+  const maxOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[1]);
+  const minOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]);
+  const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
 
-  fetchCSVData(selectedYear, selectedAmenity, selectedMode).then(() => {
-    fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
-      .then(response => response.json())
-      .then(AmenitiesLayer => {
-        if (currentAmenitiesLayer) {
-          map.removeLayer(currentAmenitiesLayer);
+  if (currentAmenitiesLayer) {
+    currentAmenitiesLayer.eachLayer(layer => {
+      const feature = layer.feature;
+      const hexId = feature.properties.Hex_ID;
+      const time = hexTimeMap[hexId];
+      let color = 'transparent';
+
+      if (time !== undefined) {
+        if (time <= 5) color = '#fde725';
+        else if (time <= 10) color = '#7ad151';
+        else if (time <= 15) color = '#23a884';
+        else if (time <= 20) color = '#2a788e';
+        else if (time <= 25) color = '#414387';
+        else if (time <= 30) color = '#440154';
+      }
+
+      let opacity;
+      if (opacityField === 'None') {
+        opacity = 0.8;
+      } else {
+        const opacityValue = feature.properties[opacityField];
+        if (opacityValue === 0 || opacityValue === null) {
+          opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
+        } else {
+          opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
         }
+      }
+      let weight;
+      if (outlineField === 'None') {
+        weight = 0;
+      } else {
+        const outlineValue = feature.properties[outlineField];
+        if (outlineValue === 0 || outlineValue === null) {
+          weight = isInverseAmenitiesOutline ? 4 : 0;
+        } else {
+          weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
+        }
+      }
 
-        currentAmenitiesLayer = L.geoJSON(AmenitiesLayer, {
-          style: feature => {
-            const hexId = feature.properties.Hex_ID;
-            const time = hexTimeMap[hexId];
-            let color = 'transparent';
-
-            if (time !== undefined) {
-              if (time <= 5) color = '#fde725';
-              else if (time <= 10) color = '#7ad151';
-              else if (time <= 15) color = '#23a884';
-              else if (time <= 20) color = '#2a788e';
-              else if (time <= 25) color = '#414387';
-              else if (time <= 30) color = '#440154';
-            }
-
-            const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
-            const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
-
-            const minOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[0]);
-            const maxOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[1]);
-            const minOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]);
-            const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
-
-            let opacity;
-            if (opacityField === 'None') {
-              opacity = 0.8;
-            } else {
-              const opacityValue = feature.properties[opacityField];
-              if (opacityValue === 0 || opacityValue === null) {
-                opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
-              } else {
-                opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
-              }
-            }
-            let weight;
-            if (outlineField === 'None') {
-              weight = 0;
-            } else {
-              const outlineValue = feature.properties[outlineField];
-              if (outlineValue === 0 || outlineValue === null) {
-                weight = isInverseAmenitiesOutline ? 4 : 0;
-              } else {
-                weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
-              }
-            }
-
-            return {
-              fillColor: color,
-              weight: weight,
-              opacity: 1,
-              color: 'black',
-              fillOpacity: opacity
-            };
-          },
-          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
-        }).addTo(map);
-
-        updateAmenitiesLayerStyle();
+      layer.setStyle({
+        fillColor: color,
+        weight: weight,
+        opacity: 1,
+        color: 'black',
+        fillOpacity: opacity
       });
-  });
+    });
+  }
 }
