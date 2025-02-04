@@ -51,7 +51,6 @@ opacityFieldScoresDropdown.value = "None";
 outlineFieldScoresDropdown.value = "None";
 opacityFieldAmenitiesDropdown.value = "None";
 outlineFieldAmenitiesDropdown.value = "None";
-
 let autoUpdateOpacity = true;
 let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
@@ -59,23 +58,21 @@ let outlineOrder = 'low-to-high';
 let layersLoaded = 0;
 let opacityRangeScoresSlider;
 let outlineRangeScoresSlider;
-let isInverseOpacity = false;
-let isInverseOutline = false;
-let currentAmenitiesLayer = null;
-let hexTimeMap = {};
 let opacityRangeAmenitiesSlider;
 let outlineRangeAmenitiesSlider;
+let isInverseScoresOpacity = false;
+let isInverseScoresOutline = false;
 let isInverseAmenitiesOpacity = false;
 let isInverseAmenitiesOutline = false;
+let currentAmenitiesLayer = null;
+let hexTimeMap = {};
 
 document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
 document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
 document.getElementById('opacityFieldAmenitiesDropdown').addEventListener('change', updateAmenitiesLayerStyle);
 document.getElementById('outlineFieldAmenitiesDropdown').addEventListener('change', updateAmenitiesLayerStyle);
-
 inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
 inverseOutlineScaleScoresButton.addEventListener("click", inverseOutlineScoresScale);
-
 yearScoresDropdown.addEventListener("change", updateScoresLayer)
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
@@ -99,7 +96,6 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   updateSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
-
 document.addEventListener('DOMContentLoaded', (event) => {
   const drawMapButton = document.getElementById('drawAmenitiesMap');
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
@@ -155,11 +151,11 @@ function initializeAmenitiesSliders() {
 }
 
 function toggleInverseOpacityScoresScale() {
-  isInverseOpacity = !isInverseOpacity;
+  isInverseScoresOpacity = !isInverseScoresOpacity;
   const handles = opacityRangeScoresSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeScoresSlider.querySelectorAll('.noUi-connect');
 
-  if (isInverseOpacity) {
+  if (isInverseScoresOpacity) {
     opacityRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
@@ -184,11 +180,11 @@ function toggleInverseOpacityScoresScale() {
 }
 
 function toggleInverseOutlineScoresScale() {
-  isInverseOutline = !isInverseOutline;
+  isInverseScoresOutline = !isInverseScoresOutline;
   const handles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
   const connectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
 
-  if (isInverseOutline) {
+  if (isInverseScoresOutline) {
     outlineRangeScoresSlider.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
