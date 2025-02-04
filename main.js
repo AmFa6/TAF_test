@@ -4,7 +4,7 @@ const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/lig
   attribution: '&copy; OpenStreetMap contributors & CartoDB'
 }).addTo(map);
 
-const geoJsonFiles = [
+const ScoresFiles = [
   { year: '2024', path: 'https://AmFa6.github.io/TAF_test/2024_connectscore.geojson' },
   { year: '2023', path: 'https://AmFa6.github.io/TAF_test/2023_connectscore.geojson' },
   { year: '2022', path: 'https://AmFa6.github.io/TAF_test/2022_connectscore.geojson' },
@@ -18,13 +18,13 @@ const geoJsonFiles = [
 
 const layers = {};
 let layersLoaded = 0;
-const totalLayers = geoJsonFiles.length;
+const totalLayers = ScoresFiles.length;
 
-geoJsonFiles.forEach(file => {
+ScoresFiles.forEach(file => {
   fetch(file.path)
     .then(response => response.json())
-    .then(geoJson => {
-      layers[file.year] = geoJson;
+    .then(ScoresLayer => {
+      layers[file.year] = ScoresLayer;
       layersLoaded++;
       if (layersLoaded === totalLayers) {
         initializeScoreSliders();
@@ -35,7 +35,7 @@ geoJsonFiles.forEach(file => {
 });
 
 const yearScoresDropdown = document.getElementById("yearScoresDropdown");
-geoJsonFiles.forEach(file => {
+ScoresFiles.forEach(file => {
   const option = document.createElement("option");
   option.value = file.year;
   option.text = file.year;
@@ -351,12 +351,12 @@ function updateScoresLayer() {
     let minOutline = parseFloat(outlineRangeScoresSlider.noUiSlider.get()[0]);
     let maxOutline = parseFloat(outlineRangeScoresSlider.noUiSlider.get()[1]);
 
-    const filteredGeoJson = {
+    const filteredScoresLayer = {
       type: "FeatureCollection",
       features: filteredFeatures
     };
 
-    const geoJsonLayer = L.geoJSON(filteredGeoJson, {
+    const ScoresLayer = L.geoJSON(filteredScoresLayer, {
       style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
@@ -830,12 +830,12 @@ function updateAmenitiesLayer() {
   fetchCSVData(selectedYear, selectedAmenity, selectedMode).then(() => {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
-      .then(geoJson => {
+      .then(AmenitiesLayer => {
         if (currentAmenitiesLayer) {
           map.removeLayer(currentAmenitiesLayer);
         }
 
-        currentAmenitiesLayer = L.geoJSON(geoJson, {
+        currentAmenitiesLayer = L.geoJSON(AmenitiesLayer, {
           style: feature => {
             const hexId = feature.properties.Hex_ID;
             const time = hexTimeMap[hexId];
