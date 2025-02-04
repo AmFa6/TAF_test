@@ -37,12 +37,13 @@ ScoresFiles.forEach(file => {
     .then(response => response.json())
     .then(ScoresLayer => {
       layers[file.year] = ScoresLayer;
-      if (Object.keys(layers).length === totalLayers) {
+      layersLoaded++;
+      if (layersLoaded === totalLayers) {
         initializeScoreSliders();
         updateSliderScoresRanges();
         updateScoresLayer();
       }
-    });
+    })
   const option = document.createElement("option");
   option.value = file.year;
   option.text = file.year;
@@ -52,26 +53,58 @@ ScoresFiles.forEach(file => {
 yearScoresDropdown.value = "";
 opacityFieldScoresDropdown.value = "None";
 outlineFieldScoresDropdown.value = "None";
+opacityFieldAmenitiesDropdown.value = "None";
+outlineFieldAmenitiesDropdown.value = "None";
+let autoUpdateOpacity = true;
+let autoUpdateOutline = true;
 let opacityScoresOrder = 'low-to-high';
 let outlineScoresOrder = 'low-to-high';
 let opacityAmenitiesOrder = 'low-to-high';
 let outlineAmenitiesOrder = 'low-to-high';
+let layersLoaded = 0;
+let opacityRangeScoresSlider;
+let outlineRangeScoresSlider;
+let opacityRangeAmenitiesSlider;
+let outlineRangeAmenitiesSlider;
+let isInverseScoresOpacity = false;
+let isInverseScoresOutline = false;
+let isInverseAmenitiesOpacity = false;
+let isInverseAmenitiesOutline = false;
+let currentAmenitiesLayer = null;
+let hexTimeMap = {};
+let csvDataCache = {};
 
 document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
 document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
+inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
+inverseOutlineScaleScoresButton.addEventListener("click", inverseOutlineScoresScale);
 document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
 document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
+inverseOpacityScaleAmenitiesButton.addEventListener("click", inverseOpacityAmenitiesScale);
+inverseOutlineScaleAmenitiesButton.addEventListener("click", inverseOutlineAmenitiesScale);
 
-yearScoresDropdown.addEventListener("change", updateScoresLayer);
+yearScoresDropdown.addEventListener("change", updateScoresLayer)
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
 opacityFieldScoresDropdown.addEventListener("change", () => {
+  autoUpdateOpacity = true;
   updateSliderScoresRanges();
   updateScoresLayer();
 });
 outlineFieldScoresDropdown.addEventListener("change", () => {
+  autoUpdateOutline = true;
   updateSliderScoresRanges();
   updateScoresLayer();
+});
+opacityFieldAmenitiesDropdown.addEventListener("change", () => {
+  autoUpdateOpacity = true;
+  updateSliderAmenitiesRanges();
+  updateAmenitiesLayer();
+});
+outlineFieldAmenitiesDropdown.addEventListener("change", () => {
+  autoUpdateOutline = true;
+  updateSliderAmenitiesRanges();
+  updateAmenitiesLayer();
 });
 document.addEventListener('DOMContentLoaded', (event) => {
   const drawMapButton = document.getElementById('drawAmenitiesMap');
@@ -273,7 +306,43 @@ function updateLegend() {
 
   legendContent.innerHTML = '';
 
-  const headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
+  let headerText;
+  let classes;
+
+  if (currentAmenitiesLayer) {
+    headerText = "Journey Time Catchment (minutes)";
+    classes = [
+      { range: `<= 5`, color: "#fde725" },
+      { range: `> 5 and <= 10`, color: "#7ad151" },
+      { range: `> 10 and <= 15`, color: "#23a884" },
+      { range: `> 15 and <= 20`, color: "#2a788e" },
+      { range: `> 20 and <= 25`, color: "#414387" },
+      { range: `> 25 and <= 30`, color: "#440154" }
+    ];
+  } else {
+    headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
+    classes = selectedYear.includes('-') ? [
+      { range: `<= -20%`, color: "#FF0000" },
+      { range: `> -20% and <= -10%`, color: "#FF5500" },
+      { range: `> -10% and < 0`, color: "#FFAA00" },
+      { range: `= 0`, color: "transparent" },
+      { range: `> 0 and <= 10%`, color: "#B0E200" },
+      { range: `>= 10% and < 20%`, color: "#6EC500" },
+      { range: `>= 20%`, color: "#38A800" }
+    ] : [
+      { range: `90-100 - 10% of region's population with best access to amenities`, color: "#fde725" },
+      { range: `80-90`, color: "#b5de2b" },
+      { range: `70-80`, color: "#6ece58" },
+      { range: `60-70`, color: "#35b779" },
+      { range: `50-60`, color: "#1f9e89" },
+      { range: `40-50`, color: "#26828e" },
+      { range: `30-40`, color: "#31688e" },
+      { range: `20-30`, color: "#3e4989" },
+      { range: `10-20`, color: "#482777" },
+      { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
+    ];
+  }
+
   const headerDiv = document.createElement("div");
   headerDiv.innerHTML = `${headerText}`;
   headerDiv.style.fontSize = "1.1em";
@@ -283,27 +352,6 @@ function updateLegend() {
   const masterCheckboxDiv = document.createElement("div");
   masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
   legendContent.appendChild(masterCheckboxDiv);
-
-  const classes = selectedYear.includes('-') ? [
-    { range: `<= -20%`, color: "#FF0000" },
-    { range: `> -20% and <= -10%`, color: "#FF5500" },
-    { range: `> -10% and < 0`, color: "#FFAA00" },
-    { range: `= 0`, color: "transparent" },
-    { range: `> 0 and <= 10%`, color: "#B0E200" },
-    { range: `>= 10% and < 20%`, color: "#6EC500" },
-    { range: `>= 20%`, color: "#38A800" }
-  ] : [
-    { range: `90-100 - 10% of region's population with best access to amenities`, color: "#fde725" },
-    { range: `80-90`, color: "#b5de2b" },
-    { range: `70-80`, color: "#6ece58" },
-    { range: `60-70`, color: "#35b779" },
-    { range: `50-60`, color: "#1f9e89" },
-    { range: `40-50`, color: "#26828e" },
-    { range: `30-40`, color: "#31688e" },
-    { range: `20-30`, color: "#3e4989" },
-    { range: `10-20`, color: "#482777" },
-    { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
-  ];
 
   classes.forEach(c => {
     const div = document.createElement("div");
@@ -342,8 +390,8 @@ function updateMasterCheckbox() {
 }
 
 function initializeScoreSliders() {
-  const opacityRangeScoresSlider = document.getElementById('opacityRangeScoresSlider');
-  const outlineRangeScoresSlider = document.getElementById('outlineRangeScoresSlider');
+  opacityRangeScoresSlider = document.getElementById('opacityRangeScoresSlider');
+  outlineRangeScoresSlider = document.getElementById('outlineRangeScoresSlider');
   initializeSliders(opacityRangeScoresSlider, updateScoresLayer);
   initializeSliders(outlineRangeScoresSlider, updateScoresLayer);
 }
