@@ -806,8 +806,8 @@ function updateAmenitiesLayerStyle() {
         weight = 0;
       } else {
         const outlineValue = feature.properties[outlineField];
-        if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
-          weight = 0;
+        if (outlineValue === 0 || outlineValue === null) {
+          weight = isInverseAmenitiesOutline ? 4 : 0;
         } else {
           weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
         }
@@ -860,9 +860,11 @@ function fetchAndDisplayAmenitiesLayer() {
   fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
     .then(response => response.json())
     .then(AmenitiesLayer => {
-      if (currentAmenitiesLayer) {
-        map.removeLayer(currentAmenitiesLayer);
-      }
+      map.eachLayer(layer => {
+        if (layer !== baseLayer) {
+          map.removeLayer(layer);
+        }
+      });
 
       currentAmenitiesLayer = L.geoJSON(AmenitiesLayer, {
         style: feature => {
