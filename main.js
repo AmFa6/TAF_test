@@ -66,6 +66,7 @@ let isInverseAmenitiesOpacity = false;
 let isInverseAmenitiesOutline = false;
 let currentAmenitiesLayer = null;
 let hexTimeMap = {};
+let csvDataCache = {};
 
 document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
 document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
@@ -739,6 +740,8 @@ async function fetchCSVData(selectedYear, selectedAmenity, selectedMode) {
       }
     }
   });
+
+  csvDataCache[`${selectedYear}_${selectedAmenity}_${selectedMode}`] = hexTimeMap;
 }
 
 function updateAmenitiesLayerStyle() {
@@ -817,73 +820,83 @@ function updateAmenitiesLayer() {
   }
 
   const selectedAmenity = selectedAmenities[0];
+  const cacheKey = `${selectedYear}_${selectedAmenity}_${selectedMode}`;
 
-  fetchCSVData(selectedYear, selectedAmenity, selectedMode).then(() => {
-    fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
-      .then(response => response.json())
-      .then(AmenitiesLayer => {
-        if (currentAmenitiesLayer) {
-          map.removeLayer(currentAmenitiesLayer);
-        }
+  if (csvDataCache[cacheKey]) {
+    hexTimeMap = csvDataCache[cacheKey];
+    fetchAndDisplayAmenitiesLayer();
+  } else {
+    fetchCSVData(selectedYear, selectedAmenity, selectedMode).then(() => {
+      fetchAndDisplayAmenitiesLayer();
+    });
+  }
+}
 
-        currentAmenitiesLayer = L.geoJSON(AmenitiesLayer, {
-          style: feature => {
-            const hexId = feature.properties.Hex_ID;
-            const time = hexTimeMap[hexId];
-            let color = 'transparent';
+function fetchAndDisplayAmenitiesLayer() {
+  fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
+    .then(response => response.json())
+    .then(AmenitiesLayer => {
+      if (currentAmenitiesLayer) {
+        map.removeLayer(currentAmenitiesLayer);
+      }
 
-            if (time !== undefined) {
-              if (time <= 5) color = '#fde725';
-              else if (time <= 10) color = '#7ad151';
-              else if (time <= 15) color = '#23a884';
-              else if (time <= 20) color = '#2a788e';
-              else if (time <= 25) color = '#414387';
-              else if (time <= 30) color = '#440154';
-            }
+      currentAmenitiesLayer = L.geoJSON(AmenitiesLayer, {
+        style: feature => {
+          const hexId = feature.properties.Hex_ID;
+          const time = hexTimeMap[hexId];
+          let color = 'transparent';
 
-            const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
-            const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
+          if (time !== undefined) {
+            if (time <= 5) color = '#fde725';
+            else if (time <= 10) color = '#7ad151';
+            else if (time <= 15) color = '#23a884';
+            else if (time <= 20) color = '#2a788e';
+            else if (time <= 25) color = '#414387';
+            else if (time <= 30) color = '#440154';
+          }
 
-            const minOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[0]);
-            const maxOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[1]);
-            const minOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]);
-            const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
+          const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
+          const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
 
-            let opacity;
-            if (opacityField === 'None') {
-              opacity = 0.8;
+          const minOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[0]);
+          const maxOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[1]);
+          const minOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]);
+          const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
+
+          let opacity;
+          if (opacityField === 'None') {
+            opacity = 0.8;
+          } else {
+            const opacityValue = feature.properties[opacityField];
+            if (opacityValue === 0 || opacityValue === null) {
+              opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
             } else {
-              const opacityValue = feature.properties[opacityField];
-              if (opacityValue === 0 || opacityValue === null) {
-                opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
-              } else {
-                opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
-              }
+              opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
             }
-            let weight;
-            if (outlineField === 'None') {
-              weight = 0;
+          }
+          let weight;
+          if (outlineField === 'None') {
+            weight = 0;
+          } else {
+            const outlineValue = feature.properties[outlineField];
+            if (outlineValue === 0 || outlineValue === null) {
+              weight = isInverseAmenitiesOutline ? 4 : 0;
             } else {
-              const outlineValue = feature.properties[outlineField];
-              if (outlineValue === 0 || outlineValue === null) {
-                weight = isInverseAmenitiesOutline ? 4 : 0;
-              } else {
-                weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
-              }
+              weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
             }
+          }
 
-            return {
-              fillColor: color,
-              weight: weight,
-              opacity: 1,
-              color: 'black',
-              fillOpacity: opacity
-            };
-          },
-          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
-        }).addTo(map);
+          return {
+            fillColor: color,
+            weight: weight,
+            opacity: 1,
+            color: 'black',
+            fillOpacity: opacity
+          };
+        },
+        onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
+      }).addTo(map);
 
-        updateAmenitiesLayerStyle();
-      });
-  });
+      updateAmenitiesLayerStyle();
+    });
 }
