@@ -25,6 +25,8 @@ const opacityFieldScoresDropdown = document.getElementById("opacityFieldScoresDr
 const outlineFieldScoresDropdown = document.getElementById("outlineFieldScoresDropdown");
 const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
 const inverseOutlineScaleScoresButton = document.getElementById("inverseOutlineScaleScoresButton");
+const purposeAmenitiesDropdown = document.getElementById("purposeAmenitiesDropdown");
+const modeAmenitiesDropdown = document.getElementById("modeAmenitiessDropdown");
 const inverseOpacityScaleAmenitiesButton = document.getElementById("inverseOpacityScaleAmenitiesButton");
 const inverseOutlineScaleAmenitiesButton = document.getElementById("inverseOutlineScaleAmenitiesButton");
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
@@ -848,7 +850,13 @@ function updateAmenitiesLayer() {
 }
 
 function fetchAndDisplayAmenitiesLayer() {
-  const selectedYear = yearSelector.value; // Add this line to define selectedYear
+  const selectedYear = yearSelector.value;
+  const selectedMode = document.querySelector('#modeAmenitiesDropdown').value;
+  const selectedAmenities = Array.from(amenitiesCheckboxes)
+    .filter(checkbox => checkbox.checked)
+    .map(checkbox => checkbox.value);
+  const selectedAmenity = selectedAmenities[0];
+
   fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
     .then(response => response.json())
     .then(AmenitiesLayer => {
@@ -910,7 +918,7 @@ function fetchAndDisplayAmenitiesLayer() {
             fillOpacity: opacity
           };
         },
-        onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedYear here
+        onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedYear, selectedAmenity, and selectedMode here
       }).addTo(map);
 
       updateAmenitiesLayerStyle();
