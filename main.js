@@ -593,6 +593,7 @@ function initializeAmenitiesSliders() {
 
 function toggleInverseOpacityAmenitiesScale() {
   isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
+  console.log(`Inverse Opacity Scores Scale: ${isInverseAmenitiesOpacity}`);
   const handles = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
 
@@ -623,6 +624,7 @@ function toggleInverseOpacityAmenitiesScale() {
 
 function toggleInverseOutlineAmenitiesScale() {
   isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
+  console.log(`Inverse Opacity Scores Scale: ${isInverseAmenitiesOutline}`);
   const handles = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
   const connectElements = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
 
