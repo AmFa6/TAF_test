@@ -938,4 +938,5 @@ function updateAmenitiesLayer() {
       })
       .catch(error => console.error('Error fetching GeoJSON:', error));
   }
+  updateLegend();
 }
