@@ -822,9 +822,6 @@ function updateAmenitiesLayer() {
             onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
           });
 
-          if (currentAmenitiesLayer) {
-            map.removeLayer(currentAmenitiesLayer);
-          }
           currentAmenitiesLayer = geoJsonLayer;
           geoJsonLayer.addTo(map);
         });
