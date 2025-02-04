@@ -17,8 +17,16 @@ const ScoresFiles = [
 ];
 
 const layers = {};
-let layersLoaded = 0;
 const totalLayers = ScoresFiles.length;
+const yearScoresDropdown = document.getElementById("yearScoresDropdown");
+const purposeScoresDropdown = document.getElementById("purposeScoresDropdown");
+const modeScoresDropdown = document.getElementById("modeScoresDropdown");
+const opacityFieldScoresDropdown = document.getElementById("opacityFieldScoresDropdown");
+const outlineFieldScoresDropdown = document.getElementById("outlineFieldScoresDropdown");
+const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
+const inverseOutlineScaleScoresButton = document.getElementById("inverseOutlineScaleScoresButton");
+const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
+const yearSelector = document.querySelector('#yearAmenitiesDropdown'); // Corrected ID
 
 ScoresFiles.forEach(file => {
   fetch(file.path)
@@ -32,45 +40,43 @@ ScoresFiles.forEach(file => {
         updateScoresLayer();
       }
     })
-});
-
-const yearScoresDropdown = document.getElementById("yearScoresDropdown");
-ScoresFiles.forEach(file => {
   const option = document.createElement("option");
   option.value = file.year;
   option.text = file.year;
   yearScoresDropdown.add(option);
 });
 
-const purposeScoresDropdown = document.getElementById("purposeScoresDropdown");
-const modeScoresDropdown = document.getElementById("modeScoresDropdown");
-const opacityFieldScoresDropdown = document.getElementById("opacityFieldScoresDropdown");
-const outlineFieldScoresDropdown = document.getElementById("outlineFieldScoresDropdown");
 yearScoresDropdown.value = "";
 opacityFieldScoresDropdown.value = "None";
 outlineFieldScoresDropdown.value = "None";
+opacityFieldAmenitiesDropdown.value = "None";
+outlineFieldAmenitiesDropdown.value = "None";
 
 let autoUpdateOpacity = true;
 let autoUpdateOutline = true;
 let opacityOrder = 'low-to-high';
 let outlineOrder = 'low-to-high';
-
+let layersLoaded = 0;
 let opacityRangeScoresSlider;
 let outlineRangeScoresSlider;
 let isInverseOpacity = false;
 let isInverseOutline = false;
+let currentAmenitiesLayer = null;
+let hexTimeMap = {};
+let opacityRangeAmenitiesSlider;
+let outlineRangeAmenitiesSlider;
+let isInverseAmenitiesOpacity = false;
+let isInverseAmenitiesOutline = false;
 
 document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
 document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
-const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
+document.getElementById('opacityFieldAmenitiesDropdown').addEventListener('change', updateAmenitiesLayerStyle);
+document.getElementById('outlineFieldAmenitiesDropdown').addEventListener('change', updateAmenitiesLayerStyle);
+
 inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
-const inverseOutlineScaleScoresButton = document.getElementById("inverseOutlineScaleScoresButton");
 inverseOutlineScaleScoresButton.addEventListener("click", inverseOutlineScoresScale);
 
-yearScoresDropdown.addEventListener("change", () => {
-  updateSliderScoresRanges();
-  updateScoresLayer();
-});
+yearScoresDropdown.addEventListener("change", updateScoresLayer)
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
 opacityFieldScoresDropdown.addEventListener("change", () => {
@@ -83,37 +89,21 @@ outlineFieldScoresDropdown.addEventListener("change", () => {
   updateSliderScoresRanges();
   updateScoresLayer();
 });
-const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
-const yearSelector = document.querySelector('#yearAmenitiesDropdown'); // Corrected ID
-let currentAmenitiesLayer = null;
-let hexTimeMap = {};
-let opacityRangeAmenitiesSlider;
-let outlineRangeAmenitiesSlider;
-let isInverseAmenitiesOpacity = false;
-let isInverseAmenitiesOutline = false;
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  const drawMapButton = document.getElementById('drawAmenitiesMap');
-  drawMapButton.addEventListener('click', updateAmenitiesLayer);
+opacityFieldAmenitiesDropdown.addEventListener("change", () => {
+  autoUpdateOpacity = true;
+  updateSliderAmenitiesRanges();
+  updateAmenitiesLayer();
+});
+outlineFieldAmenitiesDropdown.addEventListener("change", () => {
+  autoUpdateOutline = true;
+  updateSliderAmenitiesRanges();
+  updateAmenitiesLayer();
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const drawMapButton = document.getElementById('drawAmenitiesMap');
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
-
-  initializeAmenitiesSliders();
-
-  document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
-  document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
-
-  document.getElementById('opacityFieldAmenitiesDropdown').addEventListener('change', updateSliderAmenitiesRange);
-  document.getElementById('outlineFieldAmenitiesDropdown').addEventListener('change', updateSliderAmenitiesRange);
 });
-
-document.getElementById('opacityFieldAmenitiesDropdown').addEventListener('change', updateAmenitiesLayerStyle);
-document.getElementById('outlineFieldAmenitiesDropdown').addEventListener('change', updateAmenitiesLayerStyle);
-opacityRangeAmenitiesSlider.noUiSlider.on('update', updateAmenitiesLayerStyle);
-outlineRangeAmenitiesSlider.noUiSlider.on('update', updateAmenitiesLayerStyle);
 
 function initializeSliders(sliderElement, updateCallback) {
   noUiSlider.create(sliderElement, {
@@ -648,7 +638,7 @@ function toggleInverseOutlineAmenitiesScale() {
   updateAmenitiesLayerStyle();
 }
 
-function updateSliderAmenitiesRange() {
+function updateSliderAmenitiesRanges() {
   const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
   const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
 
