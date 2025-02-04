@@ -738,7 +738,6 @@ function updateAmenitiesLayer() {
   const selectedMode = document.querySelector('#modeAmenitiesDropdown').value;
 
   if (!selectedYear || selectedAmenities.length === 0 || !selectedMode) {
-    console.error('Year, amenities, or mode not selected properly.');
     return;
   }
 
