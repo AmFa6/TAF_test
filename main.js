@@ -848,6 +848,7 @@ function updateAmenitiesLayer() {
 }
 
 function fetchAndDisplayAmenitiesLayer() {
+  const selectedYear = yearSelector.value; // Add this line to define selectedYear
   fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
     .then(response => response.json())
     .then(AmenitiesLayer => {
@@ -909,7 +910,7 @@ function fetchAndDisplayAmenitiesLayer() {
             fillOpacity: opacity
           };
         },
-        onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
+        onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode) // Pass selectedYear here
       }).addTo(map);
 
       updateAmenitiesLayerStyle();
