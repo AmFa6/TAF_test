@@ -19,25 +19,6 @@ const ScoresFiles = [
 const layers = {};
 const totalLayers = ScoresFiles.length;
 let layersLoaded = 0;
-
-ScoresFiles.forEach(file => {
-  fetch(file.path)
-    .then(response => response.json())
-    .then(ScoresLayer => {
-      layers[file.year] = ScoresLayer;
-      layersLoaded++;
-      if (layersLoaded === totalLayers) {
-        initializeScoresSliders();
-        updateScoresSliderRanges();
-        updateLayerVisibility();
-      }
-    });
-  const option = document.createElement("option");
-  option.value = file.year;
-  option.text = file.year;
-  yearScoresDropdown.add(option);
-});
-
 const yearScoresDropdown = document.getElementById("yearScoresDropdown");
 const purposeScoresDropdown = document.getElementById("purposeScoresDropdown");
 const purposeMap = {
@@ -85,6 +66,24 @@ outlineFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateScoresSliderRanges();
   updateLayerVisibility();
+});
+
+ScoresFiles.forEach(file => {
+  fetch(file.path)
+    .then(response => response.json())
+    .then(ScoresLayer => {
+      layers[file.year] = ScoresLayer;
+      layersLoaded++;
+      if (layersLoaded === totalLayers) {
+        initializeScoresSliders();
+        updateScoresSliderRanges();
+        updateLayerVisibility();
+      }
+    });
+  const option = document.createElement("option");
+  option.value = file.year;
+  option.text = file.year;
+  yearScoresDropdown.add(option);
 });
 
 function initializeScoresSliders() {
