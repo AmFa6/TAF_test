@@ -99,6 +99,7 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
 document.addEventListener('DOMContentLoaded', (event) => {
   const drawMapButton = document.getElementById('drawAmenitiesMap');
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
+  initializeAmenitiesSliders();
 });
 
 function initializeSliders(sliderElement, updateCallback) {
