@@ -853,6 +853,14 @@ function updateAmenitiesLayer() {
               else if (time <= 30) color = '#440154';
             }
 
+            const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
+            const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
+
+            const minOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[0]);
+            const maxOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[1]);
+            const minOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]);
+            const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
+
             let opacity;
             if (opacityField === 'None') {
               opacity = 0.8;
