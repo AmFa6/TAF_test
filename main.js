@@ -26,7 +26,7 @@ const outlineFieldScoresDropdown = document.getElementById("outlineFieldScoresDr
 const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
 const inverseOutlineScaleScoresButton = document.getElementById("inverseOutlineScaleScoresButton");
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
-const yearSelector = document.querySelector('#yearAmenitiesDropdown'); // Corrected ID
+const yearSelector = document.querySelector('#yearAmenitiesDropdown');
 
 ScoresFiles.forEach(file => {
   fetch(file.path)
@@ -70,10 +70,13 @@ let csvDataCache = {};
 
 document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
 document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
-document.getElementById('opacityFieldAmenitiesDropdown').addEventListener('change', updateAmenitiesLayerStyle);
-document.getElementById('outlineFieldAmenitiesDropdown').addEventListener('change', updateAmenitiesLayerStyle);
 inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
 inverseOutlineScaleScoresButton.addEventListener("click", inverseOutlineScoresScale);
+document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
+document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
+inverseOpacityScaleAmenitiesButton.addEventListener("click", inverseOpacityAmenitiesScale);
+inverseOutlineScaleAmenitiesButton.addEventListener("click", inverseOutlineAmenitiesScale);
+
 yearScoresDropdown.addEventListener("change", updateScoresLayer)
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
@@ -531,6 +534,16 @@ function inverseOpacityScoresScale() {
 function inverseOutlineScoresScale() {
   outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
   updateScoresLayer();
+}
+
+function inverseOpacityAmenitiesScale() {
+  opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  updateAmenitiesLayer();
+}
+
+function inverseOutlineAmenitiesScale() {
+  outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  updateAmenitiesLayer();
 }
 
 function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
