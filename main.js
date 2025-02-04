@@ -737,14 +737,11 @@ function updateAmenitiesLayer() {
   const selectedYear = yearSelector.value;
   const selectedMode = document.querySelector('#modeAmenitiesDropdown').value;
 
-  if (selectedAmenities.length === 0) {
-    map.eachLayer(layer => {
-      if (layer.feature && layer.feature.properties.Hex_ID) {
-        map.removeLayer(layer);
-      }
-    });
-    return;
-  }
+  map.eachLayer(layer => {
+    if (layer !== baseLayer) {
+      map.removeLayer(layer);
+    }
+  });
 
   const selectedAmenity = selectedAmenities[0];
   const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
