@@ -774,11 +774,19 @@ function updateAmenitiesLayer() {
           const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
 
           const geoJsonLayer = L.geoJSON(geoJson, {
-            style: feature => styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear),
-            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
-          }).addTo(map);
+            style: feature => {
+              const hexId = feature.properties.Hex_ID;
+              const time = hexTimeMap[hexId];
+              feature.properties.time = time;
+              return styleFeature(feature, 'time', opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear);
+            },
+            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
+          });
+
+          currentAmenitiesLayer = geoJsonLayer;
+          geoJsonLayer.addTo(map);
         });
-  
+
       updateLegend();
     });
 }
