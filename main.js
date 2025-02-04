@@ -86,25 +86,25 @@ purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
 opacityFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
-  isInverseScoresOpacity = false; // Reset to non-inverse
+  isInverseScoresOpacity = false;
   updateSliderScoresRanges();
   updateScoresLayer();
 });
 outlineFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
-  isInverseScoresOutline = false; // Reset to non-inverse
+  isInverseScoresOutline = false;
   updateSliderScoresRanges();
   updateScoresLayer();
 });
 opacityFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
-  isInverseAmenitiesOpacity = false; // Reset to non-inverse
+  isInverseAmenitiesOpacity = false;
   updateSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
 outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
-  isInverseAmenitiesOutline = false; // Reset to non-inverse
+  isInverseAmenitiesOutline = false;
   updateSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
@@ -409,6 +409,7 @@ function toggleInverseOpacityScoresScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
+  updateSliderScoresRanges();
   updateScoresLayer();
 }
 
@@ -438,6 +439,7 @@ function toggleInverseOutlineScoresScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
+  updateSliderScoresRanges();
   updateScoresLayer();
 }
 
@@ -615,6 +617,7 @@ function toggleInverseOpacityAmenitiesScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
+  updateSliderAmenitiesRanges();
   updateAmenitiesLayer();
 }
 
@@ -644,6 +647,7 @@ function toggleInverseOutlineAmenitiesScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
+  updateSliderAmenitiesRanges();
   updateAmenitiesLayer();
 }
 
