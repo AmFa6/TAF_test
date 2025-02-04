@@ -86,21 +86,25 @@ purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
 opacityFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
+  isInverseScoresOpacity = false; // Reset to non-inverse
   updateSliderScoresRanges();
   updateScoresLayer();
 });
 outlineFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
+  isInverseScoresOutline = false; // Reset to non-inverse
   updateSliderScoresRanges();
   updateScoresLayer();
 });
 opacityFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
+  isInverseAmenitiesOpacity = false; // Reset to non-inverse
   updateSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
 outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
+  isInverseAmenitiesOutline = false; // Reset to non-inverse
   updateSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
