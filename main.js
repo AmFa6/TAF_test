@@ -57,8 +57,10 @@ opacityFieldAmenitiesDropdown.value = "None";
 outlineFieldAmenitiesDropdown.value = "None";
 let autoUpdateOpacity = true;
 let autoUpdateOutline = true;
-let opacityOrder = 'low-to-high';
-let outlineOrder = 'low-to-high';
+let opacityScoresOrder = 'low-to-high';
+let outlineScoresOrder = 'low-to-high';
+let opacityAmenitiesOrder = 'low-to-high';
+let outlineAmenitiesOrder = 'low-to-high';
 let layersLoaded = 0;
 let opacityRangeScoresSlider;
 let outlineRangeScoresSlider;
@@ -145,7 +147,7 @@ function initializeSliders(sliderElement, updateCallback) {
   });
 }
 
-function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
+function styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
   const value = feature.properties[fieldToDisplay];
   const color = getColor(value, selectedYear);
 
@@ -157,7 +159,7 @@ function styleFeature(feature, fieldToDisplay, opacityField, outlineField, minOp
     if (opacityValue === 0 || opacityValue === null || opacityValue === undefined || opacityValue === '') {
       opacity = 0.1;
     } else {
-      opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
+      opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityScoresOrder);
     }
   }
 
@@ -442,8 +444,8 @@ function toggleInverseOutlineScoresScale() {
 }
 
 function inverseOpacityScoresScale() {
-  opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  console.log(`Opacity Order Scores Scale: ${opacityOrder}`);
+  opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  console.log(`Opacity Order Scores Scale: ${opacityScoresOrder}`);
   updateScoresLayer();
 }
 
@@ -593,7 +595,7 @@ function initializeAmenitiesSliders() {
 
 function toggleInverseOpacityAmenitiesScale() {
   isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
-  console.log(`Inverse Opacity Scores Scale: ${isInverseAmenitiesOpacity}`);
+  console.log(`Inverse Opacity Amenities Scale: ${isInverseAmenitiesOpacity}`);
   const handles = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
 
@@ -624,7 +626,7 @@ function toggleInverseOpacityAmenitiesScale() {
 
 function toggleInverseOutlineAmenitiesScale() {
   isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
-  console.log(`Inverse Opacity Scores Scale: ${isInverseAmenitiesOutline}`);
+  console.log(`Inverse Outline Amenities Scale: ${isInverseAmenitiesOutline}`);
   const handles = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
   const connectElements = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
 
@@ -654,7 +656,8 @@ function toggleInverseOutlineAmenitiesScale() {
 }
 
 function inverseOpacityAmenitiesScale() {
-  opacityOrder = opacityOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  console.log(`Opacity Order Amenities Scale: ${opacityAmenitiesOrder}`);
   updateAmenitiesLayer();
 }
 
@@ -834,7 +837,7 @@ function updateAmenitiesLayer() {
               if (opacityValue === 0 || opacityValue === null) {
                 opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
               } else {
-                opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
+                opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityAmenitiesOrder);
               }
             }
             let weight;
@@ -892,7 +895,7 @@ function updateAmenitiesLayer() {
               if (opacityValue === 0 || opacityValue === null) {
                 opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
               } else {
-                opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
+                opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityAmenitiesOrder);
               }
             }
             let weight;
