@@ -741,12 +741,6 @@ function updateAmenitiesLayer() {
     return;
   }
 
-  map.eachLayer(layer => {
-    if (layer !== baseLayer) {
-      map.removeLayer(layer);
-    }
-  });
-
   const selectedAmenity = selectedAmenities[0];
   const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
 
@@ -779,8 +773,9 @@ function updateAmenitiesLayer() {
           const minOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]);
           const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
 
-          const geoJsonLayer = L.geoJSON(geoJson, {
-            style: feature => {
+          if (currentAmenitiesLayer) {
+            currentAmenitiesLayer.eachLayer(layer => {
+              const feature = layer.feature;
               const hexId = feature.properties.Hex_ID;
               const time = hexTimeMap[hexId];
               let color = 'transparent';
@@ -817,22 +812,64 @@ function updateAmenitiesLayer() {
                 }
               }
 
-              return {
+              layer.setStyle({
                 fillColor: color,
                 weight: weight,
                 opacity: 1,
                 color: 'black',
                 fillOpacity: opacity
-              };
-            },
-            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
-          });
+              });
+            });
+          } else {
+            currentAmenitiesLayer = L.geoJSON(geoJson, {
+              style: feature => {
+                const hexId = feature.properties.Hex_ID;
+                const time = hexTimeMap[hexId];
+                let color = 'transparent';
 
-          if (currentAmenitiesLayer) {
-            map.removeLayer(currentAmenitiesLayer);
+                if (time !== undefined) {
+                  if (time <= 5) color = '#fde725';
+                  else if (time <= 10) color = '#7ad151';
+                  else if (time <= 15) color = '#23a884';
+                  else if (time <= 20) color = '#2a788e';
+                  else if (time <= 25) color = '#414387';
+                  else if (time <= 30) color = '#440154';
+                }
+
+                let opacity;
+                if (opacityField === 'None') {
+                  opacity = 0.8;
+                } else {
+                  const opacityValue = feature.properties[opacityField];
+                  if (opacityValue === 0 || opacityValue === null) {
+                    opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
+                  } else {
+                    opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityOrder);
+                  }
+                }
+                let weight;
+                if (outlineField === 'None') {
+                  weight = 0;
+                } else {
+                  const outlineValue = feature.properties[outlineField];
+                  if (outlineValue === 0 || outlineValue === null) {
+                    weight = isInverseAmenitiesOutline ? 4 : 0;
+                  } else {
+                    weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
+                  }
+                }
+
+                return {
+                  fillColor: color,
+                  weight: weight,
+                  opacity: 1,
+                  color: 'black',
+                  fillOpacity: opacity
+                };
+              },
+              onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
+            }).addTo(map);
           }
-          currentAmenitiesLayer = geoJsonLayer;
-          geoJsonLayer.addTo(map);
         });
     });
 }
