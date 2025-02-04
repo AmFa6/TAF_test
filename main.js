@@ -171,7 +171,7 @@ function styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField,
     if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
       weight = 0;
     } else {
-      weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
+      weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineScoresOrder);
     }
   }
 
@@ -450,8 +450,8 @@ function inverseOpacityScoresScale() {
 }
 
 function inverseOutlineScoresScale() {
-  outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  console.log(`Outline Order Scores Scale: ${outlineOrder}`);
+  outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  console.log(`Outline Order Scores Scale: ${outlineScoresOrder}`);
   updateScoresLayer();
 }
 
@@ -662,7 +662,8 @@ function inverseOpacityAmenitiesScale() {
 }
 
 function inverseOutlineAmenitiesScale() {
-  outlineOrder = outlineOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  console.log(`Outline Order Amenities Scale: ${outlineAmenitiesOrder}`);
   updateAmenitiesLayer();
 }
 
@@ -848,7 +849,7 @@ function updateAmenitiesLayer() {
               if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
                 weight = 0;
               } else {
-                weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
+                weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineAmenitiesOrder);
               }
             }
 
@@ -906,7 +907,7 @@ function updateAmenitiesLayer() {
               if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
                 weight = 0;
               } else {
-                weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineOrder);
+                weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineAmenitiesOrder);
               }
             }
 
