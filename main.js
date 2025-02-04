@@ -611,7 +611,7 @@ function toggleInverseOpacityAmenitiesScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
-  updateAmenitiesLayerStyle();
+  updateAmenitiesLayer();
 }
 
 function toggleInverseOutlineAmenitiesScale() {
@@ -640,7 +640,7 @@ function toggleInverseOutlineAmenitiesScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
-  updateAmenitiesLayerStyle();
+  updateAmenitiesLayer();
 }
 
 function inverseOpacityAmenitiesScale() {
