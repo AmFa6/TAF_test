@@ -128,32 +128,20 @@ const destinationTypes = {
 
 function loadDestinations() {
   const amenitiesTypes = Object.keys(destinationTypes);
-  const icons = {
-    'PriSch': 'school',
-    'SecSch': 'school',
-    'FurEd': 'university',
-    'Em500': 'briefcase',
-    'Em5000': 'building',
-    'StrEmp': 'industry',
-    'CitCtr': 'city',
-    'MajCtr': 'shopping-cart',
-    'DisCtr': 'store',
-    'GP': 'hospital',
-    'Hospital': 'hospital'
-  };
   amenitiesTypes.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
       .then(AmenitiesLayer => {
         L.geoJSON(AmenitiesLayer, {
           pointToLayer: (feature, latlng) => {
-            const icon = L.ExtraMarkers.icon({
-              icon: icons[amenity] || 'info-circle', // Use the icon based on amenity type
-              markerColor: 'grey',
-              shape: 'circle',
-              prefix: 'fa' // Use 'fa' for Font Awesome icons
+            return L.circleMarker(latlng, {
+              radius: 5,
+              fillColor: 'rgba(104, 162, 245, 0.8)',
+              color: 'rgba(104, 162, 245, 0)',
+              weight: 1,
+              opacity: 1,
+              fillOpacity: 0.8
             });
-            return L.marker(latlng, { icon: icon });
           },
           onEachFeature: (feature, layer) => {
             layer.on('click', () => {
