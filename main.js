@@ -112,14 +112,40 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initializeAmenitiesSliders();
 });
 
-// Add this function to load amenities layers by default
+// Define a function to get the appropriate icon for each amenity
+function getAmenityIcon(amenity) {
+  const icons = {
+    'PriSch': 'school',
+    'SecSch': 'school',
+    'FurEd': 'university',
+    'Em500': 'briefcase',
+    'Em5000': 'building',
+    'StrEmp': 'industry',
+    'CitCtr': 'city',
+    'MajCtr': 'shopping-cart',
+    'DisCtr': 'store',
+    'GP': 'hospital',
+    'Hospital': 'hospital'
+  };
+
+  return L.AwesomeMarkers.icon({
+    icon: icons[amenity] || 'info-sign',
+    markerColor: 'blue',
+    prefix: 'fa'
+  });
+}
+
+// Modify the loadDestinations function to use the icons
 function loadDestinations() {
-  const amenitiesTypes = ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'cafe', 'bus_stop'];
+  const amenitiesTypes = ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hospital'];
   amenitiesTypes.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
       .then(AmenitiesLayer => {
         L.geoJSON(AmenitiesLayer, {
+          pointToLayer: (feature, latlng) => {
+            return L.marker(latlng, { icon: getAmenityIcon(amenity) });
+          },
           style: feature => {
             return {
               fillColor: '#3388ff',
