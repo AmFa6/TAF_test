@@ -42,7 +42,7 @@ amenitiesTypes.forEach(type => {
     .then(data => {
       const layer = L.geoJSON(data, {
         style: {
-          color: getRandomColor(),
+          color: '#767676', // Dark grey color
           weight: 2,
           opacity: 1,
           fillOpacity: 0.5
