@@ -31,6 +31,38 @@ const inverseOpacityScaleAmenitiesButton = document.getElementById("inverseOpaci
 const inverseOutlineScaleAmenitiesButton = document.getElementById("inverseOutlineScaleAmenitiesButton");
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
 const yearSelector = document.querySelector('#yearAmenitiesDropdown');
+const amenitiesLayers = {};
+const amenitiesTypes = [
+  'CitCtr', 'DisCtr', 'FurEd', 'GP', 'Hospital', 'MajCtr', 'PriSch', 'SecSch', 'Em500', 'Em5000', 'StrEmp'
+];
+
+amenitiesTypes.forEach(type => {
+  fetch(`https://AmFa6.github.io/TAF_test/${type}.geojson`)
+    .then(response => response.json())
+    .then(data => {
+      const layer = L.geoJSON(data, {
+        style: {
+          color: getRandomColor(),
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.5
+        }
+      });
+      amenitiesLayers[type] = layer;
+      layer.addTo(map);
+    });
+});
+
+document.querySelectorAll('#amenities-legend .checkbox-label input[type="checkbox"]').forEach(checkbox => {
+  checkbox.addEventListener('change', function() {
+    const type = this.value;
+    if (this.checked) {
+      amenitiesLayers[type].addTo(map);
+    } else {
+      map.removeLayer(amenitiesLayers[type]);
+    }
+  });
+});
 
 ScoresFiles.forEach(file => {
   fetch(file.path)
