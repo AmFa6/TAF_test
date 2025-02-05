@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 // Add this function to load amenities layers by default
 function loadDestinations() {
-  const amenitiesTypes = ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos'];
+  const amenitiesTypes = ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'cafe', 'bus_stop'];
   amenitiesTypes.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
