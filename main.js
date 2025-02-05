@@ -123,25 +123,37 @@ const destinationTypes = {
   'MajCtr': 'Major Centre',
   'DisCtr': 'District Centre',
   'GP': 'General Practice',
-  'Hospital': 'Hos'
+  'Hos': 'Hospital'
 };
 
 function loadDestinations() {
   const amenitiesTypes = Object.keys(destinationTypes);
+  const icons = {
+    'PriSch': 'fa-school',
+    'SecSch': 'fa-school',
+    'FurEd': 'fa-university',
+    'Em500': 'fa-briefcase',
+    'Em5000': 'fa-building',
+    'StrEmp': 'fa-industry',
+    'CitCtr': 'fa-city',
+    'MajCtr': 'fa-shopping-cart',
+    'DisCtr': 'fa-store',
+    'GP': 'fa-hospital',
+    'Hospital': 'fa-hospital'
+  };
   amenitiesTypes.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
       .then(AmenitiesLayer => {
         L.geoJSON(AmenitiesLayer, {
           pointToLayer: (feature, latlng) => {
-            return L.circleMarker(latlng, {
-              radius: 5,
-              fillColor: 'rgba(104, 162, 245, 0.8)',
-              color: 'rgba(104, 162, 245, 0)',
-              weight: 1,
-              opacity: 1,
-              fillOpacity: 0.8
+            const icon = L.ExtraMarkers.icon({
+              icon: icons[amenity] || 'fa-info-circle', // Use the icon based on amenity type
+              markerColor: 'grey',
+              shape: 'circle',
+              prefix: 'fa' // Use 'fa' for Font Awesome icons
             });
+            return L.marker(latlng, { icon: icon });
           },
           onEachFeature: (feature, layer) => {
             layer.on('click', () => {
