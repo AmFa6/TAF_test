@@ -33,7 +33,7 @@ const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[typ
 const yearSelector = document.querySelector('#yearAmenitiesDropdown');
 const amenitiesLayers = {};
 const amenitiesTypes = [
-  'CitCtr', 'DisCtr', 'FurEd', 'GP', 'Hospital', 'MajCtr', 'PriSch', 'SecSch', 'Em500', 'Em5000', 'StrEmp'
+  'CitCtr', 'DisCtr', 'FurEd', 'GP', 'Hos', 'MajCtr', 'PriSch', 'SecSch', 'Em500', 'Em5000', 'StrEmp'
 ];
 
 amenitiesTypes.forEach(type => {
