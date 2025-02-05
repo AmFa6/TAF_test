@@ -112,9 +112,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initializeAmenitiesSliders();
 });
 
-// Add this function to load amenities layers by default
+const destinationTypes = {
+  'PriSch': 'Primary School',
+  'SecSch': 'Secondary School',
+  'FurEd': 'Further Education',
+  'Em500': 'Employment (500+)',
+  'Em5000': 'Employment (5000+)',
+  'StrEmp': 'Strategic Employment',
+  'CitCtr': 'City Centre',
+  'MajCtr': 'Major Centre',
+  'DisCtr': 'District Centre',
+  'GP': 'General Practice',
+  'Hospital': 'Hos'
+};
+
 function loadDestinations() {
-  const amenitiesTypes = ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'cafe', 'bus_stop'];
+  const amenitiesTypes = Object.keys(destinationTypes);
   amenitiesTypes.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
@@ -128,6 +141,15 @@ function loadDestinations() {
               weight: 1,
               opacity: 1,
               fillOpacity: 0.8
+            });
+          },
+          onEachFeature: (feature, layer) => {
+            layer.on('click', () => {
+              const popupContent = `<strong>Destination Type:</strong> ${destinationTypes[amenity]}`;
+              L.popup()
+                .setLatLng(layer.getLatLng())
+                .setContent(popupContent)
+                .openOn(map);
             });
           }
         }).addTo(map);
