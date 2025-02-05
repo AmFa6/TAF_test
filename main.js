@@ -112,6 +112,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initializeAmenitiesSliders();
 });
 
+// Add this function to load amenities layers by default
+function loadDestinations() {
+  const amenitiesTypes = ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos'];
+  amenitiesTypes.forEach(amenity => {
+    fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
+      .then(response => response.json())
+      .then(AmenitiesLayer => {
+        L.geoJSON(AmenitiesLayer, {
+          style: feature => {
+            return {
+              fillColor: '#3388ff',
+              weight: 1,
+              opacity: 1,
+              color: 'black',
+              fillOpacity: 0.5
+            };
+          }
+        }).addTo(map);
+      })
+      .catch(error => console.error('Error fetching GeoJSON:', error));
+  });
+}
+
+loadDestinations();
+
 function initializeSliders(sliderElement, updateCallback) {
   noUiSlider.create(sliderElement, {
     start: [0, 0],
@@ -357,6 +382,14 @@ function updateLegend() {
     const div = document.createElement("div");
     const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
     div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+    legendContent.appendChild(div);
+  });
+
+  // Add checkboxes for each amenity type
+  const amenitiesTypes = ['school', 'hospital', 'park', 'supermarket', 'pharmacy', 'library', 'post_office', 'bank', 'restaurant', 'cafe', 'bus_stop'];
+  amenitiesTypes.forEach(amenity => {
+    const div = document.createElement("div");
+    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-amenity="${amenity}" checked> <span style="display: inline-block; width: 20px; height: 20px; background-color: #3388ff;"></span> ${amenity}`;
     legendContent.appendChild(div);
   });
 
