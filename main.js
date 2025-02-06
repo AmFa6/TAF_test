@@ -112,54 +112,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initializeAmenitiesSliders();
 });
 
-const destinationTypes = {
-  'PriSch': 'Primary School',
-  'SecSch': 'Secondary School',
-  'FurEd': 'Further Education',
-  'Em500': 'Employment (500+)',
-  'Em5000': 'Employment (5000+)',
-  'StrEmp': 'Strategic Employment',
-  'CitCtr': 'City Centre',
-  'MajCtr': 'Major Centre',
-  'DisCtr': 'District Centre',
-  'GP': 'General Practice',
-  'Hos': 'Hospital'
-};
-
-function loadDestinations() {
-  const amenitiesTypes = Object.keys(destinationTypes);
-  amenitiesTypes.forEach(amenity => {
-    fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
-      .then(response => response.json())
-      .then(AmenitiesLayer => {
-        L.geoJSON(AmenitiesLayer, {
-          pointToLayer: (feature, latlng) => {
-            return L.circleMarker(latlng, {
-              radius: 5,
-              fillColor: 'rgba(104, 162, 245, 0.8)',
-              color: 'rgba(104, 162, 245, 0)',
-              weight: 1,
-              opacity: 1,
-              fillOpacity: 0.8
-            });
-          },
-          onEachFeature: (feature, layer) => {
-            layer.on('click', () => {
-              const popupContent = `<strong>Destination Type:</strong> ${destinationTypes[amenity]}`;
-              L.popup()
-                .setLatLng(layer.getLatLng())
-                .setContent(popupContent)
-                .openOn(map);
-            });
-          }
-        }).addTo(map);
-      })
-      .catch(error => console.error('Error fetching GeoJSON:', error));
-  });
-}
-
-loadDestinations();
-
 function initializeSliders(sliderElement, updateCallback) {
   noUiSlider.create(sliderElement, {
     start: [0, 0],
@@ -405,14 +357,6 @@ function updateLegend() {
     const div = document.createElement("div");
     const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
     div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
-    legendContent.appendChild(div);
-  });
-
-  // Add checkboxes for each amenity type
-  const amenitiesTypes = ['school', 'hospital', 'park', 'supermarket', 'pharmacy', 'library', 'post_office', 'bank', 'restaurant', 'cafe', 'bus_stop'];
-  amenitiesTypes.forEach(amenity => {
-    const div = document.createElement("div");
-    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-amenity="${amenity}" checked> <span style="display: inline-block; width: 20px; height: 20px; background-color: #3388ff;"></span> ${amenity}`;
     legendContent.appendChild(div);
   });
 
