@@ -81,6 +81,16 @@
     .button-container > button {
       flex: 1;
       margin-left: 10px;
+      cursor: pointer;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 1em;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: 'Trebuchet MS', sans-serif;
+      font-weight: normal;
     }
     .button-container > button:first-child {
       margin-left: 0;
@@ -90,7 +100,7 @@
       border: none;
       text-align: left;
       outline: none;
-      font-size: 1em;
+      font-size: 0.9em;
       background: #f0f0f0;
       margin-bottom: 10px;
       display: flex;
@@ -345,7 +355,7 @@
         <label class="checkbox-label"><input type="checkbox" value="GP"> <span>General Practice</span></label>
         <label class="checkbox-label"><input type="checkbox" value="Hospital"> <span>Hospital</span></label>
         <br>
-        <button id="drawAmenitiesMap" class="medium-font" style="margin-bottom: 20px;">Draw Amenities Catchment</button>
+        <button id="drawAmenitiesMap" class="medium-font">Draw Map</button>
         <br>
         <button type="button" class="collapsible">Settings</button>
         <div class="collapsible-content">
