@@ -279,15 +279,24 @@ function isClassVisible(value, selectedYear) {
   for (const checkbox of legendCheckboxes) {
     const range = checkbox.getAttribute('data-range');
     const isChecked = checkbox.checked;
+
     if (selectedYear.includes('-')) {
       const [min, max] = range.split(' to ').map(parseFloat);
       if (value >= min && value <= max && !isChecked) {
         return false;
       }
     } else {
-      const [min, max] = range.split('-').map(parseFloat);
-      if (value >= min && value <= max && !isChecked) {
+      if (range.includes('<=') && value <= parseFloat(range.split('<=')[1]) && !isChecked) {
         return false;
+      } else if (range.includes('>') && range.includes('<=') && value > parseFloat(range.split('>')[1].split('<=')[0]) && value <= parseFloat(range.split('<=')[1]) && !isChecked) {
+        return false;
+      } else if (range.includes('>') && value > parseFloat(range.split('>')[1]) && !isChecked) {
+        return false;
+      } else {
+        const [min, max] = range.split('-').map(parseFloat);
+        if (value >= min && value <= max && !isChecked) {
+          return false;
+        }
       }
     }
   }
