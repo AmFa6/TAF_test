@@ -909,9 +909,9 @@ function updateAmenitiesLayer() {
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
         }).addTo(map);
 
+        console.log("Amenities layer updated.");
         updateLegend();
       })
       .catch(error => console.error('Error fetching GeoJSON:', error));
   }
-  console.log("Amenities layer updated.");
 }
