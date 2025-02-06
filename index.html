@@ -95,6 +95,16 @@
     .button-container > button:first-child {
       margin-left: 0;
     }
+
+    .large-button {
+      font-size: 1em;
+      padding: 10px;
+    }
+
+    .small-button {
+      font-size: 0.8em;
+      padding: 5px;
+    }
     .collapsible {
       cursor: pointer;
       border: none;
@@ -293,7 +303,7 @@
           </div>
           <div class="field-container">
             <div class="button-container">
-              <button id="inverseOpacityScaleScoresButton" class="small-font">Inverse Scale</button>
+              <button id="inverseOpacityScaleScoresButton" class="small-button">Inverse Scale</button>
             </div>
           </div>
           <br>
@@ -317,7 +327,7 @@
           </div>
           <div class="field-container">
             <div class="button-container">
-              <button id="inverseOutlineScaleScoresButton" class="small-font">Inverse Scale</button>
+              <button id="inverseOutlineScaleScoresButton" class="small-button">Inverse Scale</button>
             </div>
           </div>
         </div>
@@ -354,9 +364,11 @@
         <label class="checkbox-label"><input type="checkbox" value="DisCtr"> <span>District Centre</span></label>
         <label class="checkbox-label"><input type="checkbox" value="GP"> <span>General Practice</span></label>
         <label class="checkbox-label"><input type="checkbox" value="Hospital"> <span>Hospital</span></label>
-        <br>
-        <button id="drawAmenitiesMap" class="medium-font">Draw Map</button>
-        <br>
+        <div class="field-container">
+          <div class="button-container">
+            <button id="drawAmenitiesMap" class="large-button">Draw Amenities Catchment</button>
+          </div>
+        </div>
         <button type="button" class="collapsible">Settings</button>
         <div class="collapsible-content">
           <label for="opacityFieldAmenitiesDropdown" class="medium-font">Link Hexagon Transparency to:</label>
@@ -379,7 +391,7 @@
           </div>
           <div class="field-container">
             <div class="button-container">
-              <button id="inverseOpacityScaleAmenitiesButton" class="small-font">Inverse Scale</button>
+              <button id="inverseOpacityScaleAmenitiesButton" class="small-button">Inverse Scale</button>
             </div>
           </div>
           <br>
@@ -403,7 +415,7 @@
           </div>
           <div class="field-container">
             <div class="button-container">
-              <button id="inverseOutlineScaleAmenitiesButton" class="small-font">Inverse Scale</button>
+              <button id="inverseOutlineScaleAmenitiesButton" class="small-button">Inverse Scale</button>
             </div>
           </div>
         </div>
@@ -427,9 +439,11 @@
           <option value="PT">Public Transport</option>
           <option value="Ca">Car</option>
         </select>
-        <br>
-        <button id="drawMapButton" class="medium-font">Draw Map</button>
-      </div>
+        <div class="field-container">
+          <div class="button-container">
+            <button id="drawHexagonsMap" class="large-button">Draw Hexagons Catchment</button>
+          </div>
+        </div>
     </div>
   </div>
   <div id="legend">
