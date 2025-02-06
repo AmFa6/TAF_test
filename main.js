@@ -295,6 +295,7 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateLegend() {
+  console.log("Updating legend...");
   const selectedYear = yearScoresDropdown.value;
   const legendContent = document.getElementById("legend-content");
 
@@ -310,6 +311,7 @@ function updateLegend() {
   let classes;
 
   if (currentAmenitiesLayer) {
+    console.log("Current layer is amenities.");
     headerText = "Journey Time Catchment (minutes)";
     classes = [
       { range: `<= 5`, color: "#fde725" },
@@ -320,6 +322,7 @@ function updateLegend() {
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
   } else {
+    console.log("Current layer is scores.");
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
       { range: `<= -20%`, color: "#FF0000" },
@@ -386,6 +389,7 @@ function updateLegend() {
   });
 
   updateMasterCheckbox();
+  console.log("Legend updated.");
 }
 
 function updateMasterCheckbox() {
@@ -566,8 +570,10 @@ function updateSliderScoresRanges() {
 }
 
 function updateScoresLayer() {
+  console.log("Updating scores layer...");
   const selectedYear = yearScoresDropdown.value;
   if (!selectedYear) {
+    console.log("No year selected for scores.");
     return;
   }
   const selectedPurpose = purposeScoresDropdown.value;
@@ -607,6 +613,7 @@ function updateScoresLayer() {
   }
 
   updateLegend();
+  console.log("Scores layer updated.");
 }
 
 function initializeAmenitiesSliders() {
@@ -778,6 +785,7 @@ function updateSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesLayer() {
+  console.log("Updating amenities layer...");
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
@@ -786,6 +794,7 @@ function updateAmenitiesLayer() {
   const selectedMode = document.querySelector('#modeAmenitiesDropdown').value;
 
   if (!selectedYear || selectedAmenities.length === 0 || !selectedMode) {
+    console.log("Missing selection for amenities layer.");
     return;
   }
 
@@ -947,4 +956,5 @@ function updateAmenitiesLayer() {
       .catch(error => console.error('Error fetching GeoJSON:', error));
   }
   updateLegend();
+  console.log("Amenities layer updated.");
 }
