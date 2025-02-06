@@ -302,7 +302,6 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateLegend() {
-  console.log("Updating legend...");
   const selectedYear = yearScoresDropdown.value;
   const legendContent = document.getElementById("legend-content");
 
@@ -318,7 +317,6 @@ function updateLegend() {
   let classes;
 
   if (currentAmenitiesLayer) {
-    console.log("Current layer is amenities.");
     headerText = "Journey Time Catchment (minutes)";
     classes = [
       { range: `> 0 and <= 5`, color: "#fde725" },
@@ -329,7 +327,6 @@ function updateLegend() {
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
   } else {
-    console.log("Current layer is scores.");
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
       { range: `<= -20%`, color: "#FF0000" },
@@ -396,7 +393,6 @@ function updateLegend() {
   });
 
   updateMasterCheckbox();
-  console.log("Legend updated.");
 }
 
 function updateMasterCheckbox() {
@@ -417,7 +413,6 @@ function initializeScoreSliders() {
 
 function toggleInverseOpacityScoresScale() {
   isInverseScoresOpacity = !isInverseScoresOpacity;
-  console.log(`Inverse Opacity Scores Scale: ${isInverseScoresOpacity}`);
   const handles = opacityRangeScoresSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeScoresSlider.querySelectorAll('.noUi-connect');
 
@@ -448,7 +443,6 @@ function toggleInverseOpacityScoresScale() {
 
 function toggleInverseOutlineScoresScale() {
   isInverseScoresOutline = !isInverseScoresOutline;
-  console.log(`Inverse Outline Scores Scale: ${isInverseScoresOutline}`);
   const handles = outlineRangeScoresSlider.querySelectorAll('.noUi-handle');
   const connectElements = outlineRangeScoresSlider.querySelectorAll('.noUi-connect');
 
@@ -479,13 +473,11 @@ function toggleInverseOutlineScoresScale() {
 
 function inverseOpacityScoresScale() {
   opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  console.log(`Opacity Order Scores Scale: ${opacityScoresOrder}`);
   updateScoresLayer();
 }
 
 function inverseOutlineScoresScale() {
   outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  console.log(`Outline Order Scores Scale: ${outlineScoresOrder}`);
   updateScoresLayer();
 }
 
@@ -577,10 +569,8 @@ function updateSliderScoresRanges() {
 }
 
 function updateScoresLayer() {
-  console.log("Updating scores layer...");
   const selectedYear = yearScoresDropdown.value;
   if (!selectedYear) {
-    console.log("No year selected for scores.");
     return;
   }
   const selectedPurpose = purposeScoresDropdown.value;
@@ -621,8 +611,6 @@ function updateScoresLayer() {
     currentAmenitiesLayer = null; // Ensure currentAmenitiesLayer is null when displaying scores
     updateLegend();
   }
-
-  console.log("Scores layer updated.");
 }
 
 function initializeAmenitiesSliders() {
@@ -634,7 +622,6 @@ function initializeAmenitiesSliders() {
 
 function toggleInverseOpacityAmenitiesScale() {
   isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
-  console.log(`Inverse Opacity Amenities Scale: ${isInverseAmenitiesOpacity}`);
   const handles = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
 
@@ -665,7 +652,6 @@ function toggleInverseOpacityAmenitiesScale() {
 
 function toggleInverseOutlineAmenitiesScale() {
   isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
-  console.log(`Inverse Outline Amenities Scale: ${isInverseAmenitiesOutline}`);
   const handles = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
   const connectElements = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
 
@@ -696,13 +682,11 @@ function toggleInverseOutlineAmenitiesScale() {
 
 function inverseOpacityAmenitiesScale() {
   opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  console.log(`Opacity Order Amenities Scale: ${opacityAmenitiesOrder}`);
   updateAmenitiesLayer();
 }
 
 function inverseOutlineAmenitiesScale() {
   outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  console.log(`Outline Order Amenities Scale: ${outlineAmenitiesOrder}`);
   updateAmenitiesLayer();
 }
 
@@ -794,7 +778,6 @@ function updateSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesLayer() {
-  console.log("Updating amenities layer...");
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
@@ -803,7 +786,6 @@ function updateAmenitiesLayer() {
   const selectedMode = document.querySelector('#modeAmenitiesDropdown').value;
 
   if (!selectedYear || selectedAmenities.length === 0 || !selectedMode) {
-    console.log("Missing selection for amenities layer.");
     return;
   }
 
@@ -812,7 +794,6 @@ function updateAmenitiesLayer() {
 
   if (!csvDataCache[cacheKey]) {
     const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
-    console.log(`Fetching CSV from: ${csvPath}`);
 
     fetch(csvPath)
       .then(response => response.text())
@@ -832,7 +813,6 @@ function updateAmenitiesLayer() {
         csvDataCache[cacheKey] = hexTimeMap;
         fetchAmenitiesLayer();
       })
-      .catch(error => console.error('Error fetching CSV:', error));
   } else {
     hexTimeMap = csvDataCache[cacheKey];
     fetchAmenitiesLayer();
@@ -916,9 +896,7 @@ function updateAmenitiesLayer() {
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
         }).addTo(map);
 
-        console.log("Amenities layer updated.");
         updateLegend();
       })
-      .catch(error => console.error('Error fetching GeoJSON:', error));
   }
 }
