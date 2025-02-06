@@ -290,8 +290,6 @@ function isClassVisible(value, selectedYear) {
         return false;
       } else if (range.includes('>') && range.includes('<=') && value > parseFloat(range.split('>')[1].split('<=')[0]) && value <= parseFloat(range.split('<=')[1]) && !isChecked) {
         return false;
-      } else if (range.includes('>') && !range.includes('<=') && value > parseFloat(range.split('>')[1]) && !isChecked) {
-        return false;
       } else if (range.includes('-')) {
         const [min, max] = range.split('-').map(parseFloat);
         if (value >= min && value <= max && !isChecked) {
