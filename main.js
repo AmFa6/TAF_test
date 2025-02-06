@@ -841,7 +841,18 @@ function updateAmenitiesLayer() {
           }
         });
 
-        currentAmenitiesLayer = L.geoJSON(AmenitiesLayer, {
+        const filteredFeatures = AmenitiesLayer.features.filter(feature => {
+          const hexId = feature.properties.Hex_ID;
+          const time = hexTimeMap[hexId];
+          return time !== undefined && isClassVisible(time, selectedYear);
+        });
+
+        const filteredAmenitiesLayer = {
+          type: "FeatureCollection",
+          features: filteredFeatures
+        };
+
+        currentAmenitiesLayer = L.geoJSON(filteredAmenitiesLayer, {
           style: feature => {
             const hexId = feature.properties.Hex_ID;
             const time = hexTimeMap[hexId];
