@@ -111,6 +111,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
   drawMapButton.addEventListener('click', updateAmenitiesLayer);
   initializeAmenitiesSliders();
 });
+document.addEventListener('DOMContentLoaded', (event) => {
+  const legend = document.getElementById('legend');
+  console.log('Legend position:', legend.style.top, legend.style.right);
+  console.log('Legend dimensions:', legend.offsetWidth, legend.offsetHeight);
+  console.log('Window dimensions:', window.innerWidth, window.innerHeight);
 
 function initializeSliders(sliderElement, updateCallback) {
   noUiSlider.create(sliderElement, {
