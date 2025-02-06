@@ -286,9 +286,7 @@ function isClassVisible(value, selectedYear) {
         return false;
       }
     } else {
-      if (range.includes('<=') && value <= parseFloat(range.split('<=')[1]) && !isChecked) {
-        return false;
-      } else if (range.includes('>') && range.includes('<=') && value > parseFloat(range.split('>')[1].split('<=')[0]) && value <= parseFloat(range.split('<=')[1]) && !isChecked) {
+      if (range.includes('>') && range.includes('<=') && value > parseFloat(range.split('>')[1].split('<=')[0]) && value <= parseFloat(range.split('<=')[1]) && !isChecked) {
         return false;
       } else if (range.includes('>') && !range.includes('<=') && value > parseFloat(range.split('>')[1]) && !isChecked) {
         return false;
@@ -323,7 +321,7 @@ function updateLegend() {
     console.log("Current layer is amenities.");
     headerText = "Journey Time Catchment (minutes)";
     classes = [
-      { range: `<= 5`, color: "#fde725" },
+      { range: `> 0 and <= 5`, color: "#fde725" },
       { range: `> 5 and <= 10`, color: "#7ad151" },
       { range: `> 10 and <= 15`, color: "#23a884" },
       { range: `> 15 and <= 20`, color: "#2a788e" },
