@@ -288,7 +288,7 @@ function isClassVisible(value, selectedYear) {
     } else {
       if (range.includes('<=') && value <= parseFloat(range.split('<=')[1]) && !isChecked) {
         return false;
-      } else if (range.includes('>') && range.includes('<=') && value > parseFloat(range.split('>')[1].split('<=')[0]) && value <= parseFloat(range.split('<=')[1]) && !isChecked) {
+      } else if (range.includes('>') && !range.includes('<=') && value > parseFloat(range.split('>')[1]) && !isChecked) {
         return false;
       } else if (range.includes('-')) {
         const [min, max] = range.split('-').map(parseFloat);
