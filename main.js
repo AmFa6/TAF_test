@@ -364,7 +364,11 @@ function updateLegend() {
   newLegendCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
       updateMasterCheckbox();
-      updateScoresLayer();
+      if (currentAmenitiesLayer) {
+        updateAmenitiesLayer();
+      } else {
+        updateScoresLayer();
+      }
     });
   });
 
@@ -374,7 +378,11 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.checked = isChecked;
     });
-    updateScoresLayer();
+    if (currentAmenitiesLayer) {
+      updateAmenitiesLayer();
+    } else {
+      updateScoresLayer();
+    }
   });
 
   updateMasterCheckbox();
