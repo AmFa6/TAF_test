@@ -610,9 +610,11 @@ function updateScoresLayer() {
       style: feature => styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
+
+    currentAmenitiesLayer = null; // Ensure currentAmenitiesLayer is null when displaying scores
+    updateLegend();
   }
 
-  updateLegend();
   console.log("Scores layer updated.");
 }
 
@@ -896,65 +898,9 @@ function updateAmenitiesLayer() {
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
         }).addTo(map);
 
-        if (opacityRangeAmenitiesSlider && outlineRangeAmenitiesSlider) {
-          const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
-          const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
-
-          const minOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[0]);
-          const maxOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[1]);
-          const minOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]);
-          const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
-
-          currentAmenitiesLayer.eachLayer(layer => {
-            const feature = layer.feature;
-            const hexId = feature.properties.Hex_ID;
-            const time = hexTimeMap[hexId];
-            let color = 'transparent';
-
-            if (time !== undefined) {
-              if (time <= 5) color = '#fde725';
-              else if (time <= 10) color = '#7ad151';
-              else if (time <= 15) color = '#23a884';
-              else if (time <= 20) color = '#2a788e';
-              else if (time <= 25) color = '#414387';
-              else if (time <= 30) color = '#440154';
-            }
-
-            let opacity;
-            if (opacityField === 'None') {
-              opacity = 0.8;
-            } else {
-              const opacityValue = feature.properties[opacityField];
-              if (opacityValue === 0 || opacityValue === null) {
-                opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
-              } else {
-                opacity = scaleExp(opacityValue, minOpacityValue, maxOpacityValue, 0.1, 0.8, opacityAmenitiesOrder);
-              }
-            }
-            let weight;
-            if (outlineField === 'None') {
-              weight = 0;
-            } else {
-              const outlineValue = feature.properties[outlineField];
-              if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
-                weight = 0;
-              } else {
-                weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineAmenitiesOrder);
-              }
-            }
-
-            layer.setStyle({
-              fillColor: color,
-              weight: weight,
-              opacity: 1,
-              color: 'black',
-              fillOpacity: opacity
-            });
-          });
-        }
+        updateLegend();
       })
       .catch(error => console.error('Error fetching GeoJSON:', error));
   }
-  updateLegend();
   console.log("Amenities layer updated.");
 }
