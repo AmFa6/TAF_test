@@ -26,7 +26,7 @@ const outlineFieldScoresDropdown = document.getElementById("outlineFieldScoresDr
 const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
 const inverseOutlineScaleScoresButton = document.getElementById("inverseOutlineScaleScoresButton");
 const purposeAmenitiesDropdown = document.getElementById("purposeAmenitiesDropdown");
-const modeAmenitiesDropdown = document.getElementById("modeAmenitiesDropdown");
+const modeAmenitiesDropdown = document.getElementById("modeAmenitiessDropdown");
 const inverseOpacityScaleAmenitiesButton = document.getElementById("inverseOpacityScaleAmenitiesButton");
 const inverseOutlineScaleAmenitiesButton = document.getElementById("inverseOutlineScaleAmenitiesButton");
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
@@ -861,10 +861,10 @@ function updateAmenitiesLayer() {
             const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
             const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
 
-            const minOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[0]);
-            const maxOpacityValue = parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[1]);
-            const minOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]);
-            const maxOutlineValue = parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]);
+            const minOpacityValue = opacityRangeAmenitiesSlider && opacityRangeAmenitiesSlider.noUiSlider ? parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[0]) : 0;
+            const maxOpacityValue = opacityRangeAmenitiesSlider && opacityRangeAmenitiesSlider.noUiSlider ? parseFloat(opacityRangeAmenitiesSlider.noUiSlider.get()[1]) : 0;
+            const minOutlineValue = outlineRangeAmenitiesSlider && outlineRangeAmenitiesSlider.noUiSlider ? parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[0]) : 0;
+            const maxOutlineValue = outlineRangeAmenitiesSlider && outlineRangeAmenitiesSlider.noUiSlider ? parseFloat(outlineRangeAmenitiesSlider.noUiSlider.get()[1]) : 0;
 
             let opacity;
             if (opacityField === 'None') {
