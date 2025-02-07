@@ -67,7 +67,7 @@ document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('
 inverseOpacityScaleAmenitiesButton.addEventListener("click", inverseOpacityAmenitiesScale);
 inverseOutlineScaleAmenitiesButton.addEventListener("click", inverseOutlineAmenitiesScale);
 
-yearScoresDropdown.addEventListener("change", updateScoresLayer)
+yearScoresDropdown.addEventListener("change", updateScoresLayer);
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
 yearSelector.addEventListener("change", updateAmenitiesLayer);
