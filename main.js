@@ -113,8 +113,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 document.addEventListener('DOMContentLoaded', (event) => {
   const legend = document.getElementById('legend');
+  legend.style.position = 'absolute';
   legend.style.top = '10px';
   legend.style.right = '10px';
+  legend.style.left = 'auto'; // Ensure left is not set
   console.log('Legend position:', legend.style.top, legend.style.right);
   console.log('Legend dimensions:', legend.offsetWidth, legend.offsetHeight);
   console.log('Window dimensions:', window.innerWidth, window.innerHeight);
