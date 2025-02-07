@@ -34,6 +34,24 @@ const inverseOutlineScaleAmenitiesButton = document.getElementById("inverseOutli
 const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
 const yearSelector = document.querySelector('#yearAmenitiesDropdown');
 
+ScoresFiles.forEach(file => {
+  fetch(file.path)
+    .then(response => response.json())
+    .then(ScoresLayer => {
+      layers[file.year] = ScoresLayer;
+      layersLoaded++;
+      if (layersLoaded === totalLayers) {
+        initializeScoresSliders();
+        updateSliderScoresRanges();
+        updateScoresLayer();
+      }
+    })
+  const option = document.createElement("option");
+  option.value = file.year;
+  option.text = file.year;
+  yearScoresDropdown.add(option);
+});
+
 yearScoresDropdown.value = "";
 opacityFieldScoresDropdown.value = "None";
 outlineFieldScoresDropdown.value = "None";
@@ -67,7 +85,7 @@ document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('
 inverseOpacityScaleAmenitiesButton.addEventListener("click", inverseOpacityAmenitiesScale);
 inverseOutlineScaleAmenitiesButton.addEventListener("click", inverseOutlineAmenitiesScale);
 
-yearScoresDropdown.addEventListener("change", updateScoresLayer);
+yearScoresDropdown.addEventListener("change", updateScoresLayer)
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
 yearSelector.addEventListener("change", updateAmenitiesLayer);
