@@ -105,8 +105,8 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
 });
 document.addEventListener('DOMContentLoaded', (event) => {
   const drawScoresButton = document.getElementById('drawScoresButton');
-  drawScoresButton.addEventListener('click', updateAmenitiesLayer);
-  initializeAmenitiesSliders();
+  drawScoresButton.addEventListener('click', updateScoresLayer);
+  initializeScoresSliders();
 });
 document.addEventListener('DOMContentLoaded', (event) => {
   const drawAmenitiesButton = document.getElementById('drawAmenitiesButton');
