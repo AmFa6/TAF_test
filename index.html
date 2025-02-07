@@ -249,11 +249,21 @@
 <body>
   <div id="map"></div>
   <div id="panel-container">
-    <div id="panel" class="panel">
+    <div id="Scores" class="panel">
       <button class="panel-header">Connectivity Scores</button>
       <div id="panel-content">
         <label for="yearScoresDropdown" class="large-font">Year:</label>
         <select id="yearScoresDropdown" class="medium-font"></select>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2019">2019</option>
+          <option value="2023-2024">2024</option>
+          <option value="2019-2024">2024</option>
+          <option value="2022-2023">2024</option>
+          <option value="2019-2023">2024</option>
+          <option value="2019-2022">2024</option>
+        </select>
         <br>
         <label for="purposeScoresDropdown" class="large-font">Purpose of Travel:</label>
         <select id="purposeScoresDropdown" class="medium-font">
@@ -324,7 +334,7 @@
         </div>
       </div>
     </div>
-    <div id="panel-amenities" class="panel">
+    <div id="Amenities" class="panel">
       <button class="panel-header">Journey Time Catchments - Amenities</button>
       <div id="panel-content">
         <label for="yearAmenitiesDropdown" class="large-font">Year:</label>
@@ -404,16 +414,16 @@
         </div>
       </div>
     </div>
-    <div id="panel-hexagons" class="panel">
+    <div id="Hexagons" class="panel">
       <button class="panel-header">Journey Time Catchments - Hexagons</button>
       <div id="panel-hexagons-content">
-        <label for="yearDropdownHexagons" class="large-font">Year:</label>
-        <select id="yearDropdownHexagons" class="medium-font">
+        <label for="yearHexagonsDropdown" class="large-font">Year:</label>
+        <select id="yearHexagonsDropdown" class="medium-font">
           <option value="2024">2024</option>
         </select>
         <br>
-        <label for="modeDropdownHexagons" class="large-font">Mode of Travel:</label>
-        <select id="modeDropdownHexagons" class="medium-font">
+        <label for="modeHexagonsDropdown" class="large-font">Mode of Travel:</label>
+        <select id="modeHexagonsDropdown" class="medium-font">
           <option value="Wa">Walk</option>
           <option value="Cy">Cycle</option>
           <option value="PT">Public Transport</option>
