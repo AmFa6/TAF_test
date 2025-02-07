@@ -113,7 +113,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
   drawAmenitiesButton.addEventListener('click', updateAmenitiesLayer);
   initializeAmenitiesSliders();
 });
+
 function initializeSliders(sliderElement, updateCallback) {
+  if (sliderElement.noUiSlider) {
+    return;
+  }
+
   noUiSlider.create(sliderElement, {
     start: [0, 0],
     connect: [true, true, true],
