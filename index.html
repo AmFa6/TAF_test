@@ -75,27 +75,15 @@
     }
     .button-container {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
     }
     .button-container > button {
-      flex: none;
-      cursor: pointer;
-      text-align: center;
-      border-radius: 5px;
-      font-family: 'Trebuchet MS', sans-serif;
-      font-weight: normal;
+      flex: 1;
+      margin-left: 10px;
     }
-    .large-button {
-      font-size: 1em;
-      padding: 10px;
-      border: 0.2px solid #767676;
-      margin-bottom: 10px;
-    }
-    .small-button {
-      font-size: 0.8em;
-      padding: 1 5px;
-      border: 0.1px solid #767676;
+    .button-container > button:first-child {
+      margin-left: 0;
     }
     .collapsible {
       cursor: pointer;
@@ -108,7 +96,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px;
+      padding: 10px;
       border-radius: 5px;
       font-family: 'Trebuchet MS', sans-serif;
       font-weight: normal;
@@ -140,7 +128,6 @@
       z-index: 1000;
       width: 250px;
       word-wrap: break-word;
-      box-sizing: border-box;
     }
     .noUi-target {
       background: #f0f0f0;
@@ -181,7 +168,7 @@
       position: absolute;
       background: #007bff00;
       color: #000000;
-      padding: 2px 2px;
+      padding: 2px 5px;
       border: none;
       font-size: 0.8em;
       top: -18px;
@@ -296,7 +283,7 @@
           </div>
           <div class="field-container">
             <div class="button-container">
-              <button id="inverseOpacityScaleScoresButton" class="small-button">Inverse Scale</button>
+              <button id="inverseOpacityScaleScoresButton" class="small-font">Inverse Scale</button>
             </div>
           </div>
           <br>
@@ -320,7 +307,7 @@
           </div>
           <div class="field-container">
             <div class="button-container">
-              <button id="inverseOutlineScaleScoresButton" class="small-button">Inverse Scale</button>
+              <button id="inverseOutlineScaleScoresButton" class="small-font">Inverse Scale</button>
             </div>
           </div>
         </div>
@@ -332,9 +319,6 @@
         <label for="yearAmenitiesDropdown" class="large-font">Year:</label>
         <select id="yearAmenitiesDropdown" class="medium-font">
           <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
-          <option value="2021">2021</option>
         </select>
         <br>
         <label for="modeAmenitiesDropdown" class="large-font">Mode of Travel:</label>
@@ -357,11 +341,9 @@
         <label class="checkbox-label"><input type="checkbox" value="DisCtr"> <span>District Centre</span></label>
         <label class="checkbox-label"><input type="checkbox" value="GP"> <span>General Practice</span></label>
         <label class="checkbox-label"><input type="checkbox" value="Hospital"> <span>Hospital</span></label>
-        <div class="field-container">
-          <div class="button-container">
-            <button id="drawAmenitiesMap" class="large-button">Draw Amenities Catchment</button>
-          </div>
-        </div>
+        <br>
+        <button id="drawAmenitiesMap" class="medium-font">Draw Map</button>
+        <br>
         <button type="button" class="collapsible">Settings</button>
         <div class="collapsible-content">
           <label for="opacityFieldAmenitiesDropdown" class="medium-font">Link Hexagon Transparency to:</label>
@@ -384,7 +366,7 @@
           </div>
           <div class="field-container">
             <div class="button-container">
-              <button id="inverseOpacityScaleAmenitiesButton" class="small-button">Inverse Scale</button>
+              <button id="inverseOpacityScaleAmenitiesButton" class="small-font">Inverse Scale</button>
             </div>
           </div>
           <br>
@@ -408,7 +390,7 @@
           </div>
           <div class="field-container">
             <div class="button-container">
-              <button id="inverseOutlineScaleAmenitiesButton" class="small-button">Inverse Scale</button>
+              <button id="inverseOutlineScaleAmenitiesButton" class="small-font">Inverse Scale</button>
             </div>
           </div>
         </div>
@@ -420,9 +402,6 @@
         <label for="yearDropdownHexagons" class="large-font">Year:</label>
         <select id="yearDropdownHexagons" class="medium-font">
           <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
-          <option value="2021">2021</option>
         </select>
         <br>
         <label for="modeDropdownHexagons" class="large-font">Mode of Travel:</label>
@@ -432,11 +411,9 @@
           <option value="PT">Public Transport</option>
           <option value="Ca">Car</option>
         </select>
-        <div class="field-container">
-          <div class="button-container">
-            <button id="drawHexagonsMap" class="large-button">Draw Hexagons Catchment</button>
-          </div>
-        </div>
+        <br>
+        <button id="drawMapButton" class="medium-font">Draw Map</button>
+      </div>
     </div>
   </div>
   <div id="legend">
