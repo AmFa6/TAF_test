@@ -39,7 +39,7 @@ ScoresFiles.forEach(file => {
       layers[file.year] = ScoresLayer;
       layersLoaded++;
       if (layersLoaded === totalLayers) {
-        initializeScoreSliders();
+        initializeScoresSliders();
         updateSliderScoresRanges();
         updateScoresLayer();
       }
@@ -410,7 +410,7 @@ function updateMasterCheckbox() {
   masterCheckbox.indeterminate = !allChecked && !noneChecked;
 }
 
-function initializeScoreSliders() {
+function initializeScoresSliders() {
   opacityRangeScoresSlider = document.getElementById('opacityRangeScoresSlider');
   outlineRangeScoresSlider = document.getElementById('outlineRangeScoresSlider');
   initializeSliders(opacityRangeScoresSlider, updateScoresLayer);
