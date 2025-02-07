@@ -693,10 +693,10 @@ function inverseOutlineAmenitiesScale() {
 }
 
 function updateSliderAmenitiesRanges() {
-  const opacityField = document.getElementById('opacityFieldAmenitiesDropdown').value;
-  const outlineField = document.getElementById('outlineFieldAmenitiesDropdown').value;
+  const opacityField = opacityFieldAmenitiesDropdown.value;
+  const outlineField = outlineFieldAmenitiesDropdown.value;
 
-  const selectedYear = yearSelector.value;
+  const selectedYear = yearAmenitiesDropdown.value;
   const selectedLayer = layers[selectedYear];
 
   if (selectedLayer) {
