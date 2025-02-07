@@ -103,12 +103,12 @@ outlineFieldScoresDropdown.addEventListener("change", () => {
 });
 opacityFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
-  updateSliderAmenitiesRanges();
+  updateOpacitySliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
 outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
-  updateSliderAmenitiesRanges();
+  updateOutlineSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
 
@@ -657,7 +657,7 @@ function toggleInverseOpacityAmenitiesScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
-  updateSliderAmenitiesRanges();
+  updateOpacitySliderAmenitiesRanges();
   updateAmenitiesLayer();
 }
 
@@ -687,7 +687,7 @@ function toggleInverseOutlineAmenitiesScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
-  updateSliderAmenitiesRanges();
+  updateOutlineSliderAmenitiesRanges();
   updateAmenitiesLayer();
 }
 
@@ -701,39 +701,24 @@ function inverseOutlineAmenitiesScale() {
   updateAmenitiesLayer();
 }
 
-function updateSliderAmenitiesRanges() {
+function updateOpacitySliderAmenitiesRanges() {
   const opacityField = opacityFieldAmenitiesDropdown.value;
-  const outlineField = outlineFieldAmenitiesDropdown.value;
-
   const selectedYear = yearAmenitiesDropdown.value;
   const selectedLayer = layers[selectedYear];
 
   if (selectedLayer) {
     const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
-    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
-
     const minOpacity = Math.min(...opacityValues);
     const maxOpacity = Math.max(...opacityValues);
-    const minOutline = Math.min(...outlineValues);
-    const maxOutline = Math.max(...outlineValues);
-
     const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
-    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
-
     let opacityStep = roundedMaxOpacity / 100;
-    let outlineStep = roundedMaxOutline / 100;
 
     if (isNaN(opacityStep) || opacityStep <= 0) {
       opacityStep = 1;
     }
-    if (isNaN(outlineStep) || outlineStep <= 0) {
-      outlineStep = 1;
-    }
 
     const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
     const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
-    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
-    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
 
     if (opacityField === "None") {
       opacityRangeAmenitiesSlider.setAttribute('disabled', true);
@@ -760,6 +745,28 @@ function updateSliderAmenitiesRanges() {
       document.getElementById('opacityRangeAmenitiesMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
       document.getElementById('opacityRangeAmenitiesMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
+  }
+}
+
+function updateOutlineSliderAmenitiesRanges() {
+  const outlineField = outlineFieldAmenitiesDropdown.value;
+  const selectedYear = yearAmenitiesDropdown.value;
+  const selectedLayer = layers[selectedYear];
+
+  if (selectedLayer) {
+    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
+    const minOutline = Math.min(...outlineValues);
+    const maxOutline = Math.max(...outlineValues);
+    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
+    let outlineStep = roundedMaxOutline / 100;
+
+    if (isNaN(outlineStep) || outlineStep <= 0) {
+      outlineStep = 1;
+    }
+
+    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
+    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
+
     if (outlineField === "None") {
       outlineRangeAmenitiesSlider.setAttribute('disabled', true);
       outlineRangeAmenitiesSlider.noUiSlider.updateOptions({
