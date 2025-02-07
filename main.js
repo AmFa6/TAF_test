@@ -48,6 +48,8 @@ ScoresFiles.forEach(file => {
     })
 });
 
+initializeAmenitiesSliders()
+
 yearScoresDropdown.value = "";
 opacityFieldScoresDropdown.value = "None";
 outlineFieldScoresDropdown.value = "None";
@@ -623,10 +625,6 @@ function initializeAmenitiesSliders() {
 }
 
 function toggleInverseOpacityAmenitiesScale() {
-  if (!opacityRangeAmenitiesSlider.noUiSlider) {
-    initializeAmenitiesSliders();
-  }
-
   isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
   const handles = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
   const connectElements = opacityRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
@@ -657,10 +655,6 @@ function toggleInverseOpacityAmenitiesScale() {
 }
 
 function toggleInverseOutlineAmenitiesScale() {
-  if (!outlineRangeAmenitiesSlider.noUiSlider) {
-    initializeAmenitiesSliders();
-  }
-
   isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
   const handles = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-handle');
   const connectElements = outlineRangeAmenitiesSlider.querySelectorAll('.noUi-connect');
