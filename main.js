@@ -48,8 +48,6 @@ ScoresFiles.forEach(file => {
     })
 });
 
-initializeAmenitiesSliders()
-
 yearScoresDropdown.value = "";
 opacityFieldScoresDropdown.value = "None";
 outlineFieldScoresDropdown.value = "None";
@@ -73,6 +71,8 @@ let isInverseAmenitiesOutline = false;
 let currentAmenitiesLayer = null;
 let hexTimeMap = {};
 let csvDataCache = {};
+
+initializeAmenitiesSliders()
 
 document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
 document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
