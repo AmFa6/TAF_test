@@ -83,6 +83,14 @@ document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('
 inverseOpacityScaleAmenitiesButton.addEventListener("click", inverseOpacityAmenitiesScale);
 inverseOutlineScaleAmenitiesButton.addEventListener("click", inverseOutlineAmenitiesScale);
 
+yearScoresDropdown.addEventListener("change", updateScoresLayer)
+purposeScoresDropdown.addEventListener("change", updateScoresLayer);
+modeScoresDropdown.addEventListener("change", updateScoresLayer);
+yearSelector.addEventListener("change", updateAmenitiesLayer);
+modeAmenitiesDropdown.addEventListener("change", updateAmenitiesLayer);
+amenitiesCheckboxes.forEach(checkbox => {
+  checkbox.addEventListener("change", updateAmenitiesLayer);
+});
 opacityFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateSliderScoresRanges();
@@ -102,16 +110,6 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateSliderAmenitiesRanges();
   updateAmenitiesLayer();
-});
-document.addEventListener('DOMContentLoaded', (event) => {
-  const drawScoresButton = document.getElementById('drawScoresButton');
-  drawScoresButton.addEventListener('click', updateScoresLayer);
-  initializeScoresSliders();
-});
-document.addEventListener('DOMContentLoaded', (event) => {
-  const drawAmenitiesButton = document.getElementById('drawAmenitiesButton');
-  drawAmenitiesButton.addEventListener('click', updateAmenitiesLayer);
-  initializeAmenitiesSliders();
 });
 
 function initializeSliders(sliderElement, updateCallback) {
