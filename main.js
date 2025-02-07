@@ -46,10 +46,6 @@ ScoresFiles.forEach(file => {
         updateScoresLayer();
       }
     })
-  const option = document.createElement("option");
-  option.value = file.year;
-  option.text = file.year;
-  yearScoresDropdown.add(option);
 });
 
 yearScoresDropdown.value = "";
