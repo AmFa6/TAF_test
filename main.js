@@ -69,10 +69,9 @@ let isInverseScoresOpacity = false;
 let isInverseScoresOutline = false;
 let isInverseAmenitiesOpacity = false;
 let isInverseAmenitiesOutline = false;
-let currentAmenitiesCatchmentLayer = null;
+let currentAmenitiesLayer = null;
 let hexTimeMap = {};
 let csvDataCache = {};
-let amenitiesPinsLayer = L.layerGroup().addTo(map);
 
 initializeAmenitiesSliders()
 
@@ -88,10 +87,10 @@ inverseOutlineScaleAmenitiesButton.addEventListener("click", inverseOutlineAmeni
 yearScoresDropdown.addEventListener("change", updateScoresLayer)
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
-yearSelector.addEventListener("change", updateAmenitiesCatchmentLayer);
-modeAmenitiesDropdown.addEventListener("change", updateAmenitiesCatchmentLayer);
+yearSelector.addEventListener("change", updateAmenitiesLayer);
+modeAmenitiesDropdown.addEventListener("change", updateAmenitiesLayer);
 amenitiesCheckboxes.forEach(checkbox => {
-  checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
+  checkbox.addEventListener("change", updateAmenitiesLayer);
 });
 opacityFieldScoresDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
@@ -106,68 +105,13 @@ outlineFieldScoresDropdown.addEventListener("change", () => {
 opacityFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderAmenitiesRanges();
-  updateAmenitiesCatchmentLayer();
+  updateAmenitiesLayer();
 });
 outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateOutlineSliderAmenitiesRanges();
-  updateAmenitiesCatchmentLayer();
+  updateAmenitiesLayer();
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-  loadAmenitiesPins();
-  updateLegend();
-});
-document.querySelectorAll('.legend-amenity-checkbox').forEach(checkbox => {
-  checkbox.addEventListener('change', updateAmenitiesPinsLayer);
-});
-
-function loadAmenitiesPins() {
-  console.log('Loading amenities pins');
-  const amenities = [
-    'PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp',
-    'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos'
-  ];
-
-  amenitiesPinsLayer.clearLayers();
-  console.log('Cleared amenities pins layer');
-
-  amenities.forEach(amenity => {
-    fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(`Adding ${amenity} pins to the map`);
-        const amenityLayer = L.geoJSON(data, {
-          pointToLayer: (feature, latlng) => L.marker(latlng)
-        });
-        amenitiesPinsLayer.addLayer(amenityLayer);
-        console.log(`Added ${amenity} pins to the map`);
-      });
-  });
-}
-
-function updateAmenitiesPinsLayer() {
-  console.log('Updating amenities pins layer');
-  const selectedAmenities = Array.from(document.querySelectorAll('.legend-amenity-checkbox'))
-    .filter(checkbox => checkbox.checked)
-    .map(checkbox => checkbox.value);
-
-  amenitiesPinsLayer.clearLayers();
-  console.log('Cleared amenities pins layer');
-
-  selectedAmenities.forEach(amenity => {
-    fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(`Adding ${amenity} pins to the map`);
-        const amenityLayer = L.geoJSON(data, {
-          pointToLayer: (feature, latlng) => L.marker(latlng)
-        });
-        amenitiesPinsLayer.addLayer(amenityLayer);
-        console.log(`Added ${amenity} pins to the map`);
-      });
-  });
-}
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
@@ -363,7 +307,6 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateLegend() {
-  console.log('Updating legend');
   const selectedYear = yearScoresDropdown.value;
   const legendContent = document.getElementById("legend-content");
 
@@ -378,7 +321,7 @@ function updateLegend() {
   let headerText;
   let classes;
 
-  if (currentAmenitiesCatchmentLayer) {
+  if (currentAmenitiesLayer) {
     headerText = "Journey Time Catchment (minutes)";
     classes = [
       { range: `> 0 and <= 5`, color: "#fde725" },
@@ -433,8 +376,8 @@ function updateLegend() {
   newLegendCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
       updateMasterCheckbox();
-      if (currentAmenitiesCatchmentLayer) {
-        updateAmenitiesCatchmentLayer();
+      if (currentAmenitiesLayer) {
+        updateAmenitiesLayer();
       } else {
         updateScoresLayer();
       }
@@ -447,21 +390,14 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.checked = isChecked;
     });
-    if (currentAmenitiesCatchmentLayer) {
-      updateAmenitiesCatchmentLayer();
+    if (currentAmenitiesLayer) {
+      updateAmenitiesLayer();
     } else {
       updateScoresLayer();
     }
   });
 
   updateMasterCheckbox();
-
-  const legendAmenitiesCheckboxes = document.querySelectorAll('.legend-amenity-checkbox');
-  legendAmenitiesCheckboxes.forEach(checkbox => {
-    checkbox.checked = true;
-  });
-
-  updateAmenitiesPinsLayer();
 }
 
 function updateMasterCheckbox() {
@@ -645,7 +581,6 @@ function updateOutlineSliderScoresRanges() {
 }
 
 function updateScoresLayer() {
-  console.log('Updating scores layer');
   const selectedYear = yearScoresDropdown.value;
   if (!selectedYear) {
     return;
@@ -656,8 +591,7 @@ function updateScoresLayer() {
   const outlineField = outlineFieldScoresDropdown.value;
 
   map.eachLayer(layer => {
-    if (layer !== baseLayer && layer !== amenitiesPinsLayer) {
-      console.log('Removing layer:', layer);
+    if (layer !== baseLayer) {
       map.removeLayer(layer);
     }
   });
@@ -686,7 +620,7 @@ function updateScoresLayer() {
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
 
-    currentAmenitiesCatchmentLayer = null; // Ensure currentAmenitiesCatchmentLayer is null when displaying scores
+    currentAmenitiesLayer = null; // Ensure currentAmenitiesLayer is null when displaying scores
     updateLegend();
   }
 }
@@ -694,8 +628,8 @@ function updateScoresLayer() {
 function initializeAmenitiesSliders() {
   opacityRangeAmenitiesSlider = document.getElementById('opacityRangeAmenitiesSlider');
   outlineRangeAmenitiesSlider = document.getElementById('outlineRangeAmenitiesSlider');
-  initializeSliders(opacityRangeAmenitiesSlider, updateAmenitiesCatchmentLayer);
-  initializeSliders(outlineRangeAmenitiesSlider, updateAmenitiesCatchmentLayer);
+  initializeSliders(opacityRangeAmenitiesSlider, updateAmenitiesLayer);
+  initializeSliders(outlineRangeAmenitiesSlider, updateAmenitiesLayer);
 }
 
 function toggleInverseOpacityAmenitiesScale() {
@@ -725,7 +659,7 @@ function toggleInverseOpacityAmenitiesScale() {
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
   updateOpacitySliderAmenitiesRanges();
-  updateAmenitiesCatchmentLayer();
+  updateAmenitiesLayer();
 }
 
 function toggleInverseOutlineAmenitiesScale() {
@@ -755,17 +689,17 @@ function toggleInverseOutlineAmenitiesScale() {
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
   updateOutlineSliderAmenitiesRanges();
-  updateAmenitiesCatchmentLayer();
+  updateAmenitiesLayer();
 }
 
 function inverseOpacityAmenitiesScale() {
   opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateAmenitiesCatchmentLayer();
+  updateAmenitiesLayer();
 }
 
 function inverseOutlineAmenitiesScale() {
   outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateAmenitiesCatchmentLayer();
+  updateAmenitiesLayer();
 }
 
 function updateOpacitySliderAmenitiesRanges() {
@@ -862,8 +796,7 @@ function updateOutlineSliderAmenitiesRanges() {
   }
 }
 
-function updateAmenitiesCatchmentLayer() {
-  console.log('Updating amenities catchment layer');
+function updateAmenitiesLayer() {
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
@@ -915,26 +848,25 @@ function updateAmenitiesCatchmentLayer() {
   Promise.all(fetchPromises).then(() => {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
-      .then(AmenitiesCatchmentLayer => {
+      .then(AmenitiesLayer => {
         map.eachLayer(layer => {
-          if (layer !== baseLayer && layer !== amenitiesPinsLayer) {
-            console.log('Removing layer:', layer);
+          if (layer !== baseLayer) {
             map.removeLayer(layer);
           }
         });
 
-        const filteredFeatures = AmenitiesCatchmentLayer.features.filter(feature => {
+        const filteredFeatures = AmenitiesLayer.features.filter(feature => {
           const hexId = feature.properties.Hex_ID;
           const time = hexTimeMap[hexId];
           return time !== undefined && isClassVisible(time, selectedYear);
         });
 
-        const filteredAmenitiesCatchmentLayer = {
+        const filteredAmenitiesLayer = {
           type: "FeatureCollection",
           features: filteredFeatures
         };
 
-        currentAmenitiesCatchmentLayer = L.geoJSON(filteredAmenitiesCatchmentLayer, {
+        currentAmenitiesLayer = L.geoJSON(filteredAmenitiesLayer, {
           style: feature => {
             const hexId = feature.properties.Hex_ID;
             const time = hexTimeMap[hexId];
