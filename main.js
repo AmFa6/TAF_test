@@ -75,7 +75,7 @@ initializeAmenitiesSliders()
 yearScoresDropdown.addEventListener("change", updateScoresLayer)
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
-yearSelector.addEventListener("change", updateAmenitiesLayer);
+yearAmenitiesDropdown.addEventListener("change", updateAmenitiesLayer);
 modeAmenitiesDropdown.addEventListener("change", updateAmenitiesLayer);
 amenitiesCheckboxes.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesLayer);
@@ -785,7 +785,7 @@ function updateAmenitiesLayer() {
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
 
-  const selectedYear = yearSelector.value;
+  const selectedYear = yearAmenitiesDropdown.value;
   const selectedMode = document.querySelector('#modeAmenitiesDropdown').value;
 
   if (!selectedYear || selectedAmenities.length === 0 || !selectedMode) {
