@@ -42,7 +42,8 @@ ScoresFiles.forEach(file => {
       layersLoaded++;
       if (layersLoaded === totalLayers) {
         initializeScoresSliders();
-        updateSliderScoresRanges();
+        updateOpacitySliderScoresRanges();
+        updateOutlineSliderScoresRanges();
         updateScoresLayer();
       }
     })
