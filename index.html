@@ -539,6 +539,11 @@
   
       updateAmenitiesDropdownLabel();
   
+      // Prevent the dropdown from closing when clicking inside the dropdown menu
+      amenitiesCheckboxesContainer.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+  
       // Close the dropdown if the user clicks outside of it
       window.addEventListener('click', (event) => {
         if (!event.target.matches('#amenitiesDropdown')) {
