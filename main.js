@@ -424,6 +424,19 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 
+  const amenitiesHeaderDiv = document.createElement("div");
+  amenitiesHeaderDiv.innerHTML = "Amenities";
+  amenitiesHeaderDiv.style.fontSize = "1.1em";
+  amenitiesHeaderDiv.style.marginTop = "10px";
+  legendContent.appendChild(amenitiesHeaderDiv);
+
+  const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
+  amenitiesCheckboxes.forEach(checkbox => {
+    const div = document.createElement("div");
+    div.innerHTML = `<input type="checkbox" class="amenity-checkbox" value="${checkbox.value}" ${checkbox.checked ? 'checked' : ''}> <span>${checkbox.nextElementSibling.textContent}</span>`;
+    legendContent.appendChild(div);
+  });
+
   const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
   newLegendCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
@@ -434,6 +447,11 @@ function updateLegend() {
         updateScoresLayer();
       }
     });
+  });
+
+  const newAmenityCheckboxes = document.querySelectorAll('.amenity-checkbox');
+  newAmenityCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateAmenitiesLayer);
   });
 
   const masterCheckbox = document.getElementById('masterCheckbox');
@@ -849,7 +867,7 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesLayer() {
-  const selectedAmenities = Array.from(amenitiesCheckboxes)
+  const selectedAmenities = Array.from(document.querySelectorAll('.amenity-checkbox'))
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
 
