@@ -244,6 +244,43 @@
     .checkbox-label span {
       margin-left: 6px !important;
     }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    .dropdown-toggle {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background-color: white;
+      color: black;
+      font-size: 1em;
+      text-align: left;
+      cursor: pointer;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 100%;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    .dropdown-menu label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .dropdown-menu input {
+      margin-right: 5px;
+    }
+    .dropdown-menu.show {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -351,19 +388,21 @@
         </select>
         <br>
         <label class="large-font">Amenities:</label>
-        <button type="button" class="collapsible" id="amenitiesDropdown">0 selected</button>
-        <div class="collapsible-content" id="amenitiesCheckboxesContainer">
-          <label class="checkbox-label"><input type="checkbox" value="PriSch"> <span>Primary School</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="SecSch"> <span>Secondary School</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="FurEd"> <span>Further Education</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="Em500"> <span>Employment (500+ jobs)</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="Em5000"> <span>Employment (5000+ jobs)</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="StrEmp"> <span>Strategic Employment</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="CitCtr"> <span>City Centre</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="MajCtr"> <span>Major Centre</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="DisCtr"> <span>District Centre</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="GP"> <span>General Practice</span></label>
-          <label class="checkbox-label"><input type="checkbox" value="Hos"> <span>Hospital</span></label>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" id="amenitiesDropdown">0 selected</button>
+          <div class="dropdown-menu" id="amenitiesCheckboxesContainer">
+            <label class="checkbox-label"><input type="checkbox" value="PriSch"> <span>Primary School</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="SecSch"> <span>Secondary School</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="FurEd"> <span>Further Education</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="Em500"> <span>Employment (500+ jobs)</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="Em5000"> <span>Employment (5000+ jobs)</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="StrEmp"> <span>Strategic Employment</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="CitCtr"> <span>City Centre</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="MajCtr"> <span>Major Centre</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="DisCtr"> <span>District Centre</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="GP"> <span>General Practice</span></label>
+            <label class="checkbox-label"><input type="checkbox" value="Hos"> <span>Hospital</span></label>
+          </div>
         </div>
         <button type="button" class="collapsible">Settings</button>
         <div class="collapsible-content">
@@ -447,7 +486,7 @@
         const content = button.nextElementSibling;
         content.style.display = "none";
         button.classList.add("collapsed");
-
+  
         button.addEventListener("click", function() {
           this.classList.toggle("active");
           content.style.display = content.style.display === "block" ? "none" : "block";
@@ -460,7 +499,7 @@
         const panelContent = header.nextElementSibling;
         panelContent.style.display = "none";
         header.classList.add("collapsed");
-
+  
         header.addEventListener("click", function() {
           panelHeaders.forEach(otherHeader => {
             if (otherHeader !== header) {
@@ -470,7 +509,7 @@
           });
           panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
           header.classList.toggle("collapsed", panelContent.style.display === "none");
-      
+  
           if (panelContent.style.display === "block") {
             if (header.textContent.includes("Connectivity Scores")) {
               updateScoresLayer();
@@ -480,20 +519,34 @@
           }
         });
       });
-
+  
       const amenitiesDropdown = document.getElementById('amenitiesDropdown');
-      const amenitiesCheckboxes = document.querySelectorAll('#amenitiesCheckboxesContainer input[type="checkbox"]');
-      
+      const amenitiesCheckboxesContainer = document.getElementById('amenitiesCheckboxesContainer');
+      const amenitiesCheckboxes = amenitiesCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+  
+      amenitiesDropdown.addEventListener('click', () => {
+        amenitiesCheckboxesContainer.classList.toggle('show');
+      });
+  
       function updateAmenitiesDropdownLabel() {
         const selectedCount = Array.from(amenitiesCheckboxes).filter(checkbox => checkbox.checked).length;
         amenitiesDropdown.textContent = `${selectedCount} selected`;
       }
-
+  
       amenitiesCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', updateAmenitiesDropdownLabel);
       });
-
+  
       updateAmenitiesDropdownLabel();
+  
+      // Close the dropdown if the user clicks outside of it
+      window.addEventListener('click', (event) => {
+        if (!event.target.matches('#amenitiesDropdown')) {
+          if (amenitiesCheckboxesContainer.classList.contains('show')) {
+            amenitiesCheckboxesContainer.classList.remove('show');
+          }
+        }
+      });
     });
   </script>
 </body>
