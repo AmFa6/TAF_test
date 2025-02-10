@@ -150,7 +150,7 @@ map.on('zoomend', updateAmenitiesVisibility);
 
 function updateAmenitiesVisibility() {
   const zoomLevel = map.getZoom();
-  const minZoomLevel = 13;
+  const minZoomLevel = 15;
 
   amenitiesLayers.forEach(layer => {
     if (zoomLevel >= minZoomLevel) {
