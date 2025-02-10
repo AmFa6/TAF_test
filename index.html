@@ -467,6 +467,15 @@
           });
           panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
           header.classList.toggle("collapsed", panelContent.style.display === "none");
+  
+          // Call the appropriate update function based on the panel that is expanded
+          if (panelContent.style.display === "block") {
+            if (header.textContent.includes("Connectivity Scores")) {
+              updateScoresLayer();
+            } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
+              updateAmenitiesLayer();
+            }
+          }
         });
       });
     });
