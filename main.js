@@ -828,10 +828,19 @@ function updateAmenitiesLayer() {
               }
             }
           });
-          csvDataCache[cacheKey] = hexTimeMap;
+          csvDataCache[cacheKey] = csvData;
         });
     } else {
-      Object.assign(hexTimeMap, csvDataCache[cacheKey]);
+      const csvData = csvDataCache[cacheKey];
+      csvData.forEach(row => {
+        if (row.Mode === selectedMode) {
+          const hexId = row.OriginName;
+          const time = parseFloat(row.Time);
+          if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
+            hexTimeMap[hexId] = time;
+          }
+        }
+      });
       return Promise.resolve();
     }
   });
