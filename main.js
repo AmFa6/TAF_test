@@ -808,6 +808,9 @@ function updateAmenitiesLayer() {
     return;
   }
 
+  // Clear hexTimeMap to reflect the current state of selected amenities
+  hexTimeMap = {};
+
   const cacheKeys = selectedAmenities.map(amenity => `${selectedYear}_${amenity}`);
   const fetchPromises = cacheKeys.map(cacheKey => {
     if (!csvDataCache[cacheKey]) {
