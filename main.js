@@ -25,14 +25,14 @@ const opacityFieldScoresDropdown = document.getElementById("opacityFieldScoresDr
 const outlineFieldScoresDropdown = document.getElementById("outlineFieldScoresDropdown");
 const inverseOpacityScaleScoresButton = document.getElementById("inverseOpacityScaleScoresButton");
 const inverseOutlineScaleScoresButton = document.getElementById("inverseOutlineScaleScoresButton");
+const yearAmenitiesDropdown = document.getElementById("yearAmenitiesDropdown");
 const purposeAmenitiesDropdown = document.getElementById("purposeAmenitiesDropdown");
 const modeAmenitiesDropdown = document.getElementById("modeAmenitiesDropdown");
+const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
 const opacityFieldAmenitiesDropdown = document.getElementById("opacityFieldAmenitiesDropdown");
 const outlineFieldAmenitiesDropdown = document.getElementById("outlineFieldAmenitiesDropdown");
 const inverseOpacityScaleAmenitiesButton = document.getElementById("inverseOpacityScaleAmenitiesButton");
 const inverseOutlineScaleAmenitiesButton = document.getElementById("inverseOutlineScaleAmenitiesButton");
-const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
-const yearSelector = document.querySelector('#yearAmenitiesDropdown');
 
 ScoresFiles.forEach(file => {
   fetch(file.path)
@@ -42,9 +42,6 @@ ScoresFiles.forEach(file => {
       layersLoaded++;
       if (layersLoaded === totalLayers) {
         initializeScoresSliders();
-        updateOpacitySliderScoresRanges();
-        updateOutlineSliderScoresRanges();
-        updateScoresLayer();
       }
     })
 });
@@ -75,15 +72,6 @@ let csvDataCache = {};
 
 initializeAmenitiesSliders()
 
-document.getElementById('inverseOpacityScaleScoresButton').addEventListener('click', toggleInverseOpacityScoresScale);
-document.getElementById('inverseOutlineScaleScoresButton').addEventListener('click', toggleInverseOutlineScoresScale);
-inverseOpacityScaleScoresButton.addEventListener("click", inverseOpacityScoresScale);
-inverseOutlineScaleScoresButton.addEventListener("click", inverseOutlineScoresScale);
-document.getElementById('inverseOpacityScaleAmenitiesButton').addEventListener('click', toggleInverseOpacityAmenitiesScale);
-document.getElementById('inverseOutlineScaleAmenitiesButton').addEventListener('click', toggleInverseOutlineAmenitiesScale);
-inverseOpacityScaleAmenitiesButton.addEventListener("click", inverseOpacityAmenitiesScale);
-inverseOutlineScaleAmenitiesButton.addEventListener("click", inverseOutlineAmenitiesScale);
-
 yearScoresDropdown.addEventListener("change", updateScoresLayer)
 purposeScoresDropdown.addEventListener("change", updateScoresLayer);
 modeScoresDropdown.addEventListener("change", updateScoresLayer);
@@ -112,6 +100,10 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   updateOutlineSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
+inverseOpacityScaleScoresButton.addEventListener("click", toggleInverseOpacityScoresScale);
+inverseOutlineScaleScoresButton.addEventListener("click", toggleInverseOutlineScoresScale);
+inverseOpacityScaleAmenitiesButton.addEventListener("click", toggleInverseOpacityAmenitiesScale);
+inverseOutlineScaleAmenitiesButton.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
@@ -442,6 +434,9 @@ function toggleInverseOpacityScoresScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
+
+  opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
   updateOpacitySliderScoresRanges();
   updateScoresLayer();
 }
@@ -472,17 +467,10 @@ function toggleInverseOutlineScoresScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
-  updateOutlineSliderScoresRanges();
-  updateScoresLayer();
-}
 
-function inverseOpacityScoresScale() {
-  opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateScoresLayer();
-}
-
-function inverseOutlineScoresScale() {
   outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateOutlineSliderScoresRanges();
   updateScoresLayer();
 }
 
@@ -658,6 +646,9 @@ function toggleInverseOpacityAmenitiesScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
+
+  opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
   updateOpacitySliderAmenitiesRanges();
   updateAmenitiesLayer();
 }
@@ -688,17 +679,10 @@ function toggleInverseOutlineAmenitiesScale() {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
-  updateOutlineSliderAmenitiesRanges();
-  updateAmenitiesLayer();
-}
 
-function inverseOpacityAmenitiesScale() {
-  opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateAmenitiesLayer();
-}
-
-function inverseOutlineAmenitiesScale() {
   outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateOutlineSliderAmenitiesRanges();
   updateAmenitiesLayer();
 }
 
