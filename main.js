@@ -865,16 +865,13 @@ function updateAmenitiesLayer() {
               else if (time <= 30) color = '#440154';
             }
 
-            const opacityField = document.getElementById('AmenitiesOpacity').value;
-            const outlineField = document.getElementById('AmenitiesOutline').value;
-
             const minOpacityValue = AmenitiesOpacityRange && AmenitiesOpacityRange.noUiSlider ? parseFloat(AmenitiesOpacityRange.noUiSlider.get()[0]) : 0;
             const maxOpacityValue = AmenitiesOpacityRange && AmenitiesOpacityRange.noUiSlider ? parseFloat(AmenitiesOpacityRange.noUiSlider.get()[1]) : 0;
             const minOutlineValue = AmenitiesOutlineRange && AmenitiesOutlineRange.noUiSlider ? parseFloat(AmenitiesOutlineRange.noUiSlider.get()[0]) : 0;
             const maxOutlineValue = AmenitiesOutlineRange && AmenitiesOutlineRange.noUiSlider ? parseFloat(AmenitiesOutlineRange.noUiSlider.get()[1]) : 0;
 
             let opacity;
-            if (opacityField === 'None') {
+            if (AmenitiesOpacity.value === 'None') {
               opacity = 0.8;
             } else {
               const opacityValue = feature.properties[opacityField];
@@ -885,7 +882,7 @@ function updateAmenitiesLayer() {
               }
             }
             let weight;
-            if (outlineField === 'None') {
+            if (AmenitiesOutline.value === 'None') {
               weight = 0;
             } else {
               const outlineValue = feature.properties[outlineField];
