@@ -113,54 +113,54 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   updateAmenitiesCatchmentLayer();
 });
 
-const amenitiesPinsLayer = L.layerGroup().addTo(map);
-const amenitiesPins = [
-  'PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos'
-];
+let amenitiesPinsLayer = L.layerGroup().addTo(map);
+document.addEventListener('DOMContentLoaded', () => {
+  loadAmenitiesPins();
+  updateLegend();
+});
 
 function loadAmenitiesPins() {
+  const amenities = [
+    'PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp',
+    'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos'
+  ];
+
   amenitiesPinsLayer.clearLayers();
-  amenitiesPins.forEach(amenity => {
+
+  amenities.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
       .then(data => {
-        const layer = L.geoJSON(data, {
-          pointToLayer: (feature, latlng) => L.marker(latlng),
-          onEachFeature: (feature, layer) => {
-            layer.bindPopup(`<strong>${amenity}</strong><br>${feature.properties.name || ''}`);
-          }
+        const amenityLayer = L.geoJSON(data, {
+          pointToLayer: (feature, latlng) => L.marker(latlng)
         });
-        amenitiesPinsLayer.addLayer(layer);
+        amenitiesPinsLayer.addLayer(amenityLayer);
       });
   });
 }
 
-loadAmenitiesPins();
-
-amenitiesCheckboxes.forEach(checkbox => {
-  checkbox.addEventListener("change", updateAmenitiesPinsLayer);
-});
-
 function updateAmenitiesPinsLayer() {
-  amenitiesPinsLayer.clearLayers();
-  const selectedAmenities = Array.from(amenitiesCheckboxes)
+  const selectedAmenities = Array.from(document.querySelectorAll('.legend-amenity-checkbox'))
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
+
+  amenitiesPinsLayer.clearLayers();
 
   selectedAmenities.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
       .then(data => {
-        const layer = L.geoJSON(data, {
-          pointToLayer: (feature, latlng) => L.marker(latlng),
-          onEachFeature: (feature, layer) => {
-            layer.bindPopup(`<strong>${amenity}</strong><br>${feature.properties.name || ''}`);
-          }
+        const amenityLayer = L.geoJSON(data, {
+          pointToLayer: (feature, latlng) => L.marker(latlng)
         });
-        amenitiesPinsLayer.addLayer(layer);
+        amenitiesPinsLayer.addLayer(amenityLayer);
       });
   });
 }
+
+document.querySelectorAll('.legend-amenity-checkbox').forEach(checkbox => {
+  checkbox.addEventListener('change', updateAmenitiesPinsLayer);
+});
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
@@ -448,20 +448,11 @@ function updateLegend() {
 
   updateMasterCheckbox();
 
-  const amenitiesPinsDiv = document.createElement("div");
-  amenitiesPinsDiv.innerHTML = `<strong>Amenities Pins</strong>`;
-  legendContent.appendChild(amenitiesPinsDiv);
-
-  amenitiesPins.forEach(amenity => {
-    const div = document.createElement("div");
-    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-amenity="${amenity}" checked> ${amenity}`;
-    legendContent.appendChild(div);
+  const legendAmenitiesCheckboxes = document.querySelectorAll('.legend-amenity-checkbox');
+  legendAmenitiesCheckboxes.forEach(checkbox => {
+    checkbox.checked = true;
   });
-
-  const amenitiesPinsCheckboxes = document.querySelectorAll('.legend-checkbox[data-amenity]');
-  amenitiesPinsCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateAmenitiesPinsLayer);
-  });
+  updateAmenitiesPinsLayer();
 }
 
 function updateMasterCheckbox() {
