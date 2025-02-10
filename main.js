@@ -16,20 +16,6 @@ const ScoresFiles = [
   { year: '2019-2022', path: 'https://AmFa6.github.io/TAF_test/2019-2022_connectscore.geojson' }
 ];
 
-const AmenityFiles = [
-  { type: 'PriSch', path: 'https://AmFa6.github.io/TAF_test/PriSch.geojson' },
-  { type: 'SecSch', path: 'https://AmFa6.github.io/TAF_test/SecSch.geojson' },
-  { type: 'FurEd', path: 'https://AmFa6.github.io/TAF_test/FurEd.geojson' },
-  { type: 'Em500', path: 'https://AmFa6.github.io/TAF_test/Em500.geojson' },
-  { type: 'Em5000', path: 'https://AmFa6.github.io/TAF_test/Em5000.geojson' },
-  { type: 'StrEmp', path: 'https://AmFa6.github.io/TAF_test/StrEmp.geojson' },
-  { type: 'CitCtr', path: 'https://AmFa6.github.io/TAF_test/CitCtr.geojson' },
-  { type: 'MajCtr', path: 'https://AmFa6.github.io/TAF_test/MajCtr.geojson' },
-  { type: 'DisCtr', path: 'https://AmFa6.github.io/TAF_test/DisCtr.geojson' },
-  { type: 'GP', path: 'https://AmFa6.github.io/TAF_test/GP.geojson' },
-  { type: 'Hos', path: 'https://AmFa6.github.io/TAF_test/Hos.geojson' }
-];
-
 const layers = {};
 const totalLayers = ScoresFiles.length;
 const yearScoresDropdown = document.getElementById("yearScoresDropdown");
@@ -61,25 +47,6 @@ ScoresFiles.forEach(file => {
         updateScoresLayer();
       }
     })
-});
-
-let amenitiesLayers = [];
-
-AmenityFiles.forEach(file => {
-  fetch(file.path)
-    .then(response => response.json())
-    .then(AmenityLayer => {
-      const layer = L.geoJSON(AmenityLayer, {
-        style: {
-          color: 'blue',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.5
-        }
-      });
-      amenitiesLayers.push(layer);
-      updateAmenitiesVisibility();
-    });
 });
 
 yearScoresDropdown.value = "";
@@ -145,25 +112,6 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   updateOutlineSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
-
-map.on('zoomend', updateAmenitiesVisibility);
-
-function updateAmenitiesVisibility() {
-  const zoomLevel = map.getZoom();
-  const minZoomLevel = 15;
-
-  amenitiesLayers.forEach(layer => {
-    if (zoomLevel >= minZoomLevel) {
-      if (!map.hasLayer(layer)) {
-        map.addLayer(layer);
-      }
-    } else {
-      if (map.hasLayer(layer)) {
-        map.removeLayer(layer);
-      }
-    }
-  });
-}
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
@@ -424,19 +372,6 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 
-  const amenitiesHeaderDiv = document.createElement("div");
-  amenitiesHeaderDiv.innerHTML = "Amenities";
-  amenitiesHeaderDiv.style.fontSize = "1.1em";
-  amenitiesHeaderDiv.style.marginTop = "10px";
-  legendContent.appendChild(amenitiesHeaderDiv);
-
-  const amenitiesCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
-  amenitiesCheckboxes.forEach(checkbox => {
-    const div = document.createElement("div");
-    div.innerHTML = `<input type="checkbox" class="amenity-checkbox" value="${checkbox.value}" ${checkbox.checked ? 'checked' : ''}> <span>${checkbox.nextElementSibling.textContent}</span>`;
-    legendContent.appendChild(div);
-  });
-
   const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
   newLegendCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
@@ -447,11 +382,6 @@ function updateLegend() {
         updateScoresLayer();
       }
     });
-  });
-
-  const newAmenityCheckboxes = document.querySelectorAll('.amenity-checkbox');
-  newAmenityCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateAmenitiesLayer);
   });
 
   const masterCheckbox = document.getElementById('masterCheckbox');
@@ -867,7 +797,7 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesLayer() {
-  const selectedAmenities = Array.from(document.querySelectorAll('.amenity-checkbox'))
+  const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
 
