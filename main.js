@@ -63,18 +63,22 @@ ScoresFiles.forEach(file => {
     })
 });
 
+let amenitiesLayers = [];
+
 AmenityFiles.forEach(file => {
   fetch(file.path)
     .then(response => response.json())
     .then(AmenityLayer => {
-      L.geoJSON(AmenityLayer, {
+      const layer = L.geoJSON(AmenityLayer, {
         style: {
           color: 'blue',
           weight: 2,
           opacity: 1,
           fillOpacity: 0.5
         }
-      }).addTo(map);
+      });
+      amenitiesLayers.push(layer);
+      updateAmenitiesVisibility();
     });
 });
 
@@ -141,6 +145,25 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   updateOutlineSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
+
+map.on('zoomend', updateAmenitiesVisibility);
+
+function updateAmenitiesVisibility() {
+  const zoomLevel = map.getZoom();
+  const minZoomLevel = 13;
+
+  amenitiesLayers.forEach(layer => {
+    if (zoomLevel >= minZoomLevel) {
+      if (!map.hasLayer(layer)) {
+        map.addLayer(layer);
+      }
+    } else {
+      if (map.hasLayer(layer)) {
+        map.removeLayer(layer);
+      }
+    }
+  });
+}
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
