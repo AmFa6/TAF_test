@@ -808,7 +808,7 @@ function updateAmenitiesLayer() {
     return;
   }
 
-  const cacheKeys = selectedAmenities.map(amenity => `${selectedYear}_${amenity}_${selectedMode}`);
+  const cacheKeys = selectedAmenities.map(amenity => `${selectedYear}_${amenity}`);
   const fetchPromises = cacheKeys.map(cacheKey => {
     if (!csvDataCache[cacheKey]) {
       const csvPath = `https://AmFa6.github.io/TAF_test/${cacheKey}_csv.csv`;
