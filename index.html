@@ -476,7 +476,6 @@
   </div>
   <div id="legend">
     <h4 style="font-size: 1.2em; margin-top: 0;">Legend</h4>
-    <div id="legend-content"></div>
     <div id="amenities-legend">
       <h5>Amenities</h5>
       <label><input type="checkbox" class="legend-amenity-checkbox" value="PriSch" checked> Primary School</label><br>
@@ -491,6 +490,7 @@
       <label><input type="checkbox" class="legend-amenity-checkbox" value="GP" checked> General Practice</label><br>
       <label><input type="checkbox" class="legend-amenity-checkbox" value="Hos" checked> Hospital</label><br>
     </div>
+    <div id="legend-content"></div>
   </div>
   <script src="main.js"></script>
   <script>
@@ -528,7 +528,7 @@
             if (header.textContent.includes("Connectivity Scores")) {
               updateScoresLayer();
             } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
-              updateAmenitiesCatchmentLayer();
+              updateAmenitiesLayer();
             }
           }
         });
