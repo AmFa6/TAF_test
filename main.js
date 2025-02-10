@@ -112,13 +112,6 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   updateOutlineSliderAmenitiesRanges();
   updateAmenitiesLayer();
 });
-document.getElementById('Scores').addEventListener('open', () => {
-  updateScoresLayer();
-});
-
-document.getElementById('Amenities').addEventListener('open', () => {
-  updateAmenitiesLayer();
-});
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
