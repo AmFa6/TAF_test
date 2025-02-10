@@ -113,48 +113,6 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   updateAmenitiesLayer();
 });
 
-document.addEventListener('DOMContentLoaded', (event) => {
-  const collapsibleButtons = document.querySelectorAll(".collapsible");
-  collapsibleButtons.forEach(button => {
-    const content = button.nextElementSibling;
-    content.style.display = "none";
-    button.classList.add("collapsed");
-
-    button.addEventListener("click", function() {
-      this.classList.toggle("active");
-      content.style.display = content.style.display === "block" ? "none" : "block";
-      this.classList.toggle("collapsed", content.style.display === "none");
-    });
-  });
-
-  const panelHeaders = document.querySelectorAll(".panel-header");
-  panelHeaders.forEach(header => {
-    const panelContent = header.nextElementSibling;
-    panelContent.style.display = "none";
-    header.classList.add("collapsed");
-
-    header.addEventListener("click", function() {
-      panelHeaders.forEach(otherHeader => {
-        if (otherHeader !== header) {
-          otherHeader.classList.add("collapsed");
-          otherHeader.nextElementSibling.style.display = "none";
-        }
-      });
-      panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
-      header.classList.toggle("collapsed", panelContent.style.display === "none");
-
-      // Call the appropriate update function when the panel is expanded
-      if (!header.classList.contains("collapsed")) {
-        if (header.id === "scoresPanelHeader") {
-          updateScoresLayer();
-        } else if (header.id === "amenitiesPanelHeader") {
-          updateAmenitiesLayer();
-        }
-      }
-    });
-  });
-});
-
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
     return;
