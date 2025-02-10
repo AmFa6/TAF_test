@@ -72,6 +72,7 @@ let isInverseAmenitiesOutline = false;
 let currentAmenitiesCatchmentLayer = null;
 let hexTimeMap = {};
 let csvDataCache = {};
+let amenitiesPinsLayer = L.layerGroup().addTo(map);
 
 initializeAmenitiesSliders()
 
@@ -113,12 +114,10 @@ outlineFieldAmenitiesDropdown.addEventListener("change", () => {
   updateAmenitiesCatchmentLayer();
 });
 
-let amenitiesPinsLayer = L.layerGroup().addTo(map);
 document.addEventListener('DOMContentLoaded', () => {
   loadAmenitiesPins();
   updateLegend();
 });
-
 document.querySelectorAll('.legend-amenity-checkbox').forEach(checkbox => {
   checkbox.addEventListener('change', updateAmenitiesPinsLayer);
 });
@@ -131,6 +130,7 @@ function loadAmenitiesPins() {
   ];
 
   amenitiesPinsLayer.clearLayers();
+  console.log('Cleared amenities pins layer');
 
   amenities.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
@@ -141,6 +141,7 @@ function loadAmenitiesPins() {
           pointToLayer: (feature, latlng) => L.marker(latlng)
         });
         amenitiesPinsLayer.addLayer(amenityLayer);
+        console.log(`Added ${amenity} pins to the map`);
       });
   });
 }
@@ -152,6 +153,7 @@ function updateAmenitiesPinsLayer() {
     .map(checkbox => checkbox.value);
 
   amenitiesPinsLayer.clearLayers();
+  console.log('Cleared amenities pins layer');
 
   selectedAmenities.forEach(amenity => {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
@@ -162,6 +164,7 @@ function updateAmenitiesPinsLayer() {
           pointToLayer: (feature, latlng) => L.marker(latlng)
         });
         amenitiesPinsLayer.addLayer(amenityLayer);
+        console.log(`Added ${amenity} pins to the map`);
       });
   });
 }
