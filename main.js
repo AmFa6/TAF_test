@@ -692,22 +692,6 @@ function updateScoresLayer() {
 
     currentAmenitiesLayer = null; // Ensure currentAmenitiesLayer is null when displaying scores
     updateLegend();
-
-    // Update amenities based on selected purpose
-    const relevantAmenities = {
-      Edu: ['PriSch', 'SecSch', 'FurEd'],
-      Emp: ['Em500', 'Em5000', 'FurEd'],
-      HSt: ['CitCtr', 'MajCtr', 'DisCtr'],
-      Hth: ['GP', 'Hos']
-    };
-
-    const selectedAmenities = relevantAmenities[selectedPurpose] || [];
-    const amenitiesCheckboxes = document.querySelectorAll('.amenity-checkbox');
-    amenitiesCheckboxes.forEach(checkbox => {
-      checkbox.checked = selectedAmenities.includes(checkbox.value);
-    });
-
-    updateAmenitiesLayer();
   }
 }
 
