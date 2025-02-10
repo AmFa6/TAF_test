@@ -119,7 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
   updateLegend();
 });
 
+document.querySelectorAll('.legend-amenity-checkbox').forEach(checkbox => {
+  checkbox.addEventListener('change', updateAmenitiesPinsLayer);
+});
+
 function loadAmenitiesPins() {
+  console.log('Loading amenities pins');
   const amenities = [
     'PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp',
     'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos'
@@ -131,6 +136,7 @@ function loadAmenitiesPins() {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
       .then(data => {
+        console.log(`Adding ${amenity} pins to the map`);
         const amenityLayer = L.geoJSON(data, {
           pointToLayer: (feature, latlng) => L.marker(latlng)
         });
@@ -140,6 +146,7 @@ function loadAmenitiesPins() {
 }
 
 function updateAmenitiesPinsLayer() {
+  console.log('Updating amenities pins layer');
   const selectedAmenities = Array.from(document.querySelectorAll('.legend-amenity-checkbox'))
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
@@ -150,6 +157,7 @@ function updateAmenitiesPinsLayer() {
     fetch(`https://AmFa6.github.io/TAF_test/${amenity}.geojson`)
       .then(response => response.json())
       .then(data => {
+        console.log(`Adding ${amenity} pins to the map`);
         const amenityLayer = L.geoJSON(data, {
           pointToLayer: (feature, latlng) => L.marker(latlng)
         });
@@ -157,10 +165,6 @@ function updateAmenitiesPinsLayer() {
       });
   });
 }
-
-document.querySelectorAll('.legend-amenity-checkbox').forEach(checkbox => {
-  checkbox.addEventListener('change', updateAmenitiesPinsLayer);
-});
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
@@ -356,6 +360,7 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateLegend() {
+  console.log('Updating legend');
   const selectedYear = yearScoresDropdown.value;
   const legendContent = document.getElementById("legend-content");
 
@@ -452,6 +457,7 @@ function updateLegend() {
   legendAmenitiesCheckboxes.forEach(checkbox => {
     checkbox.checked = true;
   });
+
   updateAmenitiesPinsLayer();
 }
 
@@ -636,6 +642,7 @@ function updateOutlineSliderScoresRanges() {
 }
 
 function updateScoresLayer() {
+  console.log('Updating scores layer');
   const selectedYear = yearScoresDropdown.value;
   if (!selectedYear) {
     return;
@@ -646,7 +653,8 @@ function updateScoresLayer() {
   const outlineField = outlineFieldScoresDropdown.value;
 
   map.eachLayer(layer => {
-    if (layer !== baseLayer) {
+    if (layer !== baseLayer && layer !== amenitiesPinsLayer) {
+      console.log('Removing layer:', layer);
       map.removeLayer(layer);
     }
   });
@@ -852,6 +860,7 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesCatchmentLayer() {
+  console.log('Updating amenities catchment layer');
   const selectedAmenities = Array.from(amenitiesCheckboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
@@ -905,7 +914,8 @@ function updateAmenitiesCatchmentLayer() {
       .then(response => response.json())
       .then(AmenitiesCatchmentLayer => {
         map.eachLayer(layer => {
-          if (layer !== baseLayer) {
+          if (layer !== baseLayer && layer !== amenitiesPinsLayer) {
+            console.log('Removing layer:', layer);
             map.removeLayer(layer);
           }
         });
