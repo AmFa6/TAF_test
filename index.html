@@ -351,17 +351,20 @@
         </select>
         <br>
         <label class="large-font">Amenities:</label>
-        <label class="checkbox-label"><input type="checkbox" value="PriSch"> <span>Primary School</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="SecSch"> <span>Secondary School</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="FurEd"> <span>Further Education</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="Em500"> <span>Employment (500+ jobs)</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="Em5000"> <span>Employment (5000+ jobs)</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="StrEmp"> <span>Strategic Employment</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="CitCtr"> <span>City Centre</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="MajCtr"> <span>Major Centre</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="DisCtr"> <span>District Centre</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="GP"> <span>General Practice</span></label>
-        <label class="checkbox-label"><input type="checkbox" value="Hos"> <span>Hospital</span></label>
+        <button type="button" class="collapsible" id="amenitiesDropdown">0 selected</button>
+        <div class="collapsible-content" id="amenitiesCheckboxesContainer">
+          <label class="checkbox-label"><input type="checkbox" value="PriSch"> <span>Primary School</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="SecSch"> <span>Secondary School</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="FurEd"> <span>Further Education</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="Em500"> <span>Employment (500+ jobs)</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="Em5000"> <span>Employment (5000+ jobs)</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="StrEmp"> <span>Strategic Employment</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="CitCtr"> <span>City Centre</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="MajCtr"> <span>Major Centre</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="DisCtr"> <span>District Centre</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="GP"> <span>General Practice</span></label>
+          <label class="checkbox-label"><input type="checkbox" value="Hos"> <span>Hospital</span></label>
+        </div>
         <button type="button" class="collapsible">Settings</button>
         <div class="collapsible-content">
           <label for="opacityFieldAmenitiesDropdown" class="medium-font">Link Hexagon Transparency to:</label>
@@ -444,7 +447,7 @@
         const content = button.nextElementSibling;
         content.style.display = "none";
         button.classList.add("collapsed");
-  
+
         button.addEventListener("click", function() {
           this.classList.toggle("active");
           content.style.display = content.style.display === "block" ? "none" : "block";
@@ -457,7 +460,7 @@
         const panelContent = header.nextElementSibling;
         panelContent.style.display = "none";
         header.classList.add("collapsed");
-  
+
         header.addEventListener("click", function() {
           panelHeaders.forEach(otherHeader => {
             if (otherHeader !== header) {
@@ -467,8 +470,7 @@
           });
           panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
           header.classList.toggle("collapsed", panelContent.style.display === "none");
-  
-          // Call the appropriate update function based on the panel that is expanded
+      
           if (panelContent.style.display === "block") {
             if (header.textContent.includes("Connectivity Scores")) {
               updateScoresLayer();
@@ -478,6 +480,20 @@
           }
         });
       });
+
+      const amenitiesDropdown = document.getElementById('amenitiesDropdown');
+      const amenitiesCheckboxes = document.querySelectorAll('#amenitiesCheckboxesContainer input[type="checkbox"]');
+      
+      function updateAmenitiesDropdownLabel() {
+        const selectedCount = Array.from(amenitiesCheckboxes).filter(checkbox => checkbox.checked).length;
+        amenitiesDropdown.textContent = `${selectedCount} selected`;
+      }
+
+      amenitiesCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateAmenitiesDropdownLabel);
+      });
+
+      updateAmenitiesDropdownLabel();
     });
   </script>
 </body>
