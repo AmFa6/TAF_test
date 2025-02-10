@@ -808,36 +808,32 @@ function updateAmenitiesLayer() {
     return;
   }
 
-  const selectedAmenity = selectedAmenities[0];
-  const cacheKey = `${selectedYear}_${selectedAmenity}_${selectedMode}`;
-
-  if (!csvDataCache[cacheKey]) {
-    const csvPath = `https://AmFa6.github.io/TAF_test/${selectedYear}_${selectedAmenity}_csv.csv`;
-
-    fetch(csvPath)
-      .then(response => response.text())
-      .then(csvText => {
-        const csvData = Papa.parse(csvText, { header: true }).data;
-        hexTimeMap = {};
-        csvData.forEach(row => {
-          if (row.Mode === selectedMode) {
-            const hexId = row.OriginName;
-            const time = parseFloat(row.Time);
-            if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
-              hexTimeMap[hexId] = time;
+  const cacheKeys = selectedAmenities.map(amenity => `${selectedYear}_${amenity}_${selectedMode}`);
+  const fetchPromises = cacheKeys.map(cacheKey => {
+    if (!csvDataCache[cacheKey]) {
+      const csvPath = `https://AmFa6.github.io/TAF_test/${cacheKey}_csv.csv`;
+      return fetch(csvPath)
+        .then(response => response.text())
+        .then(csvText => {
+          const csvData = Papa.parse(csvText, { header: true }).data;
+          csvData.forEach(row => {
+            if (row.Mode === selectedMode) {
+              const hexId = row.OriginName;
+              const time = parseFloat(row.Time);
+              if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
+                hexTimeMap[hexId] = time;
+              }
             }
-          }
+          });
+          csvDataCache[cacheKey] = hexTimeMap;
         });
+    } else {
+      Object.assign(hexTimeMap, csvDataCache[cacheKey]);
+      return Promise.resolve();
+    }
+  });
 
-        csvDataCache[cacheKey] = hexTimeMap;
-        fetchAmenitiesLayer();
-      })
-  } else {
-    hexTimeMap = csvDataCache[cacheKey];
-    fetchAmenitiesLayer();
-  }
-
-  function fetchAmenitiesLayer() {
+  Promise.all(fetchPromises).then(() => {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
       .then(AmenitiesLayer => {
@@ -912,10 +908,10 @@ function updateAmenitiesLayer() {
               fillOpacity: opacity
             };
           },
-          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenity, selectedMode)
+          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenities.join(','), selectedMode)
         }).addTo(map);
 
         updateLegend();
-      })
-  }
+      });
+  });
 }
