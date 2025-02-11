@@ -55,17 +55,17 @@ const purposeToAmenitiesMap = {
   All: ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos']
 };
 const amenityIcons = {
-  PriSch: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-school" style="color: blue;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  SecSch: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-school" style="color: green;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  FurEd: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-university" style="color: purple;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  Em500: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-briefcase" style="color: red;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  Em5000: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-building" style="color: orange;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  StrEmp: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-industry" style="color: darkred;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  CitCtr: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-city" style="color: darkblue;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  MajCtr: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-shopping-cart" style="color: darkgreen;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  DisCtr: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-store" style="color: darkpurple;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  GP: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-stethoscope" style="color: cadetblue;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-  Hos: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-hospital" style="color: darkorange;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] })
+  PriSch: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-school" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  SecSch: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-school" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  FurEd: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-university" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  Em500: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-briefcase" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  Em5000: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-building" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  StrEmp: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-industry" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  CitCtr: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-city" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  MajCtr: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-shopping-cart" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  DisCtr: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-store" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  GP: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-stethoscope" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  Hos: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-hospital" style="color: grey;"></i></div>', iconSize: [20, 20], iconAnchor: [10, 10] })
 };
 
 ScoresFiles.forEach(file => {
