@@ -141,11 +141,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
           updateAmenitiesLayer();
         }
       } else {
-        if (header.textContent.includes("Connectivity Scores")) {
-          removeScoresLayer();
-        } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
-          removeAmenitiesLayer();
-        }
+        map.eachLayer(layer => {
+          if (layer !== baseLayer) {
+            map.removeLayer(layer);
+          }
+        });
       }
     });
   });
@@ -161,7 +161,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const selectedCount = Array.from(amenitiesCheckboxes).filter(checkbox => checkbox.checked).length;
     amenitiesDropdown.textContent = `${selectedCount} selected`;
     if (selectedCount === 0) {
-      removeAmenitiesLayer();
+      map.eachLayer(layer => {
+        if (layer !== baseLayer) {
+          map.removeLayer(layer);
+        }
+      });
     } else {
       updateAmenitiesLayer();
     }
