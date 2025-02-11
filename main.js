@@ -51,7 +51,8 @@ const purposeToAmenitiesMap = {
   Edu: ['PriSch', 'SecSch', 'FurEd'],
   Emp: ['Em500', 'Em5000', 'StrEmp'],
   HSt: ['CitCtr', 'MajCtr', 'DisCtr'],
-  Hth: ['GP', 'Hos']
+  Hth: ['GP', 'Hos'],
+  All: ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos']
 };
 
 ScoresFiles.forEach(file => {
