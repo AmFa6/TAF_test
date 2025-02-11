@@ -105,6 +105,86 @@ ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
 AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesScale);
 AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
+document.addEventListener('DOMContentLoaded', (event) => {
+  const collapsibleButtons = document.querySelectorAll(".collapsible");
+  collapsibleButtons.forEach(button => {
+    const content = button.nextElementSibling;
+    content.style.display = "none";
+    button.classList.add("collapsed");
+
+    button.addEventListener("click", function() {
+      this.classList.toggle("active");
+      content.style.display = content.style.display === "block" ? "none" : "block";
+      this.classList.toggle("collapsed", content.style.display === "none");
+    });
+  });
+  const panelHeaders = document.querySelectorAll(".panel-header");
+  panelHeaders.forEach(header => {
+    const panelContent = header.nextElementSibling;
+    panelContent.style.display = "none";
+    header.classList.add("collapsed");
+
+    header.addEventListener("click", function() {
+      panelHeaders.forEach(otherHeader => {
+        if (otherHeader !== header) {
+          otherHeader.classList.add("collapsed");
+          otherHeader.nextElementSibling.style.display = "none";
+        }
+      });
+      panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
+      header.classList.toggle("collapsed", panelContent.style.display === "none");
+
+      if (panelContent.style.display === "block") {
+        if (header.textContent.includes("Connectivity Scores")) {
+          updateScoresLayer();
+        } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
+          updateAmenitiesLayer();
+        }
+      } else {
+        if (header.textContent.includes("Connectivity Scores")) {
+          removeScoresLayer();
+        } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
+          removeAmenitiesLayer();
+        }
+      }
+    });
+  });
+  const amenitiesDropdown = document.getElementById('amenitiesDropdown');
+  const amenitiesCheckboxesContainer = document.getElementById('amenitiesCheckboxesContainer');
+  const amenitiesCheckboxes = amenitiesCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+
+  amenitiesDropdown.addEventListener('click', () => {
+    amenitiesCheckboxesContainer.classList.toggle('show');
+  });
+
+  function updateAmenitiesDropdownLabel() {
+    const selectedCount = Array.from(amenitiesCheckboxes).filter(checkbox => checkbox.checked).length;
+    amenitiesDropdown.textContent = `${selectedCount} selected`;
+    if (selectedCount === 0) {
+      removeAmenitiesLayer();
+    } else {
+      updateAmenitiesLayer();
+    }
+  }
+
+  amenitiesCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateAmenitiesDropdownLabel);
+  });
+
+  updateAmenitiesDropdownLabel();
+  amenitiesCheckboxesContainer.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  window.addEventListener('click', (event) => {
+    if (!event.target.matches('#amenitiesDropdown')) {
+      if (amenitiesCheckboxesContainer.classList.contains('show')) {
+        amenitiesCheckboxesContainer.classList.remove('show');
+      }
+    }
+  });
+});
+
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
     return;
@@ -903,7 +983,7 @@ function updateAmenitiesLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenities.join(','), selectedMode)
         }).addTo(map);
-
+ 
         updateLegend();
       });
   });
