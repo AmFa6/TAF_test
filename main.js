@@ -54,6 +54,19 @@ const purposeToAmenitiesMap = {
   Hth: ['GP', 'Hos'],
   All: ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos']
 };
+const amenityIcons = {
+  PriSch: L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'blue', prefix: 'fa' }),
+  SecSch: L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'green', prefix: 'fa' }),
+  FurEd: L.AwesomeMarkers.icon({ icon: 'university', markerColor: 'purple', prefix: 'fa' }),
+  Em500: L.AwesomeMarkers.icon({ icon: 'briefcase', markerColor: 'red', prefix: 'fa' }),
+  Em5000: L.AwesomeMarkers.icon({ icon: 'building', markerColor: 'orange', prefix: 'fa' }),
+  StrEmp: L.AwesomeMarkers.icon({ icon: 'industry', markerColor: 'darkred', prefix: 'fa' }),
+  CitCtr: L.AwesomeMarkers.icon({ icon: 'city', markerColor: 'darkblue', prefix: 'fa' }),
+  MajCtr: L.AwesomeMarkers.icon({ icon: 'shopping-cart', markerColor: 'darkgreen', prefix: 'fa' }),
+  DisCtr: L.AwesomeMarkers.icon({ icon: 'store', markerColor: 'darkpurple', prefix: 'fa' }),
+  GP: L.AwesomeMarkers.icon({ icon: 'stethoscope', markerColor: 'cadetblue', prefix: 'fa' }),
+  Hos: L.AwesomeMarkers.icon({ icon: 'hospital', markerColor: 'darkorange', prefix: 'fa' })
+};
 
 ScoresFiles.forEach(file => {
   fetch(file.path)
@@ -542,11 +555,8 @@ function drawSelectedAmenities(selectedAmenities) {
     const amenityLayer = amenityLayers[amenity];
     if (amenityLayer) {
       const layer = L.geoJSON(amenityLayer, {
-        style: {
-          color: '#3388ff',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.5
+        pointToLayer: (feature, latlng) => {
+          return L.marker(latlng, { icon: amenityIcons[amenity] });
         },
         onEachFeature: (feature, layer) => {
           const popupContent = AmenitiesPopup(amenity, feature.properties);
