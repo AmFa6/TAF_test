@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       });
       panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
       header.classList.toggle("collapsed", panelContent.style.display === "none");
-
+    
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
           updateScoresLayer();
@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       } else {
         map.eachLayer(layer => {
           if (layer !== baseLayer) {
+            console.log("Removing layer:", layer);
             map.removeLayer(layer);
           }
         });
@@ -160,13 +161,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
   function updateAmenitiesDropdownLabel() {
     const selectedCount = Array.from(amenitiesCheckboxes).filter(checkbox => checkbox.checked).length;
     amenitiesDropdown.textContent = `${selectedCount} selected`;
-    map.eachLayer(layer => {
-      if (layer !== baseLayer) {
-        map.removeLayer(layer);
-      }
-    });
-    if (selectedCount > 0) {
-      updateAmenitiesLayer();
+    if (selectedCount === 0) {
+      map.eachLayer(layer => {
+        if (layer !== baseLayer) {
+          console.log("Removing layer:", layer);
+          map.removeLayer(layer);
+        }
+      });
+    } else {
+      updateAmenitiesLayer(); 
     }
   }
 
