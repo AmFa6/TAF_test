@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       this.classList.toggle("collapsed", content.style.display === "none");
     });
   });
+  
   const panelHeaders = document.querySelectorAll(".panel-header");
   panelHeaders.forEach(header => {
     const panelContent = header.nextElementSibling;
@@ -133,9 +134,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       });
       panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
       header.classList.toggle("collapsed", panelContent.style.display === "none");
-  
-      console.log(`Panel "${header.textContent.trim()}" is now ${panelContent.style.display === "block" ? "opened" : "closed"}`);
-  
+    
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
           console.log("Updating Scores Layer");
@@ -154,6 +153,38 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
     });
   });
+
+  const amenitiesDropdown = document.getElementById('amenitiesDropdown');
+  const amenitiesCheckboxesContainer = document.getElementById('amenitiesCheckboxesContainer');
+  const amenitiesCheckboxes = amenitiesCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+
+  amenitiesDropdown.addEventListener('click', () => {
+    amenitiesCheckboxesContainer.classList.toggle('show');
+  });
+
+  function updateAmenitiesDropdownLabel() {
+    const selectedCount = Array.from(amenitiesCheckboxes).filter(checkbox => checkbox.checked).length;
+    amenitiesDropdown.textContent = `${selectedCount} selected`;
+  }
+
+  amenitiesCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateAmenitiesDropdownLabel);
+  });
+
+  updateAmenitiesDropdownLabel();
+
+  amenitiesCheckboxesContainer.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  window.addEventListener('click', (event) => {
+    if (!event.target.matches('#amenitiesDropdown')) {
+      if (amenitiesCheckboxesContainer.classList.contains('show')) {
+        amenitiesCheckboxesContainer.classList.remove('show');
+      }
+    }
+  });
+});
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
