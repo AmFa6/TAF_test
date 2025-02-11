@@ -154,46 +154,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
     });
   });
-  const amenitiesDropdown = document.getElementById('amenitiesDropdown');
-  const amenitiesCheckboxesContainer = document.getElementById('amenitiesCheckboxesContainer');
-  const amenitiesCheckboxes = amenitiesCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
-
-  amenitiesDropdown.addEventListener('click', () => {
-    amenitiesCheckboxesContainer.classList.toggle('show');
-  });
-
-  function updateAmenitiesDropdownLabel() {
-    const selectedCount = Array.from(amenitiesCheckboxes).filter(checkbox => checkbox.checked).length;
-    amenitiesDropdown.textContent = `${selectedCount} selected`;
-    if (selectedCount === 0) {
-      map.eachLayer(layer => {
-        if (layer !== baseLayer) {
-          console.log("Removing layer:", layer);
-          map.removeLayer(layer);
-        }
-      });
-    } else {
-      updateAmenitiesLayer(); 
-    }
-  }
-
-  amenitiesCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateAmenitiesDropdownLabel);
-  });
-
-  updateAmenitiesDropdownLabel();
-  amenitiesCheckboxesContainer.addEventListener('click', (event) => {
-    event.stopPropagation();
-  });
-
-  window.addEventListener('click', (event) => {
-    if (!event.target.matches('#amenitiesDropdown')) {
-      if (amenitiesCheckboxesContainer.classList.contains('show')) {
-        amenitiesCheckboxesContainer.classList.remove('show');
-      }
-    }
-  });
-});
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
@@ -879,10 +839,14 @@ function updateAmenitiesLayer() {
   const selectedMode = AmenitiesMode.value;
 
   if (!selectedYear || selectedAmenities.length === 0 || !selectedMode) {
+    map.eachLayer(layer => {
+      if (layer !== baseLayer) {
+        map.removeLayer(layer);
+      }
+    });
     return;
   }
 
-  // Clear hexTimeMap to reflect the current state of selected amenities
   hexTimeMap = {};
 
   const cacheKeys = selectedAmenities.map(amenity => `${selectedYear}_${amenity}`);
