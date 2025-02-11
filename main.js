@@ -1048,7 +1048,7 @@ function updateAmenitiesCatchmentLayer() {
                 fillOpacity: 0.5
               },
               onEachFeature: (feature, layer) => {
-                const popupContent = generatePopupContent(amenity, feature.properties);
+                const popupContent = AmenitiesPopup(amenity, feature.properties);
                 layer.bindPopup(popupContent);
               }
             }).addTo(map);
@@ -1060,7 +1060,7 @@ function updateAmenitiesCatchmentLayer() {
   });
 }
 
-function generatePopupContent(amenity, properties) {
+function AmenitiesPopup(amenity, properties) {
   let amenityType;
   let name;
 
