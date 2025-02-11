@@ -99,6 +99,7 @@ let isInverseAmenitiesOutline = false;
 let currentAmenitiesCatchmentLayer = null;
 let hexTimeMap = {};
 let csvDataCache = {};
+let amenitiesLayerGroup = L.layerGroup();
 
 initializeAmenitiesSliders()
 
@@ -475,6 +476,10 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 
+  const amenitiesCheckboxDiv = document.createElement("div");
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <i>Amenities</i>`;
+  legendContent.appendChild(amenitiesCheckboxDiv);
+
   const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
   newLegendCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
@@ -500,6 +505,15 @@ function updateLegend() {
     }
   });
 
+  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+  amenitiesCheckbox.addEventListener('change', () => {
+    if (amenitiesCheckbox.checked) {
+      amenitiesLayerGroup.addTo(map);
+    } else {
+      map.removeLayer(amenitiesLayerGroup);
+    }
+  });
+
   updateMasterCheckbox();
 }
 
@@ -510,6 +524,89 @@ function updateMasterCheckbox() {
   const masterCheckbox = document.getElementById('masterCheckbox');
   masterCheckbox.checked = allChecked;
   masterCheckbox.indeterminate = !allChecked && !noneChecked;
+}
+
+function drawSelectedAmenities(selectedAmenities) {
+  amenitiesLayerGroup.clearLayers();
+
+  selectedAmenities.forEach(amenity => {
+    const amenityLayer = amenityLayers[amenity];
+    if (amenityLayer) {
+      const layer = L.geoJSON(amenityLayer, {
+        style: {
+          color: '#3388ff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.5
+        },
+        onEachFeature: (feature, layer) => {
+          const popupContent = AmenitiesPopup(amenity, feature.properties);
+          layer.bindPopup(popupContent);
+        }
+      });
+      amenitiesLayerGroup.addLayer(layer);
+    }
+  });
+
+  amenitiesLayerGroup.addTo(map);
+}
+
+function AmenitiesPopup(amenity, properties) {
+  let amenityType;
+  let name;
+
+  switch (amenity) {
+    case 'PriSch':
+      amenityType = 'Primary School';
+      name = properties.Establis_1;
+      break;
+    case 'SecSch':
+      amenityType = 'Secondary School';
+      name = properties.Establis_1;
+      break;
+    case 'FurEd':
+      amenityType = 'Further Education';
+      name = properties.Establis_1;
+      break;
+    case 'Em500':
+      amenityType = 'Employment (500+ employees)';
+      name = `${properties.LSOA11CD}, ${properties.LSOA11NM}`;
+      break;
+    case 'Em5000':
+      amenityType = 'Employment (5000+ employees)';
+      name = `${properties.LSOA11CD}, ${properties.LSOA11NM}`;
+      break;
+    case 'StrEmp':
+      amenityType = 'Strategic Employment';
+      name = properties.NAME;
+      break;
+    case 'CitCtr':
+      amenityType = 'City Centre';
+      name = properties.District;
+      break;
+    case 'MajCtr':
+      amenityType = 'Major Centre';
+      name = properties.Name;
+      break;
+    case 'DisCtr':
+      amenityType = 'District Centre';
+      name = properties.SITE_NAME;
+      break;
+    case 'GP':
+      amenityType = 'General Practice';
+      name = properties.WECAplu_14;
+      break;
+    case 'Hos':
+      amenityType = 'Hospital';
+      name = properties.Name;
+      break;
+    default:
+      amenityType = 'Unknown';
+      name = 'Unknown';
+      break;
+  }
+
+  return `<strong>Amenity Type:</strong> ${amenityType}<br><strong>Name:</strong> ${name}<br>`;
 }
 
 function initializeScoresSliders() {
@@ -719,24 +816,7 @@ function updateScoresLayer() {
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
 
-    const selectedAmenities = purposeToAmenitiesMap[selectedPurpose] || [];
-    selectedAmenities.forEach(amenity => {
-      const amenityLayer = amenityLayers[amenity];
-      if (amenityLayer) {
-        L.geoJSON(amenityLayer, {
-          style: {
-            color: '#3388ff',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.5
-          },
-          onEachFeature: (feature, layer) => {
-            const popupContent = AmenitiesPopup(amenity, feature.properties);
-            layer.bindPopup(popupContent);
-          }
-        }).addTo(map);
-      }
-    });
+    drawSelectedAmenities(purposeToAmenitiesMap[selectedPurpose]);
 
     currentAmenitiesCatchmentLayer = null;
     updateLegend();
@@ -1038,83 +1118,9 @@ function updateAmenitiesCatchmentLayer() {
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenities.join(','), selectedMode)
         }).addTo(map);
 
-        selectedAmenities.forEach(amenity => {
-          const amenityLayer = amenityLayers[amenity];
-          if (amenityLayer) {
-            L.geoJSON(amenityLayer, {
-              style: {
-                color: '#3388ff',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.5
-              },
-              onEachFeature: (feature, layer) => {
-                const popupContent = AmenitiesPopup(amenity, feature.properties);
-                layer.bindPopup(popupContent);
-              }
-            }).addTo(map);
-          }
-        });
+        drawSelectedAmenities(selectedAmenities);
 
         updateLegend();
       });
   });
-}
-
-function AmenitiesPopup(amenity, properties) {
-  let amenityType;
-  let name;
-
-  switch (amenity) {
-    case 'PriSch':
-      amenityType = 'Primary School';
-      name = properties.Establis_1;
-      break;
-    case 'SecSch':
-      amenityType = 'Secondary School';
-      name = properties.Establis_1;
-      break;
-    case 'FurEd':
-      amenityType = 'Further Education';
-      name = properties.Establis_1;
-      break;
-    case 'Em500':
-      amenityType = 'Employment (500+ employees)';
-      name = `${properties.LSOA11CD}, ${properties.LSOA11NM}`;
-      break;
-    case 'Em5000':
-      amenityType = 'Employment (5000+ employees)';
-      name = `${properties.LSOA11CD}, ${properties.LSOA11NM}`;
-      break;
-    case 'StrEmp':
-      amenityType = 'Strategic Employment';
-      name = properties.NAME;
-      break;
-    case 'CitCtr':
-      amenityType = 'City Centre';
-      name = properties.District;
-      break;
-    case 'MajCtr':
-      amenityType = 'Major Centre';
-      name = properties.Name;
-      break;
-    case 'DisCtr':
-      amenityType = 'District Centre';
-      name = properties.SITE_NAME;
-      break;
-    case 'GP':
-      amenityType = 'General Practice';
-      name = properties.WECAplu_14;
-      break;
-    case 'Hos':
-      amenityType = 'Hospital';
-      name = properties.Name;
-      break;
-    default:
-      amenityType = 'Unknown';
-      name = 'Unknown';
-      break;
-  }
-
-  return `<strong>Amenity Type:</strong> ${amenityType}<br><strong>Name:</strong> ${name}<br>`;
 }
