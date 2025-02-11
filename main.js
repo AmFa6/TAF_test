@@ -55,17 +55,17 @@ const purposeToAmenitiesMap = {
   All: ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos']
 };
 const amenityIcons = {
-  PriSch: L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'blue', prefix: 'fa' }),
-  SecSch: L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'green', prefix: 'fa' }),
-  FurEd: L.AwesomeMarkers.icon({ icon: 'university', markerColor: 'purple', prefix: 'fa' }),
-  Em500: L.AwesomeMarkers.icon({ icon: 'briefcase', markerColor: 'red', prefix: 'fa' }),
-  Em5000: L.AwesomeMarkers.icon({ icon: 'building', markerColor: 'orange', prefix: 'fa' }),
-  StrEmp: L.AwesomeMarkers.icon({ icon: 'industry', markerColor: 'darkred', prefix: 'fa' }),
-  CitCtr: L.AwesomeMarkers.icon({ icon: 'city', markerColor: 'darkblue', prefix: 'fa' }),
-  MajCtr: L.AwesomeMarkers.icon({ icon: 'shopping-cart', markerColor: 'darkgreen', prefix: 'fa' }),
-  DisCtr: L.AwesomeMarkers.icon({ icon: 'store', markerColor: 'darkpurple', prefix: 'fa' }),
-  GP: L.AwesomeMarkers.icon({ icon: 'stethoscope', markerColor: 'cadetblue', prefix: 'fa' }),
-  Hos: L.AwesomeMarkers.icon({ icon: 'hospital', markerColor: 'darkorange', prefix: 'fa' })
+  PriSch: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'blue', prefix: 'fa' }) : null,
+  SecSch: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'green', prefix: 'fa' }) : null,
+  FurEd: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'university', markerColor: 'purple', prefix: 'fa' }) : null,
+  Em500: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'briefcase', markerColor: 'red', prefix: 'fa' }) : null,
+  Em5000: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'building', markerColor: 'orange', prefix: 'fa' }) : null,
+  StrEmp: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'industry', markerColor: 'darkred', prefix: 'fa' }) : null,
+  CitCtr: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'city', markerColor: 'darkblue', prefix: 'fa' }) : null,
+  MajCtr: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'shopping-cart', markerColor: 'darkgreen', prefix: 'fa' }) : null,
+  DisCtr: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'store', markerColor: 'darkpurple', prefix: 'fa' }) : null,
+  GP: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'stethoscope', markerColor: 'cadetblue', prefix: 'fa' }) : null,
+  Hos: L.AwesomeMarkers ? L.AwesomeMarkers.icon({ icon: 'hospital', markerColor: 'darkorange', prefix: 'fa' }) : null
 };
 
 ScoresFiles.forEach(file => {
