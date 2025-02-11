@@ -282,6 +282,29 @@
     .dropdown-menu.show {
       display: block;
     }
+    .pin {
+      position: relative;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background-color: white;
+      border: 2px solid grey;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 20px;
+    }
+    .pin::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 10px solid grey;
+    }
   </style>
 </head>
 <body>
