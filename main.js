@@ -54,23 +54,18 @@ const purposeToAmenitiesMap = {
   Hth: ['GP', 'Hos'],
   All: ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos']
 };
-if (L.AwesomeMarkers) {
-  console.log("L.AwesomeMarkers is loaded:", L.AwesomeMarkers);
-} else {
-  console.error("L.AwesomeMarkers is not loaded.");
-}
 const amenityIcons = {
-  PriSch: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'blue', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  SecSch: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'green', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  FurEd: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'university', markerColor: 'purple', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  Em500: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'briefcase', markerColor: 'red', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  Em5000: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'building', markerColor: 'orange', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  StrEmp: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'industry', markerColor: 'darkred', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  CitCtr: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'city', markerColor: 'darkblue', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  MajCtr: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'shopping-cart', markerColor: 'darkgreen', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  DisCtr: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'store', markerColor: 'darkpurple', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  GP: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'stethoscope', markerColor: 'cadetblue', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
-  Hos: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'hospital', markerColor: 'darkorange', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' })
+  PriSch: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-school" style="color: blue;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  SecSch: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-school" style="color: green;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  FurEd: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-university" style="color: purple;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  Em500: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-briefcase" style="color: red;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  Em5000: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-building" style="color: orange;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  StrEmp: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-industry" style="color: darkred;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  CitCtr: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-city" style="color: darkblue;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  MajCtr: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-shopping-cart" style="color: darkgreen;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  DisCtr: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-store" style="color: darkpurple;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  GP: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-stethoscope" style="color: cadetblue;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  Hos: L.divIcon({ className: 'fa-icon', html: '<i class="fas fa-hospital" style="color: darkorange;"></i>', iconSize: [20, 20], iconAnchor: [10, 10] })
 };
 
 ScoresFiles.forEach(file => {
