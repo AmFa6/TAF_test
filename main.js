@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const panelContent = header.nextElementSibling;
     panelContent.style.display = "none";
     header.classList.add("collapsed");
-
+  
     header.addEventListener("click", function() {
       panelHeaders.forEach(otherHeader => {
         if (otherHeader !== header) {
@@ -133,11 +133,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
       });
       panelContent.style.display = panelContent.style.display === "block" ? "none" : "block";
       header.classList.toggle("collapsed", panelContent.style.display === "none");
-    
+  
+      console.log(`Panel "${header.textContent.trim()}" is now ${panelContent.style.display === "block" ? "opened" : "closed"}`);
+  
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
+          console.log("Updating Scores Layer");
           updateScoresLayer();
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
+          console.log("Updating Amenities Layer");
           updateAmenitiesLayer();
         }
       } else {
