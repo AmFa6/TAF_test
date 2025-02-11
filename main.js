@@ -874,7 +874,7 @@ function updateAmenitiesLayer() {
             if (AmenitiesOpacity.value === 'None') {
               opacity = 0.8;
             } else {
-              const opacityValue = feature.properties[opacityField];
+              const opacityValue = feature.properties[AmenitiesOpacity.value];
               if (opacityValue === 0 || opacityValue === null) {
                 opacity = isInverseAmenitiesOpacity ? 0.8 : 0.1;
               } else {
@@ -885,7 +885,7 @@ function updateAmenitiesLayer() {
             if (AmenitiesOutline.value === 'None') {
               weight = 0;
             } else {
-              const outlineValue = feature.properties[outlineField];
+              const outlineValue = feature.properties[AmenitiesOutline.value];
               if (outlineValue === 0 || outlineValue === null || outlineValue === undefined || outlineValue === '') {
                 weight = 0;
               } else {
