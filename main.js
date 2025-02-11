@@ -1011,7 +1011,7 @@ function updateAmenitiesLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenities.join(','), selectedMode)
         }).addTo(map);
- 
+
         selectedAmenities.forEach(amenity => {
           const amenityLayer = amenityLayers[amenity];
           if (amenityLayer) {
@@ -1023,12 +1023,7 @@ function updateAmenitiesLayer() {
                 fillOpacity: 0.5
               },
               onEachFeature: (feature, layer) => {
-                let popupContent = '<strong>Amenity Details:</strong><br>';
-                for (const key in feature.properties) {
-                  if (feature.properties.hasOwnProperty(key)) {
-                    popupContent += `<strong>${key}:</strong> ${feature.properties[key]}<br>`;
-                  }
-                }
+                const popupContent = AmenitiesPopup(amenity, feature.properties);
                 layer.bindPopup(popupContent);
               }
             }).addTo(map);
@@ -1038,4 +1033,41 @@ function updateAmenitiesLayer() {
         updateLegend();
       });
   });
+}
+
+function AmenitiesPopup(amenity, properties) {
+  let popupContent = `<strong>Amenity Type:</strong> ${amenity}<br>`;
+  switch (amenity) {
+    case 'PriSch':
+    case 'SecSch':
+    case 'FurEd':
+      popupContent += `<strong>Establishment:</strong> ${properties.Establis_1}<br>`;
+      break;
+    case 'Em500':
+    case 'Em5000':
+      popupContent += `<strong>LSOA11CD:</strong> ${properties.LSOA11CD}<br>`;
+      popupContent += `<strong>LSOA11NM:</strong> ${properties.LSOA11NM}<br>`;
+      break;
+    case 'StrEmp':
+      popupContent += `<strong>Name:</strong> ${properties.NAME}<br>`;
+      break;
+    case 'CitCtr':
+      popupContent += `<strong>District:</strong> ${properties.District}<br>`;
+      break;
+    case 'MajCtr':
+      popupContent += `<strong>Name:</strong> ${properties.Name}<br>`;
+      break;
+    case 'DisCtr':
+      popupContent += `<strong>Site Name:</strong> ${properties.SITE_NAME}<br>`;
+      break;
+    case 'GP':
+      popupContent += `<strong>WECAplu_14:</strong> ${properties.WECAplu_14}<br>`;
+      break;
+    case 'Hos':
+      popupContent += `<strong>Name:</strong> ${properties.Name}<br>`;
+      break;
+    default:
+      break;
+  }
+  return popupContent;
 }
