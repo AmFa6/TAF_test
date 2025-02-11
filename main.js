@@ -476,8 +476,13 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 
+  // Add spacing before the "Amenities" checkbox
+  const amenitiesSpacingDiv = document.createElement("div");
+  amenitiesSpacingDiv.style.marginTop = "20px";
+  legendContent.appendChild(amenitiesSpacingDiv);
+
   const amenitiesCheckboxDiv = document.createElement("div");
-  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <i>Amenities</i>`;
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-family: 'Trebuchet MS'; font-size: 1.2em;">Amenities</span>`;
   legendContent.appendChild(amenitiesCheckboxDiv);
 
   const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
