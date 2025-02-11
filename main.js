@@ -1023,7 +1023,7 @@ function updateAmenitiesLayer() {
                 fillOpacity: 0.5
               },
               onEachFeature: (feature, layer) => {
-                const popupContent = AmenitiesPopup(amenity, feature.properties);
+                const popupContent = generatePopupContent(amenity, feature.properties);
                 layer.bindPopup(popupContent);
               }
             }).addTo(map);
@@ -1035,39 +1035,60 @@ function updateAmenitiesLayer() {
   });
 }
 
-function AmenitiesPopup(amenity, properties) {
-  let popupContent = `<strong>Amenity Type:</strong> ${amenity}<br>`;
+function generatePopupContent(amenity, properties) {
+  let amenityType;
+  let name;
+
   switch (amenity) {
     case 'PriSch':
+      amenityType = 'Primary School';
+      name = properties.Establis_1;
+      break;
     case 'SecSch':
+      amenityType = 'Secondary School';
+      name = properties.Establis_1;
+      break;
     case 'FurEd':
-      popupContent += `<strong>Establishment:</strong> ${properties.Establis_1}<br>`;
+      amenityType = 'Further Education';
+      name = properties.Establis_1;
       break;
     case 'Em500':
+      amenityType = 'Employment (500+ employees)';
+      name = `${properties.LSOA11CD}, ${properties.LSOA11NM}`;
+      break;
     case 'Em5000':
-      popupContent += `<strong>LSOA11CD:</strong> ${properties.LSOA11CD}<br>`;
-      popupContent += `<strong>LSOA11NM:</strong> ${properties.LSOA11NM}<br>`;
+      amenityType = 'Employment (5000+ employees)';
+      name = `${properties.LSOA11CD}, ${properties.LSOA11NM}`;
       break;
     case 'StrEmp':
-      popupContent += `<strong>Name:</strong> ${properties.NAME}<br>`;
+      amenityType = 'Strategic Employment';
+      name = properties.NAME;
       break;
     case 'CitCtr':
-      popupContent += `<strong>District:</strong> ${properties.District}<br>`;
+      amenityType = 'City Centre';
+      name = properties.District;
       break;
     case 'MajCtr':
-      popupContent += `<strong>Name:</strong> ${properties.Name}<br>`;
+      amenityType = 'Major Centre';
+      name = properties.Name;
       break;
     case 'DisCtr':
-      popupContent += `<strong>Site Name:</strong> ${properties.SITE_NAME}<br>`;
+      amenityType = 'District Centre';
+      name = properties.SITE_NAME;
       break;
     case 'GP':
-      popupContent += `<strong>WECAplu_14:</strong> ${properties.WECAplu_14}<br>`;
+      amenityType = 'General Practice';
+      name = properties.WECAplu_14;
       break;
     case 'Hos':
-      popupContent += `<strong>Name:</strong> ${properties.Name}<br>`;
+      amenityType = 'Hospital';
+      name = properties.Name;
       break;
     default:
+      amenityType = 'Unknown';
+      name = 'Unknown';
       break;
   }
-  return popupContent;
+
+  return `<strong>Amenity Type:</strong> ${amenityType}<br><strong>Name:</strong> ${name}<br>`;
 }
