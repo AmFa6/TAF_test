@@ -217,6 +217,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 });
 
+map.on('zoomend', updateAmenitiesVisibility);
+
+updateAmenitiesVisibility();
+
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
     return;
@@ -553,7 +557,22 @@ function drawSelectedAmenities(selectedAmenities) {
     }
   });
 
-  amenitiesLayerGroup.addTo(map);
+  updateAmenitiesVisibility();
+}
+
+function updateAmenitiesVisibility() {
+  const currentZoom = map.getZoom();
+  const minZoomLevel = 15;
+
+  if (currentZoom >= minZoomLevel) {
+    if (!map.hasLayer(amenitiesLayerGroup)) {
+      amenitiesLayerGroup.addTo(map);
+    }
+  } else {
+    if (map.hasLayer(amenitiesLayerGroup)) {
+      map.removeLayer(amenitiesLayerGroup);
+    }
+  }
 }
 
 function AmenitiesPopup(amenity, properties) {
