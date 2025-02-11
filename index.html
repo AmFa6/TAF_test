@@ -282,6 +282,17 @@
     .dropdown-menu.show {
       display: block;
     }
+    .pin::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 30px solid grey;
+    }
     .pin {
       position: relative;
       display: inline-block;
@@ -292,18 +303,6 @@
       border-radius: 50%;
       text-align: center;
       line-height: 30px;
-    }
-    .pin::after {
-      content: '';
-      position: absolute;
-      bottom: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 30px solid grey;
     }
   </style>
 </head>
