@@ -1021,6 +1021,15 @@ function updateAmenitiesLayer() {
                 weight: 2,
                 opacity: 1,
                 fillOpacity: 0.5
+              },
+              onEachFeature: (feature, layer) => {
+                let popupContent = '<strong>Amenity Details:</strong><br>';
+                for (const key in feature.properties) {
+                  if (feature.properties.hasOwnProperty(key)) {
+                    popupContent += `<strong>${key}:</strong> ${feature.properties[key]}<br>`;
+                  }
+                }
+                layer.bindPopup(popupContent);
               }
             }).addTo(map);
           }
