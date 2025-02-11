@@ -562,7 +562,7 @@ function drawSelectedAmenities(selectedAmenities) {
 
 function updateAmenitiesVisibility() {
   const currentZoom = map.getZoom();
-  const minZoomLevel = 14;
+  const minZoomLevel = 13;
 
   if (currentZoom >= minZoomLevel) {
     if (!map.hasLayer(amenitiesLayerGroup)) {
