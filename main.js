@@ -160,13 +160,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
   function updateAmenitiesDropdownLabel() {
     const selectedCount = Array.from(amenitiesCheckboxes).filter(checkbox => checkbox.checked).length;
     amenitiesDropdown.textContent = `${selectedCount} selected`;
-    if (selectedCount === 0) {
-      map.eachLayer(layer => {
-        if (layer !== baseLayer) {
-          map.removeLayer(layer);
-        }
-      });
-    } else {
+    map.eachLayer(layer => {
+      if (layer !== baseLayer) {
+        map.removeLayer(layer);
+      }
+    });
+    if (selectedCount > 0) {
       updateAmenitiesLayer();
     }
   }
