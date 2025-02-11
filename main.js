@@ -54,6 +54,11 @@ const purposeToAmenitiesMap = {
   Hth: ['GP', 'Hos'],
   All: ['PriSch', 'SecSch', 'FurEd', 'Em500', 'Em5000', 'StrEmp', 'CitCtr', 'MajCtr', 'DisCtr', 'GP', 'Hos']
 };
+if (L.AwesomeMarkers) {
+  console.log("L.AwesomeMarkers is loaded:", L.AwesomeMarkers);
+} else {
+  console.error("L.AwesomeMarkers is not loaded.");
+}
 const amenityIcons = {
   PriSch: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'blue', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
   SecSch: L.AwesomeMarkers && L.AwesomeMarkers.icon ? L.AwesomeMarkers.icon({ icon: 'school', markerColor: 'green', prefix: 'fa' }) : L.icon({ iconUrl: 'default-icon.png' }),
