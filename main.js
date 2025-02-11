@@ -16,6 +16,20 @@ const ScoresFiles = [
   { year: '2019-2022', path: 'https://AmFa6.github.io/TAF_test/2019-2022_connectscore.geojson' }
 ];
 
+const AmenitiesFiles = [
+  { type: 'PriSch', path: 'https://AmFa6.github.io/TAF_test/PriSch.geojson' },
+  { type: 'SecSch', path: 'https://AmFa6.github.io/TAF_test/SecSch.geojson' },
+  { type: 'FurEd', path: 'https://AmFa6.github.io/TAF_test/FurEd.geojson' },
+  { type: 'Em500', path: 'https://AmFa6.github.io/TAF_test/Em500.geojson' },
+  { type: 'Em5000', path: 'https://AmFa6.github.io/TAF_test/Em5000.geojson' },
+  { type: 'StrEmp', path: 'https://AmFa6.github.io/TAF_test/StrEmp.geojson' },
+  { type: 'CitCtr', path: 'https://AmFa6.github.io/TAF_test/CitCtr.geojson' },
+  { type: 'MajCtr', path: 'https://AmFa6.github.io/TAF_test/MajCtr.geojson' },
+  { type: 'DisCtr', path: 'https://AmFa6.github.io/TAF_test/DisCtr.geojson' },
+  { type: 'GP', path: 'https://AmFa6.github.io/TAF_test/GP.geojson' },
+  { type: 'Hos', path: 'https://AmFa6.github.io/TAF_test/Hos.geojson' }
+];
+
 const layers = {};
 const totalLayers = ScoresFiles.length;
 const ScoresYear = document.getElementById("yearScoresDropdown");
@@ -32,6 +46,7 @@ const AmenitiesOpacity = document.getElementById("opacityFieldAmenitiesDropdown"
 const AmenitiesOutline = document.getElementById("outlineFieldAmenitiesDropdown");
 const AmenitiesInverseOpacity = document.getElementById("inverseOpacityScaleAmenitiesButton");
 const AmenitiesInverseOutline = document.getElementById("inverseOutlineScaleAmenitiesButton");
+const amenityLayers = {};
 
 ScoresFiles.forEach(file => {
   fetch(file.path)
@@ -43,6 +58,14 @@ ScoresFiles.forEach(file => {
         initializeScoresSliders();
       }
     })
+}); 
+
+AmenitiesFiles.forEach(file => {
+  fetch(file.path)
+    .then(response => response.json())
+    .then(amenityLayer => {
+      amenityLayers[file.type] = amenityLayer;
+    });
 });
 
 ScoresYear.value = "";
@@ -989,6 +1012,20 @@ function updateAmenitiesLayer() {
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenities.join(','), selectedMode)
         }).addTo(map);
  
+        selectedAmenities.forEach(amenity => {
+          const amenityLayer = amenityLayers[amenity];
+          if (amenityLayer) {
+            L.geoJSON(amenityLayer, {
+              style: {
+                color: '#3388ff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.5
+              }
+            }).addTo(map);
+          }
+        });
+
         updateLegend();
       });
   });
