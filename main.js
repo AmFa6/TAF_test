@@ -482,7 +482,7 @@ function updateLegend() {
   legendContent.appendChild(amenitiesSpacingDiv);
 
   const amenitiesCheckboxDiv = document.createElement("div");
-  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-family: 'Trebuchet MS'; font-size: 1.2em;">Amenities</span>`;
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
   legendContent.appendChild(amenitiesCheckboxDiv);
 
   const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
