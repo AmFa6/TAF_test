@@ -543,20 +543,20 @@ function updateLegend() {
     });
 
     updateMasterCheckbox();
-  } else {
-    const amenitiesCheckboxDiv = document.createElement("div");
-    amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
-    legendContent.appendChild(amenitiesCheckboxDiv);
-
-    const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
-    amenitiesCheckbox.addEventListener('change', () => {
-      if (amenitiesCheckbox.checked) {
-        amenitiesLayerGroup.addTo(map);
-      } else {
-        map.removeLayer(amenitiesLayerGroup);
-      }
-    });
   }
+
+  const amenitiesCheckboxDiv = document.createElement("div");
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
+  legendContent.appendChild(amenitiesCheckboxDiv);
+
+  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+  amenitiesCheckbox.addEventListener('change', () => {
+    if (amenitiesCheckbox.checked) {
+      amenitiesLayerGroup.addTo(map);
+    } else {
+      map.removeLayer(amenitiesLayerGroup);
+    }
+  });
 }
 
 function updateMasterCheckbox() {
