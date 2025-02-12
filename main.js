@@ -459,7 +459,7 @@ function updateLegend() {
       { range: `> 20 and <= 25`, color: "#414387" },
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
-  } else if (activeLayer === 'scores') {
+  } else {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
       { range: `<= -20%`, color: "#FF0000" },
@@ -481,9 +481,6 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
-  } else {
-    headerText = "Amenities";
-    classes = [];
   }
 
   const headerDiv = document.createElement("div");
@@ -492,11 +489,9 @@ function updateLegend() {
   headerDiv.style.marginBottom = "10px";
   legendContent.appendChild(headerDiv);
 
-  if (classes.length > 0) {
-    const masterCheckboxDiv = document.createElement("div");
-    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
-    legendContent.appendChild(masterCheckboxDiv);
-  }
+  const masterCheckboxDiv = document.createElement("div");
+  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+  legendContent.appendChild(masterCheckboxDiv);
 
   classes.forEach(c => {
     const div = document.createElement("div");
@@ -505,6 +500,7 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 
+  // Add spacing before the "Amenities" checkbox
   const amenitiesSpacingDiv = document.createElement("div");
   amenitiesSpacingDiv.style.marginTop = "20px";
   legendContent.appendChild(amenitiesSpacingDiv);
