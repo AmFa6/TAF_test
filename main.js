@@ -1031,7 +1031,7 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesCatchmentLayer() {
-  selectedAmenitiesAmenities = Array.from(AmenitiesPurpose)
+  selectedAmenitiesLayerAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
 
@@ -1155,11 +1155,11 @@ function updateAmenitiesCatchmentLayer() {
               fillOpacity: opacity
             };
           },
-          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
+          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesLayerAmenities.join(','), selectedMode)
         }).addTo(map);
 
         activeLayer = 'amenities';
-        drawSelectedAmenities(selectedAmenitiesAmenities);
+        drawSelectedAmenities(selectedAmenitiesLayerAmenities);
 
         updateLegend();
       });
