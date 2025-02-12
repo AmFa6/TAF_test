@@ -284,8 +284,10 @@ const drawControl = new L.Control.Draw({
 });
 
 map.on(L.Draw.Event.CREATED, function (event) {
+  console.log("Draw event created");
   const layer = event.layer;
   const bounds = layer.getBounds();
+  console.log("Bounds:", bounds);
 
   selectedAmenitiesFromMap = [];
   amenitiesLayerGroup.eachLayer(function (amenityLayer) {
