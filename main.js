@@ -574,10 +574,12 @@ function updateMasterCheckbox() {
 function drawSelectedAmenities(amenities) {
   amenitiesLayerGroup.clearLayers();
 
-  if (amenities.length === 0) {
-    amenities = Object.keys(amenityLayers);
-  }
-
+  map.eachLayer(layer => {
+    if (layer !== baseLayer && layer !== amenitiesLayerGroup) {
+      amenities = Object.keys(amenityLayers);
+    }
+  });
+  
   const currentZoom = map.getZoom();
   const minZoomLevel = 14;
 
