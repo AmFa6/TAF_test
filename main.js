@@ -545,6 +545,9 @@ function updateLegend() {
     updateMasterCheckbox();
   }
 
+  const amenitiesSpacingDiv = document.createElement("div");
+  amenitiesSpacingDiv.style.marginTop = "20px";
+  legendContent.appendChild(amenitiesSpacingDiv);
   const amenitiesCheckboxDiv = document.createElement("div");
   amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
   legendContent.appendChild(amenitiesCheckboxDiv);
