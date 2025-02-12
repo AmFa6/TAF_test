@@ -243,6 +243,7 @@ document.getElementById('selectAmenitiesFromMap').addEventListener('click', () =
   drawSelectedAmenities(selectedAmenitiesAmenities);
 
   if (selectingFromMap) {
+    console.log("Selecting from map enabled");
     map.getContainer().style.cursor = 'crosshair';
     map.dragging.disable();
     map.doubleClickZoom.disable();
@@ -251,6 +252,7 @@ document.getElementById('selectAmenitiesFromMap').addEventListener('click', () =
     map.keyboard.disable();
     drawControl.addTo(map);
   } else {
+    console.log("Selecting from map disabled");
     map.getContainer().style.cursor = '';
     map.dragging.enable();
     map.doubleClickZoom.enable();
@@ -289,6 +291,7 @@ map.on(L.Draw.Event.CREATED, function (event) {
   amenitiesLayerGroup.eachLayer(function (amenityLayer) {
     if (bounds.contains(amenityLayer.getLatLng())) {
       selectedAmenitiesFromMap.push(amenityLayer.feature.properties.COREID);
+      console.log("Selected COREID:", amenityLayer.feature.properties.COREID);
       amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: red;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
     } else {
       amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
