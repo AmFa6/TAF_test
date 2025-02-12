@@ -514,7 +514,7 @@ function updateLegend() {
   let headerText;
   let classes;
 
-  if (currentAmenitiesLayer) {
+  if (currentAmenitiesCatchmentLayer) {
     headerText = "Journey Time Catchment (minutes)";
     classes = [
       { range: `> 0 and <= 5`, color: "#fde725" },
@@ -569,7 +569,7 @@ function updateLegend() {
   newLegendCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
       updateMasterCheckbox();
-      if (currentAmenitiesLayer) {
+      if (currentAmenitiesCatchmentLayer) {
         updateAmenitiesCatchmentLayer();
       } else {
         updateScoresLayer();
@@ -583,7 +583,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.checked = isChecked;
     });
-    if (currentAmenitiesLayer) {
+    if (currentAmenitiesCatchmentLayer) {
       updateAmenitiesCatchmentLayer();
     } else {
       updateScoresLayer();
