@@ -314,6 +314,8 @@ map.on('zoomend', () => {
   }
 });
 
+console.log("Draw control initialized:", drawControl);
+
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
     return;
