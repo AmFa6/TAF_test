@@ -603,9 +603,13 @@ function updateAmenitiesVisibility() {
       if (amenity) {
         if (currentZoom >= minZoomLevel) {
           console.log(`Setting icon to pin for amenity: ${amenity}`);
+          console.log(`Current icon HTML: ${marker.options.icon.options.html}`);
+          console.log(`New icon HTML: ${amenityIcons[amenity].options.html}`);
           marker.setIcon(amenityIcons[amenity]);
         } else {
           console.log(`Setting icon to point for amenity: ${amenity}`);
+          console.log(`Current icon HTML: ${marker.options.icon.options.html}`);
+          console.log(`New icon HTML: <div class="dot"></div>`);
           marker.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] }));
         }
       }
