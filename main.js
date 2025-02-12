@@ -118,6 +118,8 @@ let amenitiesLayerGroup = L.layerGroup();
 let selectedScoresAmenities = [];
 let selectedAmenitiesAmenities = [];
 let activeLayer = [];
+let selectingFromMap = false;
+let selectedAmenitiesFromMap = [];
 
 initializeAmenitiesSliders()
 
@@ -234,7 +236,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
   });
 });
-
+document.getElementById('selectFromMapButton').addEventListener('click', () => {
+  selectingFromMap = !selectingFromMap;
+  selectedAmenitiesFromMap = [];
+  drawSelectedAmenities(selectedAmenitiesAmenities);
+});
 map.on('zoomend', () => {
   console.log("Zoom end event triggered");
   if (activeLayer === 'scores') {
@@ -595,6 +601,19 @@ function drawSelectedAmenities(amenities) {
         onEachFeature: (feature, layer) => {
           const popupContent = AmenitiesPopup(amenity, feature.properties);
           layer.bindPopup(popupContent);
+
+          if (selectingFromMap) {
+            layer.on('click', () => {
+              const index = selectedAmenitiesFromMap.indexOf(feature.properties.COREID);
+              if (index === -1) {
+                selectedAmenitiesFromMap.push(feature.properties.COREID);
+                layer.setStyle({ color: 'red' });
+              } else {
+                selectedAmenitiesFromMap.splice(index, 1);
+                layer.setStyle({ color: 'black' });
+              }
+            });
+          }
         }
       });
       amenitiesLayerGroup.addLayer(layer);
@@ -1073,7 +1092,7 @@ function updateAmenitiesCatchmentLayer() {
         .then(csvText => {
           const csvData = Papa.parse(csvText, { header: true }).data;
           csvData.forEach(row => {
-            if (row.Mode === selectedMode) {
+            if (row.Mode === selectedMode && (!selectingFromMap || selectedAmenitiesFromMap.includes(row.TRACC_ID))) {
               const hexId = row.OriginName;
               const time = parseFloat(row.Time);
               if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
@@ -1086,7 +1105,7 @@ function updateAmenitiesCatchmentLayer() {
     } else {
       const csvData = csvDataCache[cacheKey];
       csvData.forEach(row => {
-        if (row.Mode === selectedMode) {
+        if (row.Mode === selectedMode && (!selectingFromMap || selectedAmenitiesFromMap.includes(row.TRACC_ID))) {
           const hexId = row.OriginName;
           const time = parseFloat(row.Time);
           if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
