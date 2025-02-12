@@ -236,15 +236,27 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
   });
 });
-document.getElementById('selectAmenitiesFromMap').addEventListener('click', () => {
+
+document.getElementById('selectFromMapButton').addEventListener('click', () => {
   selectingFromMap = !selectingFromMap;
   selectedAmenitiesFromMap = [];
   drawSelectedAmenities(selectedAmenitiesAmenities);
+
   if (selectingFromMap) {
     map.getContainer().style.cursor = 'crosshair';
+    map.dragging.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
     drawControl.addTo(map);
   } else {
     map.getContainer().style.cursor = '';
+    map.dragging.enable();
+    map.doubleClickZoom.enable();
+    map.scrollWheelZoom.enable();
+    map.boxZoom.enable();
+    map.keyboard.enable();
     map.removeControl(drawControl);
   }
 });
