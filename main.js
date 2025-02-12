@@ -86,6 +86,7 @@ AmenitiesFiles.forEach(file => {
     .then(amenityLayer => {
       amenityLayers[file.type] = amenityLayer;
       drawSelectedAmenities([]);
+      updateLegend();
     });
 });
 
