@@ -1224,20 +1224,21 @@ function updateAmenitiesCatchmentLayer() {
               } else {
                 weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineAmenitiesOrder);
               }
+            }
 
-              return {
-                fillColor: color,
-                weight: weight,
-                opacity: 1,
-                color: 'black',
-                fillOpacity: opacity
-              };
-            },
-            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
-          }).addTo(map);
+            return {
+              fillColor: color,
+              weight: weight,
+              opacity: 1,
+              color: 'black',
+              fillOpacity: opacity
+            };
+          },
+          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
+        }).addTo(map);
 
-          activeLayer = 'amenities';
-          drawSelectedAmenities(selectedAmenitiesAmenities);
+        activeLayer = 'amenities';
+        drawSelectedAmenities(selectedAmenitiesAmenities);
 
         updateLegend();
       });
