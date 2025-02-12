@@ -67,6 +67,7 @@ const amenityIcons = {
   GP: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-stethoscope" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }),
   Hos: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-hospital" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] })
 };
+const dotIcon = L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] });
 
 ScoresFiles.forEach(file => {
   fetch(file.path)
@@ -556,7 +557,9 @@ function drawSelectedAmenities(selectedAmenities) {
     if (amenityLayer) {
       const layer = L.geoJSON(amenityLayer, {
         pointToLayer: (feature, latlng) => {
-          return L.marker(latlng, { icon: amenityIcons[amenity] });
+          const currentZoom = map.getZoom();
+          const icon = currentZoom > 14 ? dotIcon : amenityIcons[amenity];
+          return L.marker(latlng, { icon: icon });
         },
         onEachFeature: (feature, layer) => {
           const popupContent = AmenitiesPopup(amenity, feature.properties);
@@ -573,6 +576,11 @@ function drawSelectedAmenities(selectedAmenities) {
 function updateAmenitiesVisibility() {
   const currentZoom = map.getZoom();
   const minZoomLevel = 14;
+
+  amenitiesLayerGroup.eachLayer(layer => {
+    const icon = currentZoom > minZoomLevel ? dotIcon : amenityIcons[layer.feature.properties.type];
+    layer.setIcon(icon);
+  });
 
   if (currentZoom >= minZoomLevel) {
     if (!map.hasLayer(amenitiesLayerGroup)) {
