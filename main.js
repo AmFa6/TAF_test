@@ -230,7 +230,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 });
 
-map.on('zoomend', updateAmenitiesVisibility);
+map.on('zoomend', () => {
+  console.log("Zoom end event triggered");
+  updateAmenitiesVisibility();
+});
 
 updateAmenitiesVisibility();
 
@@ -613,13 +616,6 @@ function updateAmenitiesVisibility() {
     amenitiesLayerGroup.addTo(map);
   }
 }
-
-map.on('zoomend', () => {
-  console.log("Zoom end event triggered");
-  updateAmenitiesVisibility();
-});
-
-updateAmenitiesVisibility();
 
 function AmenitiesPopup(amenity, properties) {
   let amenityType;
