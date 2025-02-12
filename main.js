@@ -280,11 +280,13 @@ map.on(L.Draw.Event.CREATED, function (event) {
   console.log("Bounds:", bounds);
 
   selectedAmenitiesFromMap = [];
+  let selected = false;
   amenitiesLayerGroup.eachLayer(function (amenityLayer) {
-    if (bounds.contains(amenityLayer.getLatLng())) {
+    if (!selected && bounds.contains(amenityLayer.getLatLng())) {
       selectedAmenitiesFromMap.push(amenityLayer.feature.properties.COREID);
       console.log("Selected COREID:", amenityLayer.feature.properties.COREID);
       amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: red;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
+      selected = true;
     } else {
       amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
     }
