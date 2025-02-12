@@ -553,18 +553,24 @@ function updateMasterCheckbox() {
 }
 
 function drawSelectedAmenities(selectedAmenities) {
+  console.log("drawSelectedAmenities called with selectedAmenities:", selectedAmenities);
   amenitiesLayerGroup.clearLayers();
 
   if (selectedAmenities.length === 0) {
     selectedAmenities = Object.keys(amenityLayers);
   }
 
+  const currentZoom = map.getZoom();
+  const minZoomLevel = 14;
+  console.log("Current zoom level in drawSelectedAmenities:", currentZoom);
+
   selectedAmenities.forEach(amenity => {
     const amenityLayer = amenityLayers[amenity];
     if (amenityLayer) {
       const layer = L.geoJSON(amenityLayer, {
         pointToLayer: (feature, latlng) => {
-          return L.marker(latlng, { icon: amenityIcons[amenity] });
+          const icon = currentZoom >= minZoomLevel ? amenityIcons[amenity] : L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] });
+          return L.marker(latlng, { icon: icon });
         },
         onEachFeature: (feature, layer) => {
           const popupContent = AmenitiesPopup(amenity, feature.properties);
@@ -579,8 +585,10 @@ function drawSelectedAmenities(selectedAmenities) {
 }
 
 function updateAmenitiesVisibility() {
+  console.log("updateAmenitiesVisibility called");
   const currentZoom = map.getZoom();
   const minZoomLevel = 14;
+  console.log("Current zoom level in updateAmenitiesVisibility:", currentZoom);
 
   amenitiesLayerGroup.eachLayer(layer => {
     layer.eachLayer(marker => {
@@ -591,8 +599,10 @@ function updateAmenitiesVisibility() {
 
       if (amenity) {
         if (currentZoom >= minZoomLevel) {
+          console.log(`Setting icon to pin for amenity: ${amenity}`);
           marker.setIcon(amenityIcons[amenity]);
         } else {
+          console.log(`Setting icon to point for amenity: ${amenity}`);
           marker.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] }));
         }
       }
@@ -603,6 +613,13 @@ function updateAmenitiesVisibility() {
     amenitiesLayerGroup.addTo(map);
   }
 }
+
+map.on('zoomend', () => {
+  console.log("Zoom end event triggered");
+  updateAmenitiesVisibility();
+});
+
+updateAmenitiesVisibility();
 
 function AmenitiesPopup(amenity, properties) {
   let amenityType;
