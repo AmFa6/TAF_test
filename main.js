@@ -86,6 +86,7 @@ AmenitiesFiles.forEach(file => {
     .then(response => response.json())
     .then(amenityLayer => {
       amenityLayers[file.type] = amenityLayer;
+      drawSelectedAmenities(Object.keys(amenityLayers));
     });
 });
 
