@@ -459,7 +459,7 @@ function updateLegend() {
       { range: `> 20 and <= 25`, color: "#414387" },
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
-  } else {
+  } else if (activeLayer === 'scores') {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
       { range: `<= -20%`, color: "#FF0000" },
@@ -481,6 +481,9 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
+  } else {
+    headerText = "Amenities";
+    classes = [];
   }
 
   const headerDiv = document.createElement("div");
