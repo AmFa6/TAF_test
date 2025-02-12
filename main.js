@@ -314,7 +314,11 @@ map.on('zoomend', () => {
   }
 });
 
+// Additional log to ensure drawControl is initialized
 console.log("Draw control initialized:", drawControl);
+
+// Ensure draw control is added to the map initially
+drawControl.addTo(map);
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
