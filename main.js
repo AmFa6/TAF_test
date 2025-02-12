@@ -114,6 +114,7 @@ let currentAmenitiesCatchmentLayer = null;
 let hexTimeMap = {};
 let csvDataCache = {};
 let amenitiesLayerGroup = L.layerGroup();
+let selectedAmenities = [];
 
 initializeAmenitiesSliders()
 
@@ -233,7 +234,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 map.on('zoomend', () => {
   console.log("Zoom end event triggered");
-  drawSelectedAmenities([]);
+  drawSelectedAmenities(selectedAmenities);
 });
 
 function initializeSliders(sliderElement, updateCallback) {
@@ -550,19 +551,19 @@ function updateMasterCheckbox() {
   masterCheckbox.indeterminate = !allChecked && !noneChecked;
 }
 
-function drawSelectedAmenities(selectedAmenities) {
-  console.log("drawSelectedAmenities called with selectedAmenities:", selectedAmenities);
+function drawSelectedAmenities(amenities) {
+  console.log("drawSelectedAmenities called with selectedAmenities:", amenities);
   amenitiesLayerGroup.clearLayers();
 
-  if (selectedAmenities.length === 0) {
-    selectedAmenities = Object.keys(amenityLayers);
+  if (amenities.length === 0) {
+    amenities = Object.keys(amenityLayers);
   }
 
   const currentZoom = map.getZoom();
   const minZoomLevel = 14;
   console.log("Current zoom level in drawSelectedAmenities:", currentZoom);
 
-  selectedAmenities.forEach(amenity => {
+  amenities.forEach(amenity => {
     const amenityLayer = amenityLayers[amenity];
     if (amenityLayer) {
       const layer = L.geoJSON(amenityLayer, {
@@ -847,7 +848,8 @@ function updateScoresLayer() {
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
 
-    drawSelectedAmenities(purposeToAmenitiesMap[selectedPurpose]);
+    selectedAmenities = purposeToAmenitiesMap[selectedPurpose];
+    drawSelectedAmenities(selectedAmenities);
 
     currentAmenitiesCatchmentLayer = null;
     updateLegend();
