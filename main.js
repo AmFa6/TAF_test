@@ -237,10 +237,6 @@ map.on('zoomend', () => {
 
 updateAmenitiesVisibility();
 
-if (Object.keys(amenityLayers).length === 0) {
-  drawSelectedAmenities([]);
-}
-
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
     return;
@@ -597,19 +593,24 @@ function updateAmenitiesVisibility() {
     layer.eachLayer(marker => {
       const amenity = Object.keys(amenityIcons).find(key => {
         const iconHtml = marker.options.icon.options.html;
+        console.log(`Checking amenity: ${key}, iconHtml: ${iconHtml}`);
         return iconHtml && iconHtml.includes(amenityIcons[key].options.html);
       });
 
-      if (currentZoom >= minZoomLevel) {
-        console.log(`Setting icon to pin for amenity: ${amenity}`);
-        console.log(`Current icon HTML: ${marker.options.icon.options.html}`);
-        console.log(`New icon HTML: ${amenityIcons[amenity].options.html}`);
-        marker.setIcon(amenityIcons[amenity]);
+      if (amenity) {
+        if (currentZoom >= minZoomLevel) {
+          console.log(`Setting icon to pin for amenity: ${amenity}`);
+          console.log(`Current icon HTML: ${marker.options.icon.options.html}`);
+          console.log(`New icon HTML: ${amenityIcons[amenity].options.html}`);
+          marker.setIcon(amenityIcons[amenity]);
+        } else {
+          console.log(`Setting icon to point for amenity: ${amenity}`);
+          console.log(`Current icon HTML: ${marker.options.icon.options.html}`);
+          console.log(`New icon HTML: <div class="dot"></div>`);
+          marker.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] }));
+        }
       } else {
-        console.log(`Setting icon to point for amenity: ${amenity}`);
-        console.log(`Current icon HTML: ${marker.options.icon.options.html}`);
-        console.log(`New icon HTML: <div class="dot"></div>`);
-        marker.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] }));
+        console.log(`Amenity not found for marker with icon HTML: ${marker.options.icon.options.html}`);
       }
     });
   });
