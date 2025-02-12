@@ -584,12 +584,16 @@ function updateAmenitiesVisibility() {
 
   amenitiesLayerGroup.eachLayer(layer => {
     layer.eachLayer(marker => {
-      const amenity = Object.keys(amenityIcons).find(key => amenityIcons[key].options.html.includes(marker.options.icon.options.html));
+      const amenity = Object.keys(amenityIcons).find(key => {
+        const iconHtml = marker.options.icon.options.html;
+        return iconHtml && iconHtml.includes(amenityIcons[key].options.html);
+      });
+
       if (amenity) {
         if (currentZoom >= minZoomLevel) {
-          marker.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] }));
-        } else {
           marker.setIcon(amenityIcons[amenity]);
+        } else {
+          marker.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] }));
         }
       }
     });
