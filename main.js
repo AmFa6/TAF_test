@@ -245,20 +245,10 @@ document.getElementById('selectAmenitiesFromMap').addEventListener('click', () =
   if (selectingFromMap) {
     console.log("Selecting from map enabled");
     map.getContainer().style.cursor = 'crosshair';
-    map.dragging.disable();
-    map.doubleClickZoom.disable();
-    map.scrollWheelZoom.disable();
-    map.boxZoom.disable();
-    map.keyboard.disable();
     drawControl.addTo(map);
   } else {
     console.log("Selecting from map disabled");
     map.getContainer().style.cursor = '';
-    map.dragging.enable();
-    map.doubleClickZoom.enable();
-    map.scrollWheelZoom.enable();
-    map.boxZoom.enable();
-    map.keyboard.enable();
     map.removeControl(drawControl);
   }
 });
@@ -313,12 +303,6 @@ map.on('zoomend', () => {
     drawSelectedAmenities([]);
   }
 });
-
-// Additional log to ensure drawControl is initialized
-console.log("Draw control initialized:", drawControl);
-
-// Ensure draw control is added to the map initially
-drawControl.addTo(map);
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
