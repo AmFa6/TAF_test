@@ -85,6 +85,7 @@ AmenitiesFiles.forEach(file => {
     .then(response => response.json())
     .then(amenityLayer => {
       amenityLayers[file.type] = amenityLayer;
+      drawSelectedAmenities([]);
     });
 });
 
@@ -234,8 +235,6 @@ map.on('zoomend', () => {
   console.log("Zoom end event triggered");
   updateAmenitiesVisibility();
 });
-
-updateAmenitiesVisibility();
 
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
@@ -593,7 +592,6 @@ function updateAmenitiesVisibility() {
     layer.eachLayer(marker => {
       const amenity = Object.keys(amenityIcons).find(key => {
         const iconHtml = marker.options.icon.options.html;
-        console.log(`Checking amenity: ${key}, iconHtml: ${iconHtml}`);
         return iconHtml && iconHtml.includes(amenityIcons[key].options.html);
       });
 
