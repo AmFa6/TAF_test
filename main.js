@@ -607,10 +607,10 @@ function drawSelectedAmenities(amenities) {
               const index = selectedAmenitiesFromMap.indexOf(feature.properties.COREID);
               if (index === -1) {
                 selectedAmenitiesFromMap.push(feature.properties.COREID);
-                layer.setStyle({ color: 'red' });
+                layer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: red;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
               } else {
                 selectedAmenitiesFromMap.splice(index, 1);
-                layer.setStyle({ color: 'black' });
+                layer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
               }
             });
           }
