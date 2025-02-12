@@ -234,6 +234,10 @@ map.on('zoomend', updateAmenitiesVisibility);
 
 updateAmenitiesVisibility();
 
+if (Object.keys(amenityLayers).length === 0) {
+  drawSelectedAmenities([]);
+}
+
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
     return;
@@ -551,6 +555,10 @@ function updateMasterCheckbox() {
 function drawSelectedAmenities(selectedAmenities) {
   amenitiesLayerGroup.clearLayers();
 
+  if (selectedAmenities.length === 0) {
+    selectedAmenities = Object.keys(amenityLayers);
+  }
+
   selectedAmenities.forEach(amenity => {
     const amenityLayer = amenityLayers[amenity];
     if (amenityLayer) {
@@ -575,13 +583,22 @@ function updateAmenitiesVisibility() {
   const minZoomLevel = 14;
 
   if (currentZoom >= minZoomLevel) {
-    if (!map.hasLayer(amenitiesLayerGroup)) {
-      amenitiesLayerGroup.addTo(map);
-    }
+    amenitiesLayerGroup.eachLayer(layer => {
+      layer.eachLayer(marker => {
+        marker.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="dot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] }));
+      });
+    });
   } else {
-    if (map.hasLayer(amenitiesLayerGroup)) {
-      map.removeLayer(amenitiesLayerGroup);
-    }
+    amenitiesLayerGroup.eachLayer(layer => {
+      layer.eachLayer(marker => {
+        const amenity = Object.keys(amenityIcons).find(key => amenityIcons[key].options.html.includes(marker.options.icon.options.html));
+        marker.setIcon(amenityIcons[amenity]);
+      });
+    });
+  }
+
+  if (!map.hasLayer(amenitiesLayerGroup)) {
+    amenitiesLayerGroup.addTo(map);
   }
 }
 
