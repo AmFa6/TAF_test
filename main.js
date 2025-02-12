@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 map.on('zoomend', () => {
   console.log("Zoom end event triggered");
-  drawSelectedAmenities();
+  drawSelectedAmenities([]);
 });
 
 function initializeSliders(sliderElement, updateCallback) {
@@ -578,6 +578,8 @@ function drawSelectedAmenities(selectedAmenities) {
       amenitiesLayerGroup.addLayer(layer);
     }
   });
+
+  amenitiesLayerGroup.addTo(map);
 }
 
 function AmenitiesPopup(amenity, properties) {
