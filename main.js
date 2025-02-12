@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
   });
 });
-document.getElementById('selectFromMapButton').addEventListener('click', () => {
+document.getElementById('selectAmenitiesFromMap').addEventListener('click', () => {
   selectingFromMap = !selectingFromMap;
   selectedAmenitiesFromMap = [];
   drawSelectedAmenities(selectedAmenitiesAmenities);
