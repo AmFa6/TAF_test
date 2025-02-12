@@ -185,16 +185,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
-          console.log("Updating Scores Layer");
           updateScoresLayer();
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
-          console.log("Updating Amenities Layer");
           updateAmenitiesCatchmentLayer();
         }
       } else {
         map.eachLayer(layer => {
           if (layer !== baseLayer) {
-            console.log("Removing layer:", layer);
             map.removeLayer(layer);
           }
         });
@@ -558,7 +555,6 @@ function updateMasterCheckbox() {
 }
 
 function drawSelectedAmenities(amenities) {
-  console.log("drawSelectedAmenities called with selectedAmenities:", amenities);
   amenitiesLayerGroup.clearLayers();
 
   if (amenities.length === 0) {
@@ -567,7 +563,6 @@ function drawSelectedAmenities(amenities) {
 
   const currentZoom = map.getZoom();
   const minZoomLevel = 14;
-  console.log("Current zoom level in drawSelectedAmenities:", currentZoom);
 
   amenities.forEach(amenity => {
     const amenityLayer = amenityLayers[amenity];
