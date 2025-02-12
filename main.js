@@ -114,7 +114,9 @@ let currentAmenitiesCatchmentLayer = null;
 let hexTimeMap = {};
 let csvDataCache = {};
 let amenitiesLayerGroup = L.layerGroup();
-let selectedAmenities = [];
+let selectedScoresAmenities = [];
+let selectedAmenitiesAmenities = [];
+let activeLayer = [];
 
 initializeAmenitiesSliders()
 
@@ -234,7 +236,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 map.on('zoomend', () => {
   console.log("Zoom end event triggered");
-  drawSelectedAmenities(selectedAmenities);
+  if (activeLayer === 'scores') {
+    drawSelectedAmenities(selectedScoresAmenities);
+  } else if (activeLayer === 'amenities') {
+    drawSelectedAmenities(selectedAmenitiesAmenities);
+  }
 });
 
 function initializeSliders(sliderElement, updateCallback) {
@@ -848,8 +854,9 @@ function updateScoresLayer() {
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
 
-    selectedAmenities = purposeToAmenitiesMap[selectedPurpose];
-    drawSelectedAmenities(selectedAmenities);
+    selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
+    activeLayer = 'scores';
+    drawSelectedAmenities(selectedScoresAmenities);
 
     currentAmenitiesCatchmentLayer = null;
     updateLegend();
@@ -1024,14 +1031,14 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesCatchmentLayer() {
-  const selectedAmenities = Array.from(AmenitiesPurpose)
+  selectedAmenitiesLayerAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
 
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
 
-  if (!selectedYear || selectedAmenities.length === 0 || !selectedMode) {
+  if (!selectedYear || selectedAmenitiesAmenities.length === 0 || !selectedMode) {
     map.eachLayer(layer => {
       if (layer !== baseLayer) {
         map.removeLayer(layer);
@@ -1042,7 +1049,7 @@ function updateAmenitiesCatchmentLayer() {
 
   hexTimeMap = {};
 
-  const cacheKeys = selectedAmenities.map(amenity => `${selectedYear}_${amenity}`);
+  const cacheKeys = selectedAmenitiesAmenities.map(amenity => `${selectedYear}_${amenity}`);
   const fetchPromises = cacheKeys.map(cacheKey => {
     if (!csvDataCache[cacheKey]) {
       const csvPath = `https://AmFa6.github.io/TAF_test/${cacheKey}_csv.csv`;
@@ -1148,10 +1155,11 @@ function updateAmenitiesCatchmentLayer() {
               fillOpacity: opacity
             };
           },
-          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenities.join(','), selectedMode)
+          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesLayerAmenities.join(','), selectedMode)
         }).addTo(map);
 
-        drawSelectedAmenities(selectedAmenities);
+        activeLayer = 'amenities';
+        drawSelectedAmenities(selectedAmenitiesLayerAmenities);
 
         updateLegend();
       });
