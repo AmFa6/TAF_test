@@ -492,9 +492,11 @@ function updateLegend() {
   headerDiv.style.marginBottom = "10px";
   legendContent.appendChild(headerDiv);
 
-  const masterCheckboxDiv = document.createElement("div");
-  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
-  legendContent.appendChild(masterCheckboxDiv);
+  if (classes.length > 0) {
+    const masterCheckboxDiv = document.createElement("div");
+    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+    legendContent.appendChild(masterCheckboxDiv);
+  }
 
   classes.forEach(c => {
     const div = document.createElement("div");
@@ -503,7 +505,6 @@ function updateLegend() {
     legendContent.appendChild(div);
   });
 
-  // Add spacing before the "Amenities" checkbox
   const amenitiesSpacingDiv = document.createElement("div");
   amenitiesSpacingDiv.style.marginTop = "20px";
   legendContent.appendChild(amenitiesSpacingDiv);
