@@ -240,7 +240,52 @@ document.getElementById('selectAmenitiesFromMap').addEventListener('click', () =
   selectingFromMap = !selectingFromMap;
   selectedAmenitiesFromMap = [];
   drawSelectedAmenities(selectedAmenitiesAmenities);
+  if (selectingFromMap) {
+    map.getContainer().style.cursor = 'crosshair';
+    drawControl.addTo(map);
+  } else {
+    map.getContainer().style.cursor = '';
+    map.removeControl(drawControl);
+  }
 });
+
+const drawControl = new L.Control.Draw({
+  draw: {
+    polyline: false,
+    polygon: false,
+    circle: false,
+    marker: false,
+    circlemarker: false,
+    rectangle: {
+      shapeOptions: {
+        color: '#ff7800',
+        weight: 2
+      }
+    }
+  },
+  edit: {
+    featureGroup: amenitiesLayerGroup,
+    remove: false
+  }
+});
+
+map.on(L.Draw.Event.CREATED, function (event) {
+  const layer = event.layer;
+  const bounds = layer.getBounds();
+
+  selectedAmenitiesFromMap = [];
+  amenitiesLayerGroup.eachLayer(function (amenityLayer) {
+    if (bounds.contains(amenityLayer.getLatLng())) {
+      selectedAmenitiesFromMap.push(amenityLayer.feature.properties.COREID);
+      amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: red;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
+    } else {
+      amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
+    }
+  });
+
+  updateAmenitiesCatchmentLayer();
+});
+
 map.on('zoomend', () => {
   console.log("Zoom end event triggered");
   if (activeLayer === 'scores') {
@@ -1179,21 +1224,20 @@ function updateAmenitiesCatchmentLayer() {
               } else {
                 weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineAmenitiesOrder);
               }
-            }
 
-            return {
-              fillColor: color,
-              weight: weight,
-              opacity: 1,
-              color: 'black',
-              fillOpacity: opacity
-            };
-          },
-          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
-        }).addTo(map);
+              return {
+                fillColor: color,
+                weight: weight,
+                opacity: 1,
+                color: 'black',
+                fillOpacity: opacity
+              };
+            },
+            onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
+          }).addTo(map);
 
-        activeLayer = 'amenities';
-        drawSelectedAmenities(selectedAmenitiesAmenities);
+          activeLayer = 'amenities';
+          drawSelectedAmenities(selectedAmenitiesAmenities);
 
         updateLegend();
       });
