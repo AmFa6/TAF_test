@@ -520,7 +520,7 @@
   <script src="main.js"></script>
   <script>
     // Fetch GeoJSON data from ArcGIS REST API and add it to the map
-    fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_(December_2021)_GB_BGC/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson')
+    fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
       .then(response => response.json())
       .then(data => {
         L.geoJSON(data).addTo(map);
