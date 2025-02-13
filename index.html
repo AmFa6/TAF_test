@@ -521,11 +521,19 @@
   <script>
     // Fetch GeoJSON data from ArcGIS REST API and add it to the map
     fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
       .then(data => {
         L.geoJSON(data).addTo(map);
+        console.log('GeoJSON data has been successfully loaded.');
       })
       .catch(error => console.error('Error loading GeoJSON data:', error));
   </script>
+</body>
+</html>
 </body> 
 </html>
