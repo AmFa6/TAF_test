@@ -441,6 +441,11 @@ function isClassVisible(value, selectedYear) {
 
 function updateLegend() {
   const legendContent = document.getElementById("legend-content");
+  const checkboxStates = {};
+  const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
+  legendCheckboxes.forEach(checkbox => {
+    checkboxStates[checkbox.getAttribute('data-range')] = checkbox.checked;
+  });
   legendContent.innerHTML = '';
 
   if (activeLayer === 'scores') {
