@@ -518,28 +518,6 @@
     <div id="legend-content"></div>
   </div>
   <script src="main.js"></script>
-  <script>
-    // Fetch GeoJSON data from ArcGIS REST API and add it to the map
-    fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?where=1%3D1&outFields=*&geometry=-3.778%2C51.154%2C-1.422%2C51.753&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelWithin&outSR=4326&f=json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-      })
-      .then(data => {
-        L.geoJSON(data, {
-          style: function (feature) {
-            return {
-              color: 'black',
-              weight: 1
-            };
-          }
-        }).addTo(map);
-        console.log('GeoJSON data has been successfully loaded.');
-      })
-      .catch(error => console.error('Error loading GeoJSON data:', error));
-  </script>
 </body>
 </html>
 </body> 
