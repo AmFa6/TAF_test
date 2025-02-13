@@ -511,6 +511,23 @@ function updateLegend() {
 
   legendContent.innerHTML = '';
 
+  if (!activeLayer) {
+    const amenitiesCheckboxDiv = document.createElement("div");
+    amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
+    legendContent.appendChild(amenitiesCheckboxDiv);
+
+    const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+    amenitiesCheckbox.addEventListener('change', () => {
+      if (amenitiesCheckbox.checked) {
+        amenitiesLayerGroup.addTo(map);
+      } else {
+        map.removeLayer(amenitiesLayerGroup);
+      }
+    });
+
+    return;
+  }
+
   let headerText;
   let classes;
 
@@ -607,11 +624,6 @@ function updateLegend() {
       map.removeLayer(amenitiesLayerGroup);
     }
   });
-
-  if (!activeLayer) {
-    legendContent.innerHTML = '';
-    legendContent.appendChild(amenitiesCheckboxDiv);
-  }
 }
 
 function updateMasterCheckbox() {
