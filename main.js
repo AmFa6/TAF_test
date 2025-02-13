@@ -546,7 +546,9 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
+  } else {''
   }
+
 
   const headerDiv = document.createElement("div");
   headerDiv.innerHTML = `${headerText}`;
