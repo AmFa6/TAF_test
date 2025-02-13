@@ -4,7 +4,7 @@ const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/lig
   attribution: '&copy; OpenStreetMap contributors & CartoDB'
 }).addTo(map);
 
-fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?where=1%3D1&outFields=*&geometry=-3.797%2C51.145%2C-1.440%2C51.744&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelWithin&outSR=4326&f=json')
+fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?where=1%3D1&outFields=*&geometry=-3.749%2C51.145%2C-1.392%2C51.744&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelContains&outSR=4326&f=json')
 .then(response => {
   if (!response.ok) {
     throw new Error('Network response was not ok ' + response.statusText);
