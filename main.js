@@ -514,7 +514,7 @@ function updateLegend() {
   let headerText;
   let classes;
 
-  if (currentAmenitiesCatchmentLayer) {
+  if (activeLayer === 'amenities') {
     headerText = "Journey Time Catchment (minutes)";
     classes = [
       { range: `> 0 and <= 5`, color: "#fde725" },
@@ -524,7 +524,7 @@ function updateLegend() {
       { range: `> 20 and <= 25`, color: "#414387" },
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
-  } else {
+  } else if (activeLayer === 'scores') {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
       { range: `<= -20%`, color: "#FF0000" },
