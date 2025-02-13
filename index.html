@@ -528,7 +528,14 @@
         return response.json();
       })
       .then(data => {
-        L.geoJSON(data).addTo(map);
+        L.geoJSON(data, {
+          style: function (feature) {
+            return {
+              color: 'black',
+              weight: 1
+            };
+          }
+        }).addTo(map);
         console.log('GeoJSON data has been successfully loaded.');
       })
       .catch(error => console.error('Error loading GeoJSON data:', error));
