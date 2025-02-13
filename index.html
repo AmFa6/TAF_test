@@ -310,8 +310,8 @@
       z-index: -1;
     }
     .dot {
-      width: 7.5px;
-      height: 7.5px;
+      width: 5px;
+      height: 5px;
       background-color: grey;
       border-radius: 50%;
     }
@@ -518,5 +518,22 @@
     <div id="legend-content"></div>
   </div>
   <script src="main.js"></script>
+  <script>
+    // Initialize the map
+    var map = L.map('map').setView([51.480, -2.591], 11);
+
+    // Add a tile layer to the map
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors & CartoDB'
+    }).addTo(map);
+
+    // Fetch GeoJSON data from ArcGIS REST API and add it to the map
+    fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_(December_2021)_GB_BGC/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson')
+      .then(response => response.json())
+      .then(data => {
+        L.geoJSON(data).addTo(map);
+      })
+      .catch(error => console.error('Error loading GeoJSON data:', error));
+  </script>
 </body> 
 </html>
