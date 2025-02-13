@@ -114,12 +114,10 @@ let isInverseAmenitiesOutline = false;
 let currentAmenitiesCatchmentLayer = null;
 let hexTimeMap = {};
 let csvDataCache = {};
-let amenitiesLayerGroup = L.featureGroup();
+let amenitiesLayerGroup = L.layerGroup();
 let selectedScoresAmenities = [];
 let selectedAmenitiesAmenities = [];
 let activeLayer = [];
-let selectingFromMap = false;
-let selectedAmenitiesFromMap = [];
 
 initializeAmenitiesSliders()
 
@@ -235,64 +233,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
     }
   });
-});
-
-document.getElementById('selectAmenitiesFromMap').addEventListener('click', () => {
-  selectingFromMap = !selectingFromMap;
-  selectedAmenitiesFromMap = [];
-  drawSelectedAmenities(selectedAmenitiesAmenities);
-
-  if (selectingFromMap) {
-    console.log("Selecting from map enabled");
-    map.getContainer().style.cursor = 'crosshair';
-    drawControl.addTo(map);
-  } else {
-    console.log("Selecting from map disabled");
-    map.getContainer().style.cursor = '';
-    map.removeControl(drawControl);
-  }
-});
-
-const drawControl = new L.Control.Draw({
-  draw: {
-    polyline: false,
-    polygon: false,
-    circle: false,
-    marker: false,
-    circlemarker: false,
-    rectangle: {
-      shapeOptions: {
-        color: '#ff7800',
-        weight: 2
-      }
-    }
-  },
-  edit: {
-    featureGroup: amenitiesLayerGroup,
-    remove: false
-  }
-});
-
-map.on(L.Draw.Event.CREATED, function (event) {
-  console.log("Draw event created");
-  const layer = event.layer;
-  const bounds = layer.getBounds();
-  console.log("Bounds:", bounds);
-
-  selectedAmenitiesFromMap = [];
-  let selected = false;
-  amenitiesLayerGroup.eachLayer(function (amenityLayer) {
-    if (!selected && bounds.contains(amenityLayer.getLatLng())) {
-      selectedAmenitiesFromMap.push(amenityLayer.feature.properties.COREID);
-      console.log("Selected COREID:", amenityLayer.feature.properties.COREID);
-      amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: red;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
-      selected = true;
-    } else {
-      amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
-    }
-  });
-
-  updateAmenitiesCatchmentLayer();
 });
 
 map.on('zoomend', () => {
@@ -500,33 +440,13 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateLegend() {
-  const selectedYear = ScoresYear.value;
   const legendContent = document.getElementById("legend-content");
-
-  const checkboxStates = {};
-  const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
-  legendCheckboxes.forEach(checkbox => {
-    checkboxStates[checkbox.getAttribute('data-range')] = checkbox.checked;
-  });
-
   legendContent.innerHTML = '';
 
-  let headerText;
-  let classes;
-
-  if (currentAmenitiesCatchmentLayer) {
-    headerText = "Journey Time Catchment (minutes)";
-    classes = [
-      { range: `> 0 and <= 5`, color: "#fde725" },
-      { range: `> 5 and <= 10`, color: "#7ad151" },
-      { range: `> 10 and <= 15`, color: "#23a884" },
-      { range: `> 15 and <= 20`, color: "#2a788e" },
-      { range: `> 20 and <= 25`, color: "#414387" },
-      { range: `> 25 and <= 30`, color: "#440154" }
-    ];
-  } else {
-    headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
-    classes = selectedYear.includes('-') ? [
+  if (activeLayer === 'scores') {
+    const selectedYear = ScoresYear.value;
+    const headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
+    const classes = selectedYear.includes('-') ? [
       { range: `<= -20%`, color: "#FF0000" },
       { range: `> -20% and <= -10%`, color: "#FF5500" },
       { range: `> -10% and < 0`, color: "#FFAA00" },
@@ -546,51 +466,103 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
+
+    const headerDiv = document.createElement("div");
+    headerDiv.innerHTML = `${headerText}`;
+    headerDiv.style.fontSize = "1.1em";
+    headerDiv.style.marginBottom = "10px";
+    legendContent.appendChild(headerDiv);
+
+    const masterCheckboxDiv = document.createElement("div");
+    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+    legendContent.appendChild(masterCheckboxDiv);
+
+    classes.forEach(c => {
+      const div = document.createElement("div");
+      div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" checked> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+      legendContent.appendChild(div);
+    });
+
+    const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
+    newLegendCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        updateMasterCheckbox();
+        updateScoresLayer();
+      });
+    });
+
+    const masterCheckbox = document.getElementById('masterCheckbox');
+    masterCheckbox.addEventListener('change', () => {
+      const isChecked = masterCheckbox.checked;
+      newLegendCheckboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+      });
+      updateScoresLayer();
+    });
+
+    updateMasterCheckbox();
+  } else if (activeLayer === 'amenities') {
+    const headerText = "Journey Time Catchment (minutes)";
+    const classes = [
+      { range: `> 0 and <= 5`, color: "#fde725" },
+      { range: `> 5 and <= 10`, color: "#7ad151" },
+      { range: `> 10 and <= 15`, color: "#23a884" },
+      { range: `> 15 and <= 20`, color: "#2a788e" },
+      { range: `> 20 and <= 25`, color: "#414387" },
+      { range: `> 25 and <= 30`, color: "#440154" }
+    ];
+
+    const headerDiv = document.createElement("div");
+    headerDiv.innerHTML = `${headerText}`;
+    headerDiv.style.fontSize = "1.1em";
+    headerDiv.style.marginBottom = "10px";
+    legendContent.appendChild(headerDiv);
+
+    const masterCheckboxDiv = document.createElement("div");
+    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+    legendContent.appendChild(masterCheckboxDiv);
+
+    classes.forEach(c => {
+      const div = document.createElement("div");
+      div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" checked> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+      legendContent.appendChild(div);
+    });
+
+    const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
+    newLegendCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        updateMasterCheckbox();
+        updateAmenitiesCatchmentLayer();
+      });
+    });
+
+    const masterCheckbox = document.getElementById('masterCheckbox');
+    masterCheckbox.addEventListener('change', () => {
+      const isChecked = masterCheckbox.checked;
+      newLegendCheckboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+      });
+      updateAmenitiesCatchmentLayer();
+    });
+
+    updateMasterCheckbox();
   }
 
-  const headerDiv = document.createElement("div");
-  headerDiv.innerHTML = `${headerText}`;
-  headerDiv.style.fontSize = "1.1em";
-  headerDiv.style.marginBottom = "10px";
-  legendContent.appendChild(headerDiv);
+  const amenitiesSpacingDiv = document.createElement("div");
+  amenitiesSpacingDiv.style.marginTop = "20px";
+  legendContent.appendChild(amenitiesSpacingDiv);
+  const amenitiesCheckboxDiv = document.createElement("div");
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
+  legendContent.appendChild(amenitiesCheckboxDiv);
 
-  const masterCheckboxDiv = document.createElement("div");
-  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
-  legendContent.appendChild(masterCheckboxDiv);
-
-  classes.forEach(c => {
-    const div = document.createElement("div");
-    const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
-    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
-    legendContent.appendChild(div);
-  });
-
-  const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
-  newLegendCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      updateMasterCheckbox();
-      if (currentAmenitiesCatchmentLayer) {
-        updateAmenitiesCatchmentLayer();
-      } else {
-        updateScoresLayer();
-      }
-    });
-  });
-
-  const masterCheckbox = document.getElementById('masterCheckbox');
-  masterCheckbox.addEventListener('change', () => {
-    const isChecked = masterCheckbox.checked;
-    newLegendCheckboxes.forEach(checkbox => {
-      checkbox.checked = isChecked;
-    });
-    if (currentAmenitiesCatchmentLayer) {
-      updateAmenitiesCatchmentLayer();
+  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+  amenitiesCheckbox.addEventListener('change', () => {
+    if (amenitiesCheckbox.checked) {
+      amenitiesLayerGroup.addTo(map);
     } else {
-      updateScoresLayer();
+      map.removeLayer(amenitiesLayerGroup);
     }
   });
-
-  updateMasterCheckbox();
 }
 
 function updateMasterCheckbox() {
@@ -623,19 +595,6 @@ function drawSelectedAmenities(amenities) {
         onEachFeature: (feature, layer) => {
           const popupContent = AmenitiesPopup(amenity, feature.properties);
           layer.bindPopup(popupContent);
-
-          if (selectingFromMap) {
-            layer.on('click', () => {
-              const index = selectedAmenitiesFromMap.indexOf(feature.properties.COREID);
-              if (index === -1) {
-                selectedAmenitiesFromMap.push(feature.properties.COREID);
-                layer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: red;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
-              } else {
-                selectedAmenitiesFromMap.splice(index, 1);
-                layer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
-              }
-            });
-          }
         }
       });
       amenitiesLayerGroup.addLayer(layer);
@@ -1114,7 +1073,7 @@ function updateAmenitiesCatchmentLayer() {
         .then(csvText => {
           const csvData = Papa.parse(csvText, { header: true }).data;
           csvData.forEach(row => {
-            if (row.Mode === selectedMode && (!selectingFromMap || selectedAmenitiesFromMap.includes(row.TRACC_ID))) {
+            if (row.Mode === selectedMode) {
               const hexId = row.OriginName;
               const time = parseFloat(row.Time);
               if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
@@ -1127,7 +1086,7 @@ function updateAmenitiesCatchmentLayer() {
     } else {
       const csvData = csvDataCache[cacheKey];
       csvData.forEach(row => {
-        if (row.Mode === selectedMode && (!selectingFromMap || selectedAmenitiesFromMap.includes(row.TRACC_ID))) {
+        if (row.Mode === selectedMode) {
           const hexId = row.OriginName;
           const time = parseFloat(row.Time);
           if (!hexTimeMap[hexId] || time < hexTimeMap[hexId]) {
