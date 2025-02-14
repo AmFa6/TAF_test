@@ -266,64 +266,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 });
 
-document.getElementById('selectAmenitiesFromMap').addEventListener('click', () => {
-  selectingFromMap = !selectingFromMap;
-  selectedAmenitiesFromMap = [];
-  drawSelectedAmenities(selectedAmenitiesAmenities);
-
-  if (selectingFromMap) {
-    console.log("Selecting from map enabled");
-    map.getContainer().style.cursor = 'crosshair';
-    drawControl.addTo(map);
-  } else {
-    console.log("Selecting from map disabled");
-    map.getContainer().style.cursor = '';
-    map.removeControl(drawControl);
-  }
-});
-
-const drawControl = new L.Control.Draw({
-  draw: {
-    polyline: false,
-    polygon: false,
-    circle: false,
-    marker: false,
-    circlemarker: false,
-    rectangle: {
-      shapeOptions: {
-        color: '#ff7800',
-        weight: 2
-      }
-    }
-  },
-  edit: {
-    featureGroup: amenitiesLayerGroup,
-    remove: false
-  }
-});
-
-map.on(L.Draw.Event.CREATED, function (event) {
-  console.log("Draw event created");
-  const layer = event.layer;
-  const bounds = layer.getBounds();
-  console.log("Bounds:", bounds);
-
-  selectedAmenitiesFromMap = [];
-  let selected = false;
-  amenitiesLayerGroup.eachLayer(function (amenityLayer) {
-    if (!selected && bounds.contains(amenityLayer.getLatLng())) {
-      selectedAmenitiesFromMap.push(amenityLayer.feature.properties.COREID);
-      console.log("Selected COREID:", amenityLayer.feature.properties.COREID);
-      amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: red;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
-      selected = true;
-    } else {
-      amenityLayer.setIcon(L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-map-marker-alt" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] }));
-    }
-  });
-
-  updateAmenitiesCatchmentLayer();
-});
-
 map.on('zoomend', () => {
   if (ScoresLayer) {
     drawSelectedAmenities(selectedScoresAmenities);
@@ -575,7 +517,8 @@ function updateLegend() {
         updateMasterCheckbox();
         if (AmenitiesCatchmentLayer) {
           updateAmenitiesCatchmentLayer();
-        } else {
+        }
+        if (ScoresLayer) {
           updateScoresLayer();
         }
       });
@@ -589,11 +532,12 @@ function updateLegend() {
       });
       if (AmenitiesCatchmentLayer) {
         updateAmenitiesCatchmentLayer();
-      } else {
+      }
+      if (ScoresLayer) {
         updateScoresLayer();
       }
     });
-
+  
     updateMasterCheckbox();
   } else if (ScoresLayer) {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
@@ -1246,12 +1190,6 @@ function updateAmenitiesCatchmentLayer() {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
       .then(AmenitiesCatchmentLayer => {
-        map.eachLayer(layer => {
-          if (layer !== baseLayer) {
-            map.removeLayer(layer);
-          }
-        });
-
         const filteredFeatures = AmenitiesCatchmentLayer.features.filter(feature => {
           const hexId = feature.properties.Hex_ID;
           const time = hexTimeMap[hexId];
