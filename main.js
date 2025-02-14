@@ -1170,8 +1170,11 @@ function updateAmenitiesCatchmentLayer() {
 
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
-  
+
   if (!selectedYear || !selectedMode || selectedAmenitiesAmenities.length === 0) {
+    if(AmenitiesCatchmentLayer) {
+      map.removeLayer(AmenitiesCatchmentLayer);
+    }
     return;
   }
 
