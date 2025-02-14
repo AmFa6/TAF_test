@@ -240,16 +240,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
           if(ScoresLayer) {
             map.removeLayer(ScoresLayer);
           }
+        } else {
+          if(ScoresLayer) {
+            map.removeLayer(ScoresLayer);
+          }
+          if(AmenitiesCatchmentLayer) {
+            map.removeLayer(AmenitiesCatchmentLayer);
+          } 
+          drawSelectedAmenities([]);
+          updateLegend();
         }
-      } else {
-        if(ScoresLayer) {
-          map.removeLayer(ScoresLayer);
-        }
-        if(AmenitiesCatchmentLayer) {
-          map.removeLayer(AmenitiesCatchmentLayer);
-        } 
-        drawSelectedAmenities([]);
-        updateLegend();
       }
     });
   });
