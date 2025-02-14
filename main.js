@@ -146,7 +146,7 @@ let initialLoadComplete = false;
 
 initializeAmenitiesSliders()
 
-ScoresYear.addEventListener("change", updateScoresLayer)
+ScoresYear.addEventListener("change", () => updateScoresLayer)
 console.log('ScoresYear change event fired - 153');
 ScoresPurpose.addEventListener("change", updateScoresLayer);
 console.log('ScoresPurpose change event fired - 155');
@@ -484,7 +484,6 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateLegend() {
-  console.log('updateLegend function called');
   const selectedYear = ScoresYear.value;
   const legendContent = document.getElementById("legend-content");
 
