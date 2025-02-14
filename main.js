@@ -1182,6 +1182,7 @@ function updateAmenitiesCatchmentLayer() {
     if(AmenitiesCatchmentLayer) {
       map.removeLayer(AmenitiesCatchmentLayer);
     }
+    drawSelectedAmenities([]);
     return;
   }
 
