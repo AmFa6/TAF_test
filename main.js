@@ -181,6 +181,7 @@ AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesS
 AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
 document.addEventListener('DOMContentLoaded', (event) => {
+  console.log('DOMContentLoaded event fired');
   const collapsibleButtons = document.querySelectorAll(".collapsible");
   collapsibleButtons.forEach(button => {
     const content = button.nextElementSibling;
@@ -212,11 +213,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
+          console.log('Connectivity Scores panel opened');
           updateScoresLayer();
           if(AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
           } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
+          console.log('Journey Time Catchments - Amenities panel opened');
           updateAmenitiesCatchmentLayer();
           if(ScoresLayer) {
             map.removeLayer(ScoresLayer);
@@ -268,6 +271,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 map.on('zoomend', () => {
+  console.log('map zoomend event fired');
   if (ScoresLayer) {
     drawSelectedAmenities(selectedScoresAmenities);
   } else if (AmenitiesCatchmentLayer) {
@@ -1137,6 +1141,8 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesCatchmentLayer() {
+  console.log('updateAmenitiesCatchmentLayer called');
+
   selectedAmenitiesAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
