@@ -91,18 +91,6 @@ const amenityIcons = {
   Hos: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-hospital" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] })
 };
 
-ScoresFiles.forEach(file => {
-  fetch(file.path)
-    .then(response => response.json())
-    .then(ScoresLayer => {
-      layers[file.year] = ScoresLayer;
-      layersLoaded++;
-      if (layersLoaded === totalLayers) {
-        initializeScoresSliders();
-      }
-    })
-}); 
-
 AmenitiesFiles.forEach(file => {
   fetch(file.path)
     .then(response => response.json())
@@ -218,12 +206,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
           updateAmenitiesCatchmentLayer();
         }
       } else {
-        map.eachLayer(layer => {
-          if (layer !== baseLayer) {
-            map.removeLayer(layer);
+        if (header.textContent.includes("Connectivity Scores")) {
+          if (ScoresLayer) {
+            map.removeLayer(ScoresLayer);
+            ScoresLayer = null;
           }
-        });
-        activeLayer = null;
+        } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
+          if (AmenitiesCatchmentLayer) {
+            map.removeLayer(AmenitiesCatchmentLayer);
+            AmenitiesCatchmentLayer = null;
+          }
+        }
         drawSelectedAmenities([]);
         updateLegend();
       }
@@ -971,6 +964,18 @@ function updateOutlineSliderScoresRanges() {
 }
 
 function updateScoresLayer() {
+  ScoresFiles.forEach(file => {
+    fetch(file.path)
+      .then(response => response.json())
+      .then(ScoresLayer => {
+        layers[file.year] = ScoresLayer;
+        layersLoaded++;
+        if (layersLoaded === totalLayers) {
+          initializeScoresSliders();
+        }
+      })
+  }); 
+
   const selectedYear = ScoresYear.value;
   if (!selectedYear) {
     return;
