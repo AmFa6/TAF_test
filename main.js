@@ -1183,19 +1183,25 @@ function updateAmenitiesCatchmentLayer() {
   Promise.all(fetchPromises).then(() => {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
-      .then(AmenitiesCatchment => {
-        const filteredFeatures = AmenitiesCatchment.features.filter(feature => {
+      .then(data => {
+        // Remove the existing AmenitiesCatchmentLayer if it exists
+        if (AmenitiesCatchmentLayer) {
+          map.removeLayer(AmenitiesCatchmentLayer);
+          console.log('AmenitiesCatchmentLayer removed');
+        }
+
+        const filteredFeatures = data.features.filter(feature => {
           const hexId = feature.properties.Hex_ID;
           const time = hexTimeMap[hexId];
           return time !== undefined && isClassVisible(time, selectedYear);
         });
 
-        const filteredAmenitiesCatchment = {
+        const filteredAmenitiesCatchmentLayer = {
           type: "FeatureCollection",
           features: filteredFeatures
         };
 
-        AmenitiesCatchmentLayer = L.geoJSON(filteredAmenitiesCatchment, {
+        AmenitiesCatchmentLayer = L.geoJSON(filteredAmenitiesCatchmentLayer, {
           style: feature => {
             const hexId = feature.properties.Hex_ID;
             const time = hexTimeMap[hexId];
@@ -1248,6 +1254,7 @@ function updateAmenitiesCatchmentLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
+        console.log('AmenitiesCatchmentLayer drawn');
 
         drawSelectedAmenities(selectedAmenitiesAmenities);
 
