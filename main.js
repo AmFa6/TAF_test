@@ -4,6 +4,8 @@ const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/lig
   attribution: '&copy; OpenStreetMap contributors & CartoDB'
 }).addTo(map);
 
+//*fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?where=1%3D1&outFields=*&geometry=-3.749%2C51.145%2C-1.392%2C51.744&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelContains&outSR=4326&f=json')
+//*fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
   fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&geometry=-3.073689%2C51.291726%2C-2.327195%2C51.656841&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson')
     .then(response => {
       if (!response.ok) {
@@ -1141,20 +1143,10 @@ function updateAmenitiesCatchmentLayer() {
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
 
-  // Remove the existing AmenitiesCatchmentLayer
   if (AmenitiesCatchmentLayer) {
     map.removeLayer(AmenitiesCatchmentLayer);
     console.log('AmenitiesCatchmentLayer removed');
     AmenitiesCatchmentLayer = null;
-  }
-
-  if (!selectedYear || selectedAmenitiesAmenities.length === 0 || !selectedMode) {
-    map.eachLayer(layer => {
-      if (layer !== baseLayer) {
-        map.removeLayer(layer);
-      }
-    });
-    return;
   }
 
   hexTimeMap = {};
@@ -1196,8 +1188,9 @@ function updateAmenitiesCatchmentLayer() {
   Promise.all(fetchPromises).then(() => {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
-      .then(data => {
-        const filteredFeatures = data.features.filter(feature => {
+      .then(AmenitiesCatchmentLayer => {
+
+        const filteredFeatures = AmenitiesCatchmentLayer.features.filter(feature => {
           const hexId = feature.properties.Hex_ID;
           const time = hexTimeMap[hexId];
           return time !== undefined && isClassVisible(time, selectedYear);
@@ -1261,7 +1254,6 @@ function updateAmenitiesCatchmentLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
-        console.log('AmenitiesCatchmentLayer drawn');
 
         drawSelectedAmenities(selectedAmenitiesAmenities);
 
