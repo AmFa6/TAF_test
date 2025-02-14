@@ -22,8 +22,6 @@ const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/lig
           };
         }
       }).addTo(map);
-      console.log('GeoJSON data has been successfully loaded.');
-      updateLegend(); // Update the legend to include the checkbox for ward boundaries
     })
     .catch(error => console.error('Error loading GeoJSON data:', error));
 
@@ -109,7 +107,6 @@ AmenitiesFiles.forEach(file => {
     .then(amenityLayer => {
       amenityLayers[file.type] = amenityLayer;
       drawSelectedAmenities([]);
-      updateLegend();
     });
 });
 
