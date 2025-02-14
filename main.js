@@ -150,8 +150,11 @@ let initialLoadComplete = false;
 initializeAmenitiesSliders()
 
 ScoresYear.addEventListener("change", updateScoresLayer)
+console.log('ScoresYear change event fired - 153');
 ScoresPurpose.addEventListener("change", updateScoresLayer);
+console.log('ScoresPurpose change event fired - 155');
 ScoresMode.addEventListener("change", updateScoresLayer);
+console.log('ScoresMode change event fired - 157');
 AmenitiesYear.addEventListener("change", updateAmenitiesCatchmentLayer);
 console.log('AmenitiesPurpose change event fired - 156');
 AmenitiesMode.addEventListener("change", updateAmenitiesCatchmentLayer);
@@ -163,11 +166,13 @@ console.log('AmenitiesPurpose change event fired - 162');
 ScoresOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderScoresRanges();
+  console.log('ScoresOpacity change event fired - 169');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateOutlineSliderScoresRanges();
+  console.log('ScoresOutline change event fired - 175');
   updateScoresLayer();
 });
 AmenitiesOpacity.addEventListener("change", () => {
@@ -533,6 +538,7 @@ function updateLegend() {
           updateAmenitiesCatchmentLayer();
         }
         if (ScoresLayer) {
+          console.log('ScoresLayer updateLegend event fired - 541');
           updateScoresLayer();
         }
       });
@@ -549,6 +555,7 @@ function updateLegend() {
         updateAmenitiesCatchmentLayer();
       }
       if (ScoresLayer) {
+        console.log('ScoresLayer masterCheckbox event fired - 558');
         updateScoresLayer();
       }
     });
@@ -601,6 +608,7 @@ function updateLegend() {
           console.log('AmenitiesCatchmentLayer updateLegend event fired - 598');
           updateAmenitiesCatchmentLayer();
         } else {
+          console.log('ScoresLayer updateLegend event fired - 611');
           updateScoresLayer();
         }
       });
@@ -613,9 +621,10 @@ function updateLegend() {
         checkbox.checked = isChecked;
       });
       if (AmenitiesCatchmentLayer) {
-        console.log('AmenitiesCatchmentLayer masterCheckbox event fired - 613');
+        console.log('AmenitiesCatchmentLayer masterCheckbox event fired - 624');
         updateAmenitiesCatchmentLayer();
       } else {
+        console.log('ScoresLayer masterCheckbox event fired - 627');
         updateScoresLayer();
       }
     });
@@ -773,6 +782,7 @@ function initializeScoresSliders() {
   ScoresOutlineRange = document.getElementById('outlineRangeScoresSlider');
   initializeSliders(ScoresOpacityRange, updateScoresLayer);
   initializeSliders(ScoresOutlineRange, updateScoresLayer);
+  console.log('initializeScoresSliders function called - 785');
 }
 
 function toggleInverseOpacityScoresScale() {
@@ -805,6 +815,7 @@ function toggleInverseOpacityScoresScale() {
   opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOpacitySliderScoresRanges();
+  concole.log('toggleInverseOpacityScoresScale function called - 818');
   updateScoresLayer();
 }
 
@@ -838,6 +849,7 @@ function toggleInverseOutlineScoresScale() {
   outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOutlineSliderScoresRanges();
+  console.log('toggleInverseOutlineScoresScale function called - 852');
   updateScoresLayer();
 }
 
