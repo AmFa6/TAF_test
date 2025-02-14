@@ -146,7 +146,7 @@ let initialLoadComplete = false;
 
 initializeAmenitiesSliders()
 
-ScoresYear.addEventListener("change", () => updateScoresLayer)
+ScoresYear.addEventListener("change", updateScoresLayer)
 console.log('ScoresYear change event fired - 153');
 ScoresPurpose.addEventListener("change", updateScoresLayer);
 console.log('ScoresPurpose change event fired - 155');
@@ -991,6 +991,7 @@ function updateScoresLayer() {
     AmenitiesCatchmentLayer = null;
     updateLegend();
   }
+  console.log('ScoresLayer created');
 }
 
 function initializeAmenitiesSliders() {
@@ -1291,4 +1292,5 @@ function updateAmenitiesCatchmentLayer() {
         }
       });
   });
+  console.log('AmenitiesCatchmentLayer created');
 }
