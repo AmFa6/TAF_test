@@ -1168,13 +1168,6 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesCatchmentLayer() {
-  if (initialLoad && initialLoadComplete) {
-    console.log('updateAmenitiesCatchmentLayer called during initial load');
-    return;
-  } else {
-    console.log('updateAmenitiesCatchmentLayer called');
-  }
-
   selectedAmenitiesAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
@@ -1225,7 +1218,6 @@ function updateAmenitiesCatchmentLayer() {
         // Remove the existing AmenitiesCatchmentLayer if it exists
         if (AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
-          console.log('AmenitiesCatchmentLayer removed');
         }
 
         const filteredFeatures = data.features.filter(feature => {
@@ -1292,7 +1284,6 @@ function updateAmenitiesCatchmentLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
-        console.log('AmenitiesCatchmentLayer drawn');
 
         drawSelectedAmenities(selectedAmenitiesAmenities);
 
