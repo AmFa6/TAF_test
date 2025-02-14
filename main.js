@@ -153,10 +153,13 @@ ScoresYear.addEventListener("change", updateScoresLayer)
 ScoresPurpose.addEventListener("change", updateScoresLayer);
 ScoresMode.addEventListener("change", updateScoresLayer);
 AmenitiesYear.addEventListener("change", updateAmenitiesCatchmentLayer);
+console.log('AmenitiesPurpose change event fired - 156');
 AmenitiesMode.addEventListener("change", updateAmenitiesCatchmentLayer);
+console.log('AmenitiesMode change event fired - 158');
 AmenitiesPurpose.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
 });
+console.log('AmenitiesPurpose change event fired - 162');
 ScoresOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderScoresRanges();
@@ -170,11 +173,13 @@ ScoresOutline.addEventListener("change", () => {
 AmenitiesOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderAmenitiesRanges();
+  console.log('AmenitiesOpacity change event fired - 176');
   updateAmenitiesCatchmentLayer();
 });
 AmenitiesOutline.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateOutlineSliderAmenitiesRanges();
+  console.log('AmenitiesOutline change event fired - 182');
   updateAmenitiesCatchmentLayer();
 });
 ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
@@ -221,7 +226,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             map.removeLayer(AmenitiesCatchmentLayer);
           } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
-          console.log('Journey Time Catchments - Amenities panel opened');
+          console.log('Journey Time Catchments - Amenities panel opened - 229');
           updateAmenitiesCatchmentLayer();
           if(ScoresLayer) {
             map.removeLayer(ScoresLayer);
@@ -524,6 +529,7 @@ function updateLegend() {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
         if (AmenitiesCatchmentLayer) {
+          console.log('AmenitiesCatchmentLayer updateLegend event fired - 532');
           updateAmenitiesCatchmentLayer();
         }
         if (ScoresLayer) {
@@ -539,6 +545,7 @@ function updateLegend() {
         checkbox.checked = isChecked;
       });
       if (AmenitiesCatchmentLayer) {
+        console.log('AmenitiesCatchmentLayer masterCheckbox event fired - 548');
         updateAmenitiesCatchmentLayer();
       }
       if (ScoresLayer) {
@@ -591,6 +598,7 @@ function updateLegend() {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
         if (AmenitiesCatchmentLayer) {
+          console.log('AmenitiesCatchmentLayer updateLegend event fired - 598');
           updateAmenitiesCatchmentLayer();
         } else {
           updateScoresLayer();
@@ -605,6 +613,7 @@ function updateLegend() {
         checkbox.checked = isChecked;
       });
       if (AmenitiesCatchmentLayer) {
+        console.log('AmenitiesCatchmentLayer masterCheckbox event fired - 613');
         updateAmenitiesCatchmentLayer();
       } else {
         updateScoresLayer();
@@ -981,6 +990,7 @@ function initializeAmenitiesSliders() {
   AmenitiesOutlineRange = document.getElementById('outlineRangeAmenitiesSlider');
   initializeSliders(AmenitiesOpacityRange, updateAmenitiesCatchmentLayer);
   initializeSliders(AmenitiesOutlineRange, updateAmenitiesCatchmentLayer);
+  console.log('initializeAmenitiesSliders function called - 990');
 }
 
 function toggleInverseOpacityAmenitiesScale() {
@@ -1013,6 +1023,7 @@ function toggleInverseOpacityAmenitiesScale() {
   opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOpacitySliderAmenitiesRanges();
+  console.log('toggleInverseOpacityAmenitiesScale function called - 1023');
   updateAmenitiesCatchmentLayer();
 }
 
@@ -1046,6 +1057,7 @@ function toggleInverseOutlineAmenitiesScale() {
   outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOutlineSliderAmenitiesRanges();
+  console.log('toggleInverseOutlineAmenitiesScale function called - 1057');
   updateAmenitiesCatchmentLayer();
 }
 
