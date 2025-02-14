@@ -5,25 +5,26 @@ const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/lig
 }).addTo(map);
 
 //*fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?where=1%3D1&outFields=*&geometry=-3.749%2C51.145%2C-1.392%2C51.744&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelContains&outSR=4326&f=json')
-  fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
+//*fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
+  fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&geometry=-3.073689%2C51.291726%2C-2.327195%2C51.656841&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson')
     .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-      }
-      return response.json();
-    })
-    .then(data => {
-      L.geoJSON(data, {
-        style: function (feature) {
-          return {
-            color: 'black',
-            weight: 1
-          };
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
         }
-      }).addTo(map);
-      console.log('GeoJSON data has been successfully loaded.');
-    })
-    .catch(error => console.error('Error loading GeoJSON data:', error));
+        return response.json();
+      })
+      .then(data => {
+        L.geoJSON(data, {
+          style: function (feature) {
+            return {
+              color: 'black',
+              weight: 1
+            };
+          }
+        }).addTo(map);
+        console.log('GeoJSON data has been successfully loaded.');
+      })
+      .catch(error => console.error('Error loading GeoJSON data:', error));
 
 const ScoresFiles = [
   { year: '2024', path: 'https://AmFa6.github.io/TAF_test/2024_connectscore.geojson' },
