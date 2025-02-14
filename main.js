@@ -142,7 +142,6 @@ let csvDataCache = {};
 let amenitiesLayerGroup = L.featureGroup();
 let selectedScoresAmenities = [];
 let selectedAmenitiesAmenities = [];
-let activeLayer = [];
 let selectingFromMap = false;
 let selectedAmenitiesFromMap = [];
 
@@ -326,9 +325,9 @@ map.on(L.Draw.Event.CREATED, function (event) {
 });
 
 map.on('zoomend', () => {
-  if (activeLayer === 'scores') {
+  if (ScoresLayer) {
     drawSelectedAmenities(selectedScoresAmenities);
-  } else if (activeLayer === 'amenities') {
+  } else if (AmenitiesCatchmentLayer) {
     drawSelectedAmenities(selectedAmenitiesAmenities);
   } else {
     drawSelectedAmenities([]);
@@ -543,7 +542,7 @@ function updateLegend() {
   let headerText;
   let classes;
 
-  if (activeLayer === 'amenities') {
+  if (AmenitiesCatchmentLayer) {
     headerText = "Journey Time Catchment (minutes)";
     classes = [
       { range: `> 0 and <= 5`, color: "#fde725" },
@@ -596,7 +595,7 @@ function updateLegend() {
     });
 
     updateMasterCheckbox();
-  } else if (activeLayer === 'scores') {
+  } else if (ScoresLayer) {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
       { range: `<= -20%`, color: "#FF0000" },
@@ -1015,7 +1014,6 @@ function updateScoresLayer() {
     }).addTo(map);
 
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
-    activeLayer = 'scores';
     drawSelectedAmenities(selectedScoresAmenities);
 
     AmenitiesCatchmentLayer = null;
@@ -1314,7 +1312,6 @@ function updateAmenitiesCatchmentLayer() {
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
 
-        activeLayer = 'amenities';
         drawSelectedAmenities(selectedAmenitiesAmenities);
 
         updateLegend();
