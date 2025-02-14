@@ -91,6 +91,18 @@ const amenityIcons = {
   Hos: L.divIcon({ className: 'fa-icon', html: '<div class="pin"><i class="fas fa-hospital" style="color: grey;"></i></div>', iconSize: [60, 60], iconAnchor: [15, 15] })
 };
 
+ScoresFiles.forEach(file => {
+  fetch(file.path)
+    .then(response => response.json())
+    .then(ScoresLayer => {
+      layers[file.year] = ScoresLayer;
+      layersLoaded++;
+      if (layersLoaded === totalLayers) {
+        initializeScoresSliders();
+      }
+    })
+}); 
+
 AmenitiesFiles.forEach(file => {
   fetch(file.path)
     .then(response => response.json())
@@ -964,18 +976,6 @@ function updateOutlineSliderScoresRanges() {
 }
 
 function updateScoresLayer() {
-  ScoresFiles.forEach(file => {
-    fetch(file.path)
-      .then(response => response.json())
-      .then(ScoresLayer => {
-        layers[file.year] = ScoresLayer;
-        layersLoaded++;
-        if (layersLoaded === totalLayers) {
-          initializeScoresSliders();
-        }
-      })
-  }); 
-
   const selectedYear = ScoresYear.value;
   if (!selectedYear) {
     return;
@@ -985,11 +985,10 @@ function updateScoresLayer() {
   const opacityField = ScoresOpacity.value;
   const outlineField = ScoresOutline.value;
 
-  map.eachLayer(layer => {
-    if (layer !== baseLayer) {
-      map.removeLayer(layer);
-    }
-  });
+  if (ScoresLayer) {
+    map.removeLayer(ScoresLayer);
+    ScoresLayer = null;
+  }
 
   const fieldToDisplay = selectedYear.includes('-') ? `${selectedPurpose}_${selectedMode}` : `${selectedPurpose}_${selectedMode}_100`;
   const selectedLayer = layers[selectedYear];
@@ -1199,13 +1198,9 @@ function updateAmenitiesCatchmentLayer() {
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
 
-  if (!selectedYear || selectedAmenitiesAmenities.length === 0 || !selectedMode) {
-    map.eachLayer(layer => {
-      if (layer !== baseLayer) {
-        map.removeLayer(layer);
-      }
-    });
-    return;
+  if (AmenitiesCatchmentLayer) {
+    map.removeLayer(AmenitiesCatchmentLayer);
+    AmenitiesCatchmentLayer = null;
   }
 
   hexTimeMap = {};
