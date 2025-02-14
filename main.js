@@ -953,7 +953,6 @@ function updateScoresLayer() {
   const opacityField = ScoresOpacity.value;
   const outlineField = ScoresOutline.value;
 
-  // Remove the existing ScoresLayer
   if (ScoresLayer) {
     map.removeLayer(ScoresLayer);
     console.log('ScoresLayer removed');
@@ -1171,6 +1170,10 @@ function updateAmenitiesCatchmentLayer() {
 
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
+  
+  if (!selectedYear || !selectedMode || selectedAmenitiesAmenities.length === 0) {
+    return;
+  }
 
   hexTimeMap = {};
 
