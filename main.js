@@ -477,6 +477,7 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateLegend() {
+  console.log('updateLegend function called');
   const selectedYear = ScoresYear.value;
   const legendContent = document.getElementById("legend-content");
 
