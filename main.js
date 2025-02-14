@@ -154,41 +154,41 @@ let initialLoadComplete = false;
 initializeAmenitiesSliders()
 
 ScoresYear.addEventListener("change", updateScoresLayer)
-console.log('ScoresYear change event fired - 153');
+console.log('ScoresYear change event fired - updateScoresLayer');
 ScoresPurpose.addEventListener("change", updateScoresLayer);
-console.log('ScoresPurpose change event fired - 155');
+console.log('ScoresPurpose change event fired - updateScoresLayer');
 ScoresMode.addEventListener("change", updateScoresLayer);
-console.log('ScoresMode change event fired - 157');
+console.log('ScoresMode change event fired - updateScoresLayer');
 AmenitiesYear.addEventListener("change", updateAmenitiesCatchmentLayer);
-console.log('AmenitiesPurpose change event fired - 156');
+console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
 AmenitiesMode.addEventListener("change", updateAmenitiesCatchmentLayer);
-console.log('AmenitiesMode change event fired - 158');
+console.log('AmenitiesMode change event fired - updateAmenitiesCatchmentLayer');
 AmenitiesPurpose.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
 });
-console.log('AmenitiesPurpose change event fired - 162');
+console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
 ScoresOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderScoresRanges();
-  console.log('ScoresOpacity change event fired - 169');
+  console.log('ScoresOpacity change event fired - updateScoresLayer');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateOutlineSliderScoresRanges();
-  console.log('ScoresOutline change event fired - 175');
+  console.log('ScoresOutline change event fired - updateScoresLayer');
   updateScoresLayer();
 });
 AmenitiesOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderAmenitiesRanges();
-  console.log('AmenitiesOpacity change event fired - 176');
+  console.log('AmenitiesOpacity change event fired - updateAmenitiesCatchmentLayer');
   updateAmenitiesCatchmentLayer();
 });
 AmenitiesOutline.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateOutlineSliderAmenitiesRanges();
-  console.log('AmenitiesOutline change event fired - 182');
+  console.log('AmenitiesOutline change event fired - updateAmenitiesCatchmentLayer');
   updateAmenitiesCatchmentLayer();
 });
 ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
@@ -197,7 +197,6 @@ AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesS
 AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  console.log('DOMContentLoaded event fired');
   const collapsibleButtons = document.querySelectorAll(".collapsible");
   collapsibleButtons.forEach(button => {
     const content = button.nextElementSibling;
@@ -229,13 +228,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
-          console.log('Connectivity Scores panel opened');
+          console.log('Connectivity Scores panel opened - updateScoresLayer');
           updateScoresLayer();
           if(AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
           } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
-          console.log('Journey Time Catchments - Amenities panel opened - 229');
+          console.log('Journey Time Catchments - Amenities panel opened - updateAmenitiesCatchmentLayer');
           updateAmenitiesCatchmentLayer();
           if(ScoresLayer) {
             map.removeLayer(ScoresLayer);
@@ -289,7 +288,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 map.on('zoomend', () => {
-  console.log('map zoomend event fired');
   if (ScoresLayer) {
     drawSelectedAmenities(selectedScoresAmenities);
   } else if (AmenitiesCatchmentLayer) {
@@ -538,14 +536,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
-        if (AmenitiesCatchmentLayer) {
-          console.log('AmenitiesCatchmentLayer updateLegend event fired - 532');
-          updateAmenitiesCatchmentLayer();
-        }
-        if (ScoresLayer) {
-          console.log('ScoresLayer updateLegend event fired - 541');
-          updateScoresLayer();
-        }
+        updateAmenitiesCatchmentLayer();
       });
     });
 
@@ -555,17 +546,10 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
-      if (AmenitiesCatchmentLayer) {
-        console.log('AmenitiesCatchmentLayer masterCheckbox event fired - 548');
-        updateAmenitiesCatchmentLayer();
-      }
-      if (ScoresLayer) {
-        console.log('ScoresLayer masterCheckbox event fired - 558');
-        updateScoresLayer();
-      }
+      updateAmenitiesCatchmentLayer();
     });
-  
     updateMasterCheckbox();
+
   } else if (ScoresLayer) {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
@@ -609,13 +593,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
-        if (AmenitiesCatchmentLayer) {
-          console.log('AmenitiesCatchmentLayer updateLegend event fired - 598');
-          updateAmenitiesCatchmentLayer();
-        } else {
-          console.log('ScoresLayer updateLegend event fired - 611');
-          updateScoresLayer();
-        }
+        updateScoresLayer();
       });
     });
 
@@ -625,15 +603,8 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
-      if (AmenitiesCatchmentLayer) {
-        console.log('AmenitiesCatchmentLayer masterCheckbox event fired - 624');
-        updateAmenitiesCatchmentLayer();
-      } else {
-        console.log('ScoresLayer masterCheckbox event fired - 627');
-        updateScoresLayer();
-      }
+      updateScoresLayer();
     });
-
     updateMasterCheckbox();
   }
 
