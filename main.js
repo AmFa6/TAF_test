@@ -144,6 +144,7 @@ let selectedScoresAmenities = [];
 let selectedAmenitiesAmenities = [];
 let selectingFromMap = false;
 let selectedAmenitiesFromMap = [];
+let initialLoad = true;
 
 initializeAmenitiesSliders()
 
@@ -1141,7 +1142,11 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesCatchmentLayer() {
-  console.log('updateAmenitiesCatchmentLayer called');
+  if (initialLoad) {
+    console.log('updateAmenitiesCatchmentLayer called during initial load');
+  } else {
+    console.log('updateAmenitiesCatchmentLayer called');
+  }
 
   selectedAmenitiesAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
@@ -1265,6 +1270,10 @@ function updateAmenitiesCatchmentLayer() {
         drawSelectedAmenities(selectedAmenitiesAmenities);
 
         updateLegend();
+
+        if (initialLoad) {
+          initialLoad = false;
+        }
       });
   });
 }
