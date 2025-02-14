@@ -1143,10 +1143,20 @@ function updateAmenitiesCatchmentLayer() {
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
 
+  // Remove the existing AmenitiesCatchmentLayer
   if (AmenitiesCatchmentLayer) {
     map.removeLayer(AmenitiesCatchmentLayer);
     console.log('AmenitiesCatchmentLayer removed');
     AmenitiesCatchmentLayer = null;
+  }
+
+  if (!selectedYear || selectedAmenitiesAmenities.length === 0 || !selectedMode) {
+    map.eachLayer(layer => {
+      if (layer !== baseLayer) {
+        map.removeLayer(layer);
+      }
+    });
+    return;
   }
 
   hexTimeMap = {};
@@ -1188,9 +1198,8 @@ function updateAmenitiesCatchmentLayer() {
   Promise.all(fetchPromises).then(() => {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
-      .then(AmenitiesCatchmentLayer => {
-
-        const filteredFeatures = AmenitiesCatchmentLayer.features.filter(feature => {
+      .then(data => {
+        const filteredFeatures = data.features.filter(feature => {
           const hexId = feature.properties.Hex_ID;
           const time = hexTimeMap[hexId];
           return time !== undefined && isClassVisible(time, selectedYear);
@@ -1254,6 +1263,7 @@ function updateAmenitiesCatchmentLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
+        console.log('AmenitiesCatchmentLayer drawn');
 
         drawSelectedAmenities(selectedAmenitiesAmenities);
 
