@@ -216,11 +216,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
           updateAmenitiesCatchmentLayer();
         }
       } else {
-        map.eachLayer(layer => {
-          if (layer !== baseLayer) {
-            map.removeLayer(layer);
-          }
-        });
         activeLayer = null;
         drawSelectedAmenities([]);
         updateLegend();
@@ -978,12 +973,6 @@ function updateScoresLayer() {
   const opacityField = ScoresOpacity.value;
   const outlineField = ScoresOutline.value;
 
-  map.eachLayer(layer => {
-    if (layer !== baseLayer) {
-      map.removeLayer(layer);
-    }
-  });
-
   const fieldToDisplay = selectedYear.includes('-') ? `${selectedPurpose}_${selectedMode}` : `${selectedPurpose}_${selectedMode}_100`;
   const selectedLayer = layers[selectedYear];
 
@@ -1193,11 +1182,10 @@ function updateAmenitiesCatchmentLayer() {
   const selectedMode = AmenitiesMode.value;
 
   if (!selectedYear || selectedAmenitiesAmenities.length === 0 || !selectedMode) {
-    map.eachLayer(layer => {
-      if (layer !== baseLayer) {
-        map.removeLayer(layer);
-      }
-    });
+    if (currentAmenitiesCatchmentLayer) {
+      map.removeLayer(currentAmenitiesCatchmentLayer);
+      currentAmenitiesCatchmentLayer = null;
+    }
     return;
   }
 
@@ -1241,11 +1229,9 @@ function updateAmenitiesCatchmentLayer() {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
       .then(AmenitiesCatchmentLayer => {
-        map.eachLayer(layer => {
-          if (layer !== baseLayer) {
-            map.removeLayer(layer);
-          }
-        });
+        if (currentAmenitiesCatchmentLayer) {
+          map.removeLayer(currentAmenitiesCatchmentLayer);
+        }
 
         const filteredFeatures = AmenitiesCatchmentLayer.features.filter(feature => {
           const hexId = feature.properties.Hex_ID;
