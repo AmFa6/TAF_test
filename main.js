@@ -984,8 +984,10 @@ function updateScoresLayer() {
   const opacityField = ScoresOpacity.value;
   const outlineField = ScoresOutline.value;
 
+  // Remove the existing ScoresLayer
   if (ScoresLayer) {
     map.removeLayer(ScoresLayer);
+    console.log('ScoresLayer removed');
     ScoresLayer = null;
   }
 
@@ -1008,10 +1010,11 @@ function updateScoresLayer() {
       features: filteredFeatures
     };
 
-    const ScoresLayer = L.geoJSON(filteredScoresLayer, {
+    ScoresLayer = L.geoJSON(filteredScoresLayer, {
       style: feature => styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
+    console.log('ScoresLayer drawn');
 
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
@@ -1196,8 +1199,10 @@ function updateAmenitiesCatchmentLayer() {
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
 
+  // Remove the existing AmenitiesCatchmentLayer
   if (AmenitiesCatchmentLayer) {
     map.removeLayer(AmenitiesCatchmentLayer);
+    console.log('AmenitiesCatchmentLayer removed');
     AmenitiesCatchmentLayer = null;
   }
 
@@ -1311,6 +1316,7 @@ function updateAmenitiesCatchmentLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
+        console.log('AmenitiesCatchmentLayer drawn');
 
         drawSelectedAmenities(selectedAmenitiesAmenities);
 
