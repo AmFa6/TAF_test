@@ -145,6 +145,7 @@ let selectedAmenitiesAmenities = [];
 let selectingFromMap = false;
 let selectedAmenitiesFromMap = [];
 let initialLoad = true;
+let initialLoadComplete = false;
 
 initializeAmenitiesSliders()
 
@@ -1142,8 +1143,9 @@ function updateOutlineSliderAmenitiesRanges() {
 }
 
 function updateAmenitiesCatchmentLayer() {
-  if (initialLoad) {
+  if (initialLoad && initialLoadComplete) {
     console.log('updateAmenitiesCatchmentLayer called during initial load');
+    return;
   } else {
     console.log('updateAmenitiesCatchmentLayer called');
   }
@@ -1273,6 +1275,7 @@ function updateAmenitiesCatchmentLayer() {
 
         if (initialLoad) {
           initialLoad = false;
+          initialLoadComplete = true;
         }
       });
   });
