@@ -1144,12 +1144,6 @@ function updateAmenitiesCatchmentLayer() {
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
 
-  if (AmenitiesCatchmentLayer) {
-    map.removeLayer(AmenitiesCatchmentLayer);
-    console.log('AmenitiesCatchmentLayer removed');
-    AmenitiesCatchmentLayer = null;
-  }
-
   hexTimeMap = {};
 
   const cacheKeys = selectedAmenitiesAmenities.map(amenity => `${selectedYear}_${amenity}`);
