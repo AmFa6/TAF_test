@@ -213,16 +213,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
           updateScoresLayer();
+          if(AmenitiesCatchmentLayer) {
+            map.removeLayer(AmenitiesCatchmentLayer);
+          } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
           updateAmenitiesCatchmentLayer();
+          if(ScoresLayer) {
+            map.removeLayer(ScoresLayer);
+          }
         }
       } else {
-        map.eachLayer(layer => {
-          if (layer !== baseLayer) {
-            map.removeLayer(layer);
-          }
-        });
-        activeLayer = null;
+        if(ScoresLayer) {
+          map.removeLayer(ScoresLayer);
+        }
+        if(AmenitiesCatchmentLayer) {
+          map.removeLayer(AmenitiesCatchmentLayer);
+        } 
         drawSelectedAmenities([]);
         updateLegend();
       }
@@ -1138,13 +1144,10 @@ function updateAmenitiesCatchmentLayer() {
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
 
-  if (!selectedYear || selectedAmenitiesAmenities.length === 0 || !selectedMode) {
-    map.eachLayer(layer => {
-      if (layer !== baseLayer) {
-        map.removeLayer(layer);
-      }
-    });
-    return;
+  if (AmenitiesCatchmentLayer) {
+    map.removeLayer(AmenitiesCatchmentLayer);
+    console.log('AmenitiesCatchmentLayer removed');
+    AmenitiesCatchmentLayer = null;
   }
 
   hexTimeMap = {};
@@ -1186,25 +1189,19 @@ function updateAmenitiesCatchmentLayer() {
   Promise.all(fetchPromises).then(() => {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
-      .then(AmenitiesCatchmentLayer => {
-        map.eachLayer(layer => {
-          if (layer !== baseLayer) {
-            map.removeLayer(layer);
-          }
-        });
-
-        const filteredFeatures = AmenitiesCatchmentLayer.features.filter(feature => {
+      .then(AmenitiesCatchment => {
+        const filteredFeatures = AmenitiesCatchment.features.filter(feature => {
           const hexId = feature.properties.Hex_ID;
           const time = hexTimeMap[hexId];
           return time !== undefined && isClassVisible(time, selectedYear);
         });
 
-        const filteredAmenitiesCatchmentLayer = {
+        const filteredAmenitiesCatchment = {
           type: "FeatureCollection",
           features: filteredFeatures
         };
 
-        currentAmenitiesCatchmentLayer = L.geoJSON(filteredAmenitiesCatchmentLayer, {
+        AmenitiesCatchmentLayer = L.geoJSON(filteredAmenitiesCatchment, {
           style: feature => {
             const hexId = feature.properties.Hex_ID;
             const time = hexTimeMap[hexId];
@@ -1258,7 +1255,6 @@ function updateAmenitiesCatchmentLayer() {
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
 
-        activeLayer = 'amenities';
         drawSelectedAmenities(selectedAmenitiesAmenities);
 
         updateLegend();
