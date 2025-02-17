@@ -185,6 +185,19 @@ ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
 AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesScale);
 AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
+function updateCheckboxStates() {
+  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+  const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
+
+  if (amenitiesCheckbox) {
+    amenitiesCheckbox.checked = map.hasLayer(amenitiesLayerGroup);
+  }
+
+  if (wardBoundariesCheckbox) {
+    wardBoundariesCheckbox.checked = map.hasLayer(wardBoundariesLayer);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
   const collapsibleButtons = document.querySelectorAll(".collapsible");
   collapsibleButtons.forEach(button => {
@@ -196,7 +209,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       this.classList.toggle("active");
       content.style.display = content.style.display === "block" ? "none" : "block";
       this.classList.toggle("collapsed", content.style.display === "none");
-      updateCheckboxStates();
     });
   });
   
@@ -238,7 +250,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         updateLegend();
         drawSelectedAmenities([]);
       }
-      updateCheckboxStates();
     });
   });
 
