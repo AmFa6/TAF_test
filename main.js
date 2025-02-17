@@ -149,7 +149,7 @@ let selectedAmenitiesFromMap = [];
 let initialLoad = true;
 let initialLoadComplete = false;
 
-initializeSliders();
+initializeAllSliders();
 
 ScoresYear.addEventListener("change", updateScoresLayer);
 ScoresPurpose.addEventListener("change", updateScoresLayer);
@@ -282,7 +282,7 @@ map.on('zoomend', () => {
   }
 });
 
-function initializeSliders() {
+function initializeAllSliders() {
   const sliders = [
     { element: document.getElementById('opacityRangeScoresSlider'), updateCallback: () => updateSliderRanges(document.getElementById('opacityRangeScoresSlider'), 'Scores') },
     { element: document.getElementById('outlineRangeScoresSlider'), updateCallback: () => updateSliderRanges(document.getElementById('outlineRangeScoresSlider'), 'Scores') },
