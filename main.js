@@ -835,8 +835,6 @@ function toggleInverseOutlineScoresScale() {
   outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOutlineSliderScoresRanges();
-  console.log('updateScoresLayer-828');
-  updateScoresLayer();
 }
 
 function updateOpacitySliderScoresRanges() {
@@ -885,6 +883,7 @@ function updateOpacitySliderScoresRanges() {
     }
   }
   updateScoresLayer();
+  console.log('updateScoresLayer- 886');
 }
 
 function updateOutlineSliderScoresRanges() {
@@ -932,6 +931,8 @@ function updateOutlineSliderScoresRanges() {
       document.getElementById('outlineRangeScoresMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   }
+  updateScoresLayer();
+  console.log('updateScoresLayer- 934');
 }
 
 function updateScoresLayer() {
