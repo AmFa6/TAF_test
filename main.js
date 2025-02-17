@@ -347,6 +347,11 @@ function initializeAllSliders() {
       handleElement.setAttribute('data-value', formatValue(values[handle], sliderElement.noUiSlider.options.step));
     });
   });
+
+  ScoresOpacityRange = document.getElementById('opacityRangeScoresSlider');
+  ScoresOutlineRange = document.getElementById('outlineRangeScoresSlider');
+  AmenitiesOpacityRange = document.getElementById('opacityRangeAmenitiesSlider');
+  AmenitiesOutlineRange = document.getElementById('outlineRangeAmenitiesSlider');
 }
 
 function updateSliderRanges(context, layerType) {
