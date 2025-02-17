@@ -394,7 +394,7 @@ function formatValue(value, step) {
   }
 }
 
-function onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode) {
+function scorepopup(feature, layer, selectedYear, selectedPurpose, selectedMode) {
   layer.on({
     click: function (e) {
       const properties = feature.properties;
@@ -962,7 +962,7 @@ function updateScoresLayer() {
 
     ScoresLayer = L.geoJSON(filteredScoresLayer, {
       style: feature => styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
-      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
+      onEachFeature: (feature, layer) => scorepopup(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
     console.log('scoresadded- 965');
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
@@ -1265,7 +1265,7 @@ function updateAmenitiesCatchmentLayer() {
               fillOpacity: opacity
             };
           },
-          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
+          onEachFeature: (feature, layer) => scorepopup(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
 
         drawSelectedAmenities(selectedAmenitiesAmenities);
