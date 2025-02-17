@@ -574,7 +574,7 @@ function updateLegend() {
   amenitiesSpacingDiv.style.marginTop = "20px";
   legendContent.appendChild(amenitiesSpacingDiv);
   const amenitiesCheckboxDiv = document.createElement("div");
-  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" ${amenitiesLayerGroup.hasLayer(map) ? 'checked' : ''}> <span style="font-size: 1em;">Amenities</span>`;
   legendContent.appendChild(amenitiesCheckboxDiv);
 
   const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
@@ -587,7 +587,7 @@ function updateLegend() {
   });
 
   const wardBoundariesCheckboxDiv = document.createElement("div");
-  wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" checked> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
+  wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" ${wardBoundariesLayer.hasLayer(map) ? 'checked' : ''}> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
   legendContent.appendChild(wardBoundariesCheckboxDiv);
 
   const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
