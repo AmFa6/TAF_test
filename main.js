@@ -160,29 +160,45 @@ AmenitiesPurpose.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
 });
 ScoresOpacity.addEventListener("change", () => {
+  console.log('ScoresOpacity change event triggered');
   autoUpdateOpacity = true;
   updateSliderRanges(ScoresOpacityRange, 'Scores');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
+  console.log('ScoresOutline change event triggered');
   autoUpdateOutline = true;
   updateSliderRanges(ScoresOutlineRange, 'Scores');
   updateScoresLayer();
 });
 AmenitiesOpacity.addEventListener("change", () => {
+  console.log('AmenitiesOpacity change event triggered');
   autoUpdateOpacity = true;
   updateSliderRanges(AmenitiesOpacityRange, 'Amenities');
   updateAmenitiesCatchmentLayer();
 });
 AmenitiesOutline.addEventListener("change", () => {
+  console.log('AmenitiesOutline change event triggered');
   autoUpdateOutline = true;
   updateSliderRanges(AmenitiesOutlineRange, 'Amenities');
   updateAmenitiesCatchmentLayer();
 });
-ScoresInverseOpacity.addEventListener("click", () => toggleInverseScale(ScoresOpacityRange, isInverseScoresOpacity, opacityScoresOrder, 'Scores'));
-ScoresInverseOutline.addEventListener("click", () => toggleInverseScale(ScoresOutlineRange, isInverseScoresOutline, outlineScoresOrder, 'Scores'));
-AmenitiesInverseOpacity.addEventListener("click", () => toggleInverseScale(AmenitiesOpacityRange, isInverseAmenitiesOpacity, opacityAmenitiesOrder, 'Amenities'));
-AmenitiesInverseOutline.addEventListener("click", () => toggleInverseScale(AmenitiesOutlineRange, isInverseAmenitiesOutline, outlineAmenitiesOrder, 'Amenities'));
+ScoresInverseOpacity.addEventListener("click", () => {
+  console.log('ScoresInverseOpacity click event triggered');
+  toggleInverseScale(ScoresOpacityRange, isInverseScoresOpacity, opacityScoresOrder, 'Scores');
+});
+ScoresInverseOutline.addEventListener("click", () => {
+  console.log('ScoresInverseOutline click event triggered');
+  toggleInverseScale(ScoresOutlineRange, isInverseScoresOutline, outlineScoresOrder, 'Scores');
+});
+AmenitiesInverseOpacity.addEventListener("click", () => {
+  console.log('AmenitiesInverseOpacity click event triggered');
+  toggleInverseScale(AmenitiesOpacityRange, isInverseAmenitiesOpacity, opacityAmenitiesOrder, 'Amenities');
+});
+AmenitiesInverseOutline.addEventListener("click", () => {
+  console.log('AmenitiesInverseOutline click event triggered');
+  toggleInverseScale(AmenitiesOutlineRange, isInverseAmenitiesOutline, outlineAmenitiesOrder, 'Amenities');
+});
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const collapsibleButtons = document.querySelectorAll(".collapsible");
@@ -334,9 +350,21 @@ function initializeAllSliders() {
 }
 
 function updateSliderRanges(context, layerType) {
+  console.log('updateSliderRanges called with context:', context, 'and layerType:', layerType);
+  
+  if (!context) {
+    console.error('Context is undefined');
+    return;
+  }
+
   const field = context.value;
+  console.log('Field:', field);
+  
   const selectedYear = layerType === 'Scores' ? ScoresYear.value : AmenitiesYear.value;
+  console.log('Selected Year:', selectedYear);
+  
   const selectedLayer = layers[selectedYear];
+  console.log('Selected Layer:', selectedLayer);
 
   if (selectedLayer) {
     const values = field !== "None" ? selectedLayer.features.map(feature => feature.properties[field]).filter(value => value !== null && value !== 0) : [];
