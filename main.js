@@ -288,12 +288,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 map.on('zoomend', () => {
-  if (ScoresLayer) {
-    drawSelectedAmenities(selectedScoresAmenities);
-  } else if (AmenitiesCatchmentLayer) {
-    drawSelectedAmenities(selectedAmenitiesAmenities);
-  } else {
-    drawSelectedAmenities([]);
+  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+  if (amenitiesCheckbox && amenitiesCheckbox.checked) {
+    if (ScoresLayer) {
+      drawSelectedAmenities(selectedScoresAmenities);
+    } else if (AmenitiesCatchmentLayer) {
+      drawSelectedAmenities(selectedAmenitiesAmenities);
+    } else {
+      drawSelectedAmenities([]);
+    }
   }
 });
 
