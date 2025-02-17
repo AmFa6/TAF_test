@@ -103,7 +103,6 @@ ScoresFiles.forEach(file => {
       layers[file.year] = ScoresLayer;
       layersLoaded++;
       if (layersLoaded === totalLayers) {
-        initializeScoresSliders();
       }
     })
 }); 
@@ -113,7 +112,6 @@ AmenitiesFiles.forEach(file => {
     .then(response => response.json())
     .then(amenityLayer => {
       amenityLayers[file.type] = amenityLayer;
-      drawSelectedAmenities([]);
     });
 });
 
@@ -151,6 +149,7 @@ let selectedAmenitiesFromMap = [];
 let initialLoad = true;
 let initialLoadComplete = false;
 
+initializeScoresSliders();
 initializeAmenitiesSliders()
 
 ScoresYear.addEventListener("change", updateScoresLayer)
@@ -235,8 +234,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         if(AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
         } 
-        drawSelectedAmenities([]);
         updateLegend();
+        drawSelectedAmenities([]);
       }
     });
   });
@@ -502,41 +501,6 @@ function updateLegend() {
       { range: `> 20 and <= 25`, color: "#414387" },
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
-    const headerDiv = document.createElement("div");
-    headerDiv.innerHTML = `${headerText}`;
-    headerDiv.style.fontSize = "1.1em";
-    headerDiv.style.marginBottom = "10px";
-    legendContent.appendChild(headerDiv);
-
-    const masterCheckboxDiv = document.createElement("div");
-    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
-    legendContent.appendChild(masterCheckboxDiv);
-
-    classes.forEach(c => {
-      const div = document.createElement("div");
-      const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
-      div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
-      legendContent.appendChild(div);
-    });
-
-    const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
-    newLegendCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', () => {
-        updateMasterCheckbox();
-        updateAmenitiesCatchmentLayer();
-      });
-    });
-
-    const masterCheckbox = document.getElementById('masterCheckbox');
-    masterCheckbox.addEventListener('change', () => {
-      const isChecked = masterCheckbox.checked;
-      newLegendCheckboxes.forEach(checkbox => {
-        checkbox.checked = isChecked;
-      });
-      updateAmenitiesCatchmentLayer();
-    });
-    updateMasterCheckbox();
-
   } else if (ScoresLayer) {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
@@ -559,6 +523,9 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
+  }
+
+  if (headerText && classes) {
     const headerDiv = document.createElement("div");
     headerDiv.innerHTML = `${headerText}`;
     headerDiv.style.fontSize = "1.1em";
@@ -580,7 +547,11 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
-        updateScoresLayer();
+        if (AmenitiesCatchmentLayer) {
+          updateAmenitiesCatchmentLayer();
+        } else if (ScoresLayer) {
+          updateScoresLayer();
+        }
       });
     });
 
@@ -590,7 +561,11 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
-      updateScoresLayer();
+      if (AmenitiesCatchmentLayer) {
+        updateAmenitiesCatchmentLayer();
+      } else if (ScoresLayer) {
+        updateScoresLayer();
+      }
     });
     updateMasterCheckbox();
   }
@@ -610,7 +585,7 @@ function updateLegend() {
       map.removeLayer(amenitiesLayerGroup);
     }
   });
-  
+
   const wardBoundariesCheckboxDiv = document.createElement("div");
   wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" checked> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
   legendContent.appendChild(wardBoundariesCheckboxDiv);
@@ -949,11 +924,10 @@ function updateScoresLayer() {
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
 
+    updateLegend();
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
-
     AmenitiesCatchmentLayer = null;
-    updateLegend();
   }
 }
 
@@ -1137,6 +1111,7 @@ function updateAmenitiesCatchmentLayer() {
     if(AmenitiesCatchmentLayer) {
       map.removeLayer(AmenitiesCatchmentLayer);
     }
+    updateLegend();
     drawSelectedAmenities([]);
     return;
   }
@@ -1249,10 +1224,8 @@ function updateAmenitiesCatchmentLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
-
-        drawSelectedAmenities(selectedAmenitiesAmenities);
-
         updateLegend();
+        drawSelectedAmenities(selectedAmenitiesAmenities);
 
         if (initialLoad) {
           initialLoad = false;
