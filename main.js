@@ -591,7 +591,7 @@ function updateLegend() {
   amenitiesSpacingDiv.style.marginTop = "20px";
   legendContent.appendChild(amenitiesSpacingDiv);
   const amenitiesCheckboxDiv = document.createElement("div");
-  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" ${amenitiesLayerGroup.hasLayer(map) ? 'checked' : ''}> <span style="font-size: 1em;">Amenities</span>`;
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" ${map.hasLayer(amenitiesLayerGroup) ? 'checked' : ''}> <span style="font-size: 1em;">Amenities</span>`;
   legendContent.appendChild(amenitiesCheckboxDiv);
 
   const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
@@ -601,7 +601,6 @@ function updateLegend() {
     } else {
       map.removeLayer(amenitiesLayerGroup);
     }
-    drawSelectedAmenities([]);
   });
 
   const wardBoundariesCheckboxDiv = document.createElement("div");
@@ -629,14 +628,9 @@ function updateMasterCheckbox() {
 
 function drawSelectedAmenities(amenities) {
   console.log('Drawselectedamenities called');
-  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
   amenitiesLayerGroup.clearLayers();
 
-  if (!amenitiesCheckbox || !amenitiesCheckbox.checked) {
-    return;
-  }
-
-  if (amenities.length === 0) {
+  if (!amenities || amenities.length === 0) {
     amenities = Object.keys(amenityLayers);
   }
 
