@@ -593,6 +593,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
+        console.log('ScoresLayer legend-checkbox change event fired - updateScoresLayer');
         updateScoresLayer();
       });
     });
@@ -603,6 +604,7 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
+      console.log('ScoresLayer masterCheckbox change event fired - updateScoresLayer');
       updateScoresLayer();
     });
     updateMasterCheckbox();
