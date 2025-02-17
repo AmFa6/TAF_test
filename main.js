@@ -492,6 +492,7 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateFeatureVisibility() {
+  console.log('updateFeatureVisibility-495');
   if (AmenitiesCatchmentLayer) {
     const selectedYear = AmenitiesYear.value;
     const selectedMode = AmenitiesMode.value;
