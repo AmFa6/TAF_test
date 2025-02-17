@@ -154,11 +154,11 @@ let initialLoadComplete = false;
 initializeAmenitiesSliders()
 
 ScoresYear.addEventListener("change", updateScoresLayer)
-console.log('ScoresYear change event fired - updateScoresLayer');
+console.log('updateScoresLayer-157');
 ScoresPurpose.addEventListener("change", updateScoresLayer);
-console.log('ScoresPurpose change event fired - updateScoresLayer');
+console.log('updateScoresLayer-159');
 ScoresMode.addEventListener("change", updateScoresLayer);
-console.log('ScoresMode change event fired - updateScoresLayer');
+console.log('updateScoresLayer-161');
 AmenitiesYear.addEventListener("change", updateAmenitiesCatchmentLayer);
 console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
 AmenitiesMode.addEventListener("change", updateAmenitiesCatchmentLayer);
@@ -170,13 +170,13 @@ console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer
 ScoresOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderScoresRanges();
-  console.log('ScoresOpacity change event fired - updateScoresLayer');
+  console.log('updateScoresLayer-173');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateOutlineSliderScoresRanges();
-  console.log('ScoresOutline change event fired - updateScoresLayer');
+  console.log('updateScoresLayer-179');
   updateScoresLayer();
 });
 AmenitiesOpacity.addEventListener("change", () => {
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
-          console.log('Connectivity Scores panel opened - updateScoresLayer');
+          console.log('updateScoresLayer-231');
           updateScoresLayer();
           if(AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       } else {
         if(ScoresLayer) {
           map.removeLayer(ScoresLayer);
-          console.log('ScoresLayer removed');
+          console.log('ScoresLayer removed-246');
         }
         if(AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
@@ -757,8 +757,9 @@ function initializeScoresSliders() {
   ScoresOpacityRange = document.getElementById('opacityRangeScoresSlider');
   ScoresOutlineRange = document.getElementById('outlineRangeScoresSlider');
   initializeSliders(ScoresOpacityRange, updateScoresLayer);
+  console.log('udpatescoreslayer-760');
   initializeSliders(ScoresOutlineRange, updateScoresLayer);
-  console.log('initializeScoresSliders function called - 785');
+  console.log('udpatescoreslayer-762');
 }
 
 function toggleInverseOpacityScoresScale() {
@@ -825,7 +826,7 @@ function toggleInverseOutlineScoresScale() {
   outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOutlineSliderScoresRanges();
-  console.log('toggleInverseOutlineScoresScale function called - 852');
+  console.log('updateScoresLayer-828');
   updateScoresLayer();
 }
 
@@ -935,7 +936,6 @@ function updateScoresLayer() {
 
   if (ScoresLayer) {
     map.removeLayer(ScoresLayer);
-    console.log('ScoresLayer removed');
     ScoresLayer = null;
   }
 
@@ -962,7 +962,6 @@ function updateScoresLayer() {
       style: feature => styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
-    console.log('ScoresLayer drawn');
 
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
@@ -970,7 +969,6 @@ function updateScoresLayer() {
     AmenitiesCatchmentLayer = null;
     updateLegend();
   }
-  console.log('ScoresLayer created');
 }
 
 function initializeAmenitiesSliders() {
@@ -1257,7 +1255,6 @@ function updateAmenitiesCatchmentLayer() {
                 weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineAmenitiesOrder);
               }
             }
-
             return {
               fillColor: color,
               weight: weight,
