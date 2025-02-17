@@ -185,19 +185,6 @@ ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
 AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesScale);
 AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
-function updateCheckboxStates() {
-  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
-  const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
-
-  if (amenitiesCheckbox) {
-    amenitiesCheckbox.checked = amenitiesLayerGroup && map.hasLayer(amenitiesLayerGroup);
-  }
-
-  if (wardBoundariesCheckbox) {
-    wardBoundariesCheckbox.checked = wardBoundariesLayer && map.hasLayer(wardBoundariesLayer);
-  }
-}
-
 document.addEventListener('DOMContentLoaded', (event) => {
   const collapsibleButtons = document.querySelectorAll(".collapsible");
   collapsibleButtons.forEach(button => {
@@ -284,19 +271,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
   });
 
-  updateCheckboxStates();
 });
 
 map.on('zoomend', () => {
-  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
-  if (amenitiesCheckbox && amenitiesCheckbox.checked) {
-    if (ScoresLayer) {
-      drawSelectedAmenities(selectedScoresAmenities);
-    } else if (AmenitiesCatchmentLayer) {
-      drawSelectedAmenities(selectedAmenitiesAmenities);
-    } else {
-      drawSelectedAmenities([]);
-    }
+  if (ScoresLayer) {
+    drawSelectedAmenities(selectedScoresAmenities);
+  } else if (AmenitiesCatchmentLayer) {
+    drawSelectedAmenities(selectedAmenitiesAmenities);
+  } else {
+    drawSelectedAmenities([]);
   }
 });
 
@@ -587,35 +570,6 @@ function updateLegend() {
     });
     updateMasterCheckbox();
   }
-
-  const amenitiesSpacingDiv = document.createElement("div");
-  amenitiesSpacingDiv.style.marginTop = "20px";
-  legendContent.appendChild(amenitiesSpacingDiv);
-  const amenitiesCheckboxDiv = document.createElement("div");
-  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" ${map.hasLayer(amenitiesLayerGroup) ? 'checked' : ''}> <span style="font-size: 1em;">Amenities</span>`;
-  legendContent.appendChild(amenitiesCheckboxDiv);
-
-  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
-  amenitiesCheckbox.addEventListener('change', () => {
-    if (amenitiesCheckbox.checked) {
-      amenitiesLayerGroup.addTo(map);
-    } else {
-      map.removeLayer(amenitiesLayerGroup);
-    }
-  });
-
-  const wardBoundariesCheckboxDiv = document.createElement("div");
-  wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" ${wardBoundariesLayer && map.hasLayer(wardBoundariesLayer) ? 'checked' : ''}> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
-  legendContent.appendChild(wardBoundariesCheckboxDiv);
-
-  const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
-  wardBoundariesCheckbox.addEventListener('change', () => {
-    if (wardBoundariesCheckbox.checked) {
-      wardBoundariesLayer.addTo(map);
-    } else {
-      map.removeLayer(wardBoundariesLayer);
-    }
-  });
 }
 
 function updateMasterCheckbox() {
