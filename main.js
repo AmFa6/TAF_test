@@ -587,7 +587,7 @@ function updateLegend() {
   });
 
   const wardBoundariesCheckboxDiv = document.createElement("div");
-  wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" ${wardBoundariesLayer.hasLayer(map) ? 'checked' : ''}> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
+  wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" ${wardBoundariesLayer && map.hasLayer(wardBoundariesLayer) ? 'checked' : ''}> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
   legendContent.appendChild(wardBoundariesCheckboxDiv);
 
   const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
