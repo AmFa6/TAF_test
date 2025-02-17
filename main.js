@@ -190,11 +190,11 @@ function updateCheckboxStates() {
   const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
 
   if (amenitiesCheckbox) {
-    amenitiesCheckbox.checked = map.hasLayer(amenitiesLayerGroup);
+    amenitiesCheckbox.checked = amenitiesLayerGroup && map.hasLayer(amenitiesLayerGroup);
   }
 
   if (wardBoundariesCheckbox) {
-    wardBoundariesCheckbox.checked = map.hasLayer(wardBoundariesLayer);
+    wardBoundariesCheckbox.checked = wardBoundariesLayer && map.hasLayer(wardBoundariesLayer);
   }
 }
 
