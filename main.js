@@ -149,7 +149,7 @@ let selectedAmenitiesFromMap = [];
 let initialLoad = true;
 let initialLoadComplete = false;
 
-initializeAllSliders();
+initializeSliders();
 
 ScoresYear.addEventListener("change", updateScoresLayer);
 ScoresPurpose.addEventListener("change", updateScoresLayer);
