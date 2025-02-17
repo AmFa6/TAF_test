@@ -162,25 +162,25 @@ AmenitiesPurpose.forEach(checkbox => {
 ScoresOpacity.addEventListener("change", () => {
   console.log('ScoresOpacity change event triggered');
   autoUpdateOpacity = true;
-  updateSliderRanges(ScoresOpacity, 'Scores');
+  updateSliderRanges(ScoresOpacityRange, 'Scores');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
   console.log('ScoresOutline change event triggered');
   autoUpdateOutline = true;
-  updateSliderRanges(ScoresOutline, 'Scores');
+  updateSliderRanges(ScoresOutlineRange, 'Scores');
   updateScoresLayer();
 });
 AmenitiesOpacity.addEventListener("change", () => {
   console.log('AmenitiesOpacity change event triggered');
   autoUpdateOpacity = true;
-  updateSliderRanges(AmenitiesOpacity, 'Amenities');
+  updateSliderRanges(AmenitiesOpacityRange, 'Amenities');
   updateAmenitiesCatchmentLayer();
 });
 AmenitiesOutline.addEventListener("change", () => {
   console.log('AmenitiesOutline change event triggered');
   autoUpdateOutline = true;
-  updateSliderRanges(AmenitiesOutline, 'Amenities');
+  updateSliderRanges(AmenitiesOutlineRange, 'Amenities');
   updateAmenitiesCatchmentLayer();
 });
 ScoresInverseOpacity.addEventListener("click", () => {
@@ -354,15 +354,15 @@ function initializeAllSliders() {
   AmenitiesOutlineRange = document.getElementById('outlineRangeAmenitiesSlider');
 }
 
-function updateSliderRanges(context, layerType) {
-  console.log('updateSliderRanges called with context:', context, 'and layerType:', layerType);
+function updateSliderRanges(sliderElement, layerType) {
+  console.log('updateSliderRanges called with sliderElement:', sliderElement, 'and layerType:', layerType);
   
-  if (!context) {
-    console.error('Context is undefined');
+  if (!sliderElement) {
+    console.error('Slider element is undefined');
     return;
   }
 
-  const field = context.value;
+  const field = layerType === 'Scores' ? ScoresOpacity.value : AmenitiesOpacity.value;
   console.log('Field:', field);
   
   const selectedYear = layerType === 'Scores' ? ScoresYear.value : AmenitiesYear.value;
@@ -386,29 +386,29 @@ function updateSliderRanges(context, layerType) {
     const adjustedMinValue = Math.floor(minValue / step) * step;
 
     if (field === "None") {
-      context.setAttribute('disabled', true);
-      context.noUiSlider.updateOptions({
+      sliderElement.setAttribute('disabled', true);
+      sliderElement.noUiSlider.updateOptions({
         range: {
           'min': 0,
           'max': 0
         },
         step: 1
       });
-      context.noUiSlider.set(['', '']);
-      document.getElementById(`${context.id}Min`).innerText = '';
-      document.getElementById(`${context.id}Max`).innerText = '';
+      sliderElement.noUiSlider.set(['', '']);
+      document.getElementById(`${sliderElement.id}Min`).innerText = '';
+      document.getElementById(`${sliderElement.id}Max`).innerText = '';
     } else {
-      context.removeAttribute('disabled');
-      context.noUiSlider.updateOptions({
+      sliderElement.removeAttribute('disabled');
+      sliderElement.noUiSlider.updateOptions({
         range: {
           'min': adjustedMinValue,
           'max': adjustedMaxValue
         },
         step: step
       });
-      context.noUiSlider.set([adjustedMinValue, adjustedMaxValue]);
-      document.getElementById(`${context.id}Min`).innerText = formatValue(adjustedMinValue, step);
-      document.getElementById(`${context.id}Max`).innerText = formatValue(adjustedMaxValue, step);
+      sliderElement.noUiSlider.set([adjustedMinValue, adjustedMaxValue]);
+      document.getElementById(`${sliderElement.id}Min`).innerText = formatValue(adjustedMinValue, step);
+      document.getElementById(`${sliderElement.id}Max`).innerText = formatValue(adjustedMaxValue, step);
     }
   }
 }
