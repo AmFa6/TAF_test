@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       this.classList.toggle("active");
       content.style.display = content.style.display === "block" ? "none" : "block";
       this.classList.toggle("collapsed", content.style.display === "none");
+      updateCheckboxStates();
     });
   });
   
@@ -218,25 +219,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
           updateScoresLayer();
-          if(AmenitiesCatchmentLayer) {
+          if (AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
-          } 
+          }
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
           updateAmenitiesCatchmentLayer();
-          if(ScoresLayer) {
+          if (ScoresLayer) {
             map.removeLayer(ScoresLayer);
           }
         }
       } else {
-        if(ScoresLayer) {
+        if (ScoresLayer) {
           map.removeLayer(ScoresLayer);
         }
-        if(AmenitiesCatchmentLayer) {
+        if (AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
-        } 
+        }
         updateLegend();
         drawSelectedAmenities([]);
       }
+      updateCheckboxStates();
     });
   });
 
@@ -270,13 +272,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
     }
   });
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
-    if (amenitiesCheckbox && amenitiesCheckbox.checked) {
-      drawSelectedAmenities([]);
-    }
-  });
+
+  updateCheckboxStates();
 });
+
+function updateCheckboxStates() {
+  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+  const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
+
+  if (amenitiesCheckbox) {
+    amenitiesCheckbox.checked = map.hasLayer(amenitiesLayerGroup);
+  }
+
+  if (wardBoundariesCheckbox) {
+    wardBoundariesCheckbox.checked = map.hasLayer(wardBoundariesLayer);
+  }
+}
 
 map.on('zoomend', () => {
   if (ScoresLayer) {
