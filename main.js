@@ -967,9 +967,10 @@ function updateScoresLayer() {
     console.log('scoresadded- 965');
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
-
+    console.log('drawselectedamenities-970');
     AmenitiesCatchmentLayer = null;
     updateLegend();
+    console.log('updateLegend-973');
   }
 }
 
