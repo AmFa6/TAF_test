@@ -170,7 +170,6 @@ console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer
 ScoresOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderScoresRanges();
-  console.log('updateScoresLayer-173');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
@@ -285,6 +284,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         amenitiesCheckboxesContainer.classList.remove('show');
       }
     }
+  });
+
+  document.querySelectorAll('.legend-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', updateFeatureVisibility);
   });
 });
 
