@@ -251,7 +251,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
           console.log('AmenitiesCatchmentLayer removed');
         } 
         drawSelectedAmenities([]);
+        console.log('Amenities redrawn')
         updateLegend();
+        console.log('legendupdated')
       }
     });
   });
