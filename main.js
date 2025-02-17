@@ -4,26 +4,33 @@ const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/lig
   attribution: '&copy; OpenStreetMap contributors & CartoDB'
 }).addTo(map);
 
-//*fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?where=1%3D1&outFields=*&geometry=-3.749%2C51.145%2C-1.392%2C51.744&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelContains&outSR=4326&f=json')
-//*fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
-  fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&geometry=-3.073689%2C51.291726%2C-2.327195%2C51.656841&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
+fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2021_GB_BGC_2022/FeatureServer/0/query?outFields=*&where=1%3D1&geometry=-3.073689%2C51.291726%2C-2.327195%2C51.656841&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.json();
+  })
+  .then(data => {
+    wardBoundariesLayer = L.geoJSON(data, {
+      style: function (feature) {
+        return {
+          color: 'black',
+          weight: 1,
+          fillOpacity: 0
+        };
+      },
+      onEachFeature: function (feature, layer) {
+        layer.on('click', function () {
+          L.popup()
+            .setLatLng(layer.getBounds().getCenter())
+            .setContent(`<strong>Ward Name:</strong> ${feature.properties.WD21NM}`)
+            .openOn(map);
+        });
       }
-      return response.json();
-    })
-    .then(data => {
-      wardBoundariesLayer = L.geoJSON(data, {
-        style: function (feature) {
-          return {
-            color: 'black',
-            weight: 1
-          };
-        }
-      }).addTo(map);
-    })
-    .catch(error => console.error('Error loading GeoJSON data:', error));
+    }).addTo(map);
+  })
+  .catch(error => console.error('Error loading GeoJSON data:', error));
 
 const ScoresFiles = [
   { year: '2024', path: 'https://AmFa6.github.io/TAF_test/2024_connectscore.geojson' },
@@ -147,41 +154,41 @@ let initialLoadComplete = false;
 initializeAmenitiesSliders()
 
 ScoresYear.addEventListener("change", updateScoresLayer)
-console.log('ScoresYear change event fired - 153');
+console.log('ScoresYear change event fired - updateScoresLayer');
 ScoresPurpose.addEventListener("change", updateScoresLayer);
-console.log('ScoresPurpose change event fired - 155');
+console.log('ScoresPurpose change event fired - updateScoresLayer');
 ScoresMode.addEventListener("change", updateScoresLayer);
-console.log('ScoresMode change event fired - 157');
+console.log('ScoresMode change event fired - updateScoresLayer');
 AmenitiesYear.addEventListener("change", updateAmenitiesCatchmentLayer);
-console.log('AmenitiesPurpose change event fired - 156');
+console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
 AmenitiesMode.addEventListener("change", updateAmenitiesCatchmentLayer);
-console.log('AmenitiesMode change event fired - 158');
+console.log('AmenitiesMode change event fired - updateAmenitiesCatchmentLayer');
 AmenitiesPurpose.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
 });
-console.log('AmenitiesPurpose change event fired - 162');
+console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
 ScoresOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderScoresRanges();
-  console.log('ScoresOpacity change event fired - 169');
+  console.log('ScoresOpacity change event fired - updateScoresLayer');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateOutlineSliderScoresRanges();
-  console.log('ScoresOutline change event fired - 175');
+  console.log('ScoresOutline change event fired - updateScoresLayer');
   updateScoresLayer();
 });
 AmenitiesOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
   updateOpacitySliderAmenitiesRanges();
-  console.log('AmenitiesOpacity change event fired - 176');
+  console.log('AmenitiesOpacity change event fired - updateAmenitiesCatchmentLayer');
   updateAmenitiesCatchmentLayer();
 });
 AmenitiesOutline.addEventListener("change", () => {
   autoUpdateOutline = true;
   updateOutlineSliderAmenitiesRanges();
-  console.log('AmenitiesOutline change event fired - 182');
+  console.log('AmenitiesOutline change event fired - updateAmenitiesCatchmentLayer');
   updateAmenitiesCatchmentLayer();
 });
 ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
@@ -190,7 +197,6 @@ AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesS
 AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  console.log('DOMContentLoaded event fired');
   const collapsibleButtons = document.querySelectorAll(".collapsible");
   collapsibleButtons.forEach(button => {
     const content = button.nextElementSibling;
@@ -222,13 +228,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
-          console.log('Connectivity Scores panel opened');
+          console.log('Connectivity Scores panel opened - updateScoresLayer');
           updateScoresLayer();
           if(AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
           } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
-          console.log('Journey Time Catchments - Amenities panel opened - 229');
+          console.log('Journey Time Catchments - Amenities panel opened - updateAmenitiesCatchmentLayer');
           updateAmenitiesCatchmentLayer();
           if(ScoresLayer) {
             map.removeLayer(ScoresLayer);
@@ -237,9 +243,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
       } else {
         if(ScoresLayer) {
           map.removeLayer(ScoresLayer);
+          console.log('ScoresLayer removed');
         }
         if(AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
+          console.log('AmenitiesCatchmentLayer removed');
         } 
         drawSelectedAmenities([]);
         updateLegend();
@@ -280,7 +288,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 map.on('zoomend', () => {
-  console.log('map zoomend event fired');
   if (ScoresLayer) {
     drawSelectedAmenities(selectedScoresAmenities);
   } else if (AmenitiesCatchmentLayer) {
@@ -529,14 +536,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
-        if (AmenitiesCatchmentLayer) {
-          console.log('AmenitiesCatchmentLayer updateLegend event fired - 532');
-          updateAmenitiesCatchmentLayer();
-        }
-        if (ScoresLayer) {
-          console.log('ScoresLayer updateLegend event fired - 541');
-          updateScoresLayer();
-        }
+        updateAmenitiesCatchmentLayer();
       });
     });
 
@@ -546,17 +546,10 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
-      if (AmenitiesCatchmentLayer) {
-        console.log('AmenitiesCatchmentLayer masterCheckbox event fired - 548');
-        updateAmenitiesCatchmentLayer();
-      }
-      if (ScoresLayer) {
-        console.log('ScoresLayer masterCheckbox event fired - 558');
-        updateScoresLayer();
-      }
+      updateAmenitiesCatchmentLayer();
     });
-  
     updateMasterCheckbox();
+
   } else if (ScoresLayer) {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
@@ -600,13 +593,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
-        if (AmenitiesCatchmentLayer) {
-          console.log('AmenitiesCatchmentLayer updateLegend event fired - 598');
-          updateAmenitiesCatchmentLayer();
-        } else {
-          console.log('ScoresLayer updateLegend event fired - 611');
-          updateScoresLayer();
-        }
+        updateScoresLayer();
       });
     });
 
@@ -616,15 +603,8 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
-      if (AmenitiesCatchmentLayer) {
-        console.log('AmenitiesCatchmentLayer masterCheckbox event fired - 624');
-        updateAmenitiesCatchmentLayer();
-      } else {
-        console.log('ScoresLayer masterCheckbox event fired - 627');
-        updateScoresLayer();
-      }
+      updateScoresLayer();
     });
-
     updateMasterCheckbox();
   }
 
@@ -953,7 +933,6 @@ function updateScoresLayer() {
   const opacityField = ScoresOpacity.value;
   const outlineField = ScoresOutline.value;
 
-  // Remove the existing ScoresLayer
   if (ScoresLayer) {
     map.removeLayer(ScoresLayer);
     console.log('ScoresLayer removed');
@@ -1171,6 +1150,14 @@ function updateAmenitiesCatchmentLayer() {
 
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
+
+  if (!selectedYear || !selectedMode || selectedAmenitiesAmenities.length === 0) {
+    if(AmenitiesCatchmentLayer) {
+      map.removeLayer(AmenitiesCatchmentLayer);
+    }
+    drawSelectedAmenities([]);
+    return;
+  }
 
   hexTimeMap = {};
 
