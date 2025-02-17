@@ -103,6 +103,7 @@ ScoresFiles.forEach(file => {
       layers[file.year] = ScoresLayer;
       layersLoaded++;
       if (layersLoaded === totalLayers) {
+        initializeScoresSliders();
       }
     })
 }); 
@@ -112,6 +113,7 @@ AmenitiesFiles.forEach(file => {
     .then(response => response.json())
     .then(amenityLayer => {
       amenityLayers[file.type] = amenityLayer;
+      drawSelectedAmenities([]);
     });
 });
 
@@ -136,7 +138,7 @@ let isInverseScoresOpacity = false;
 let isInverseScoresOutline = false;
 let isInverseAmenitiesOpacity = false;
 let isInverseAmenitiesOutline = false;
-let wardBoundariesLayer;
+let wardBoudariesLayer;
 let ScoresLayer = null;
 let AmenitiesCatchmentLayer = null;
 let hexTimeMap = {};
@@ -149,56 +151,50 @@ let selectedAmenitiesFromMap = [];
 let initialLoad = true;
 let initialLoadComplete = false;
 
-initializeAllSliders();
+initializeAmenitiesSliders()
 
-ScoresYear.addEventListener("change", updateScoresLayer);
+ScoresYear.addEventListener("change", updateScoresLayer)
+console.log('ScoresYear change event fired - updateScoresLayer');
 ScoresPurpose.addEventListener("change", updateScoresLayer);
+console.log('ScoresPurpose change event fired - updateScoresLayer');
 ScoresMode.addEventListener("change", updateScoresLayer);
+console.log('ScoresMode change event fired - updateScoresLayer');
 AmenitiesYear.addEventListener("change", updateAmenitiesCatchmentLayer);
+console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
 AmenitiesMode.addEventListener("change", updateAmenitiesCatchmentLayer);
+console.log('AmenitiesMode change event fired - updateAmenitiesCatchmentLayer');
 AmenitiesPurpose.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
 });
+console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
 ScoresOpacity.addEventListener("change", () => {
-  console.log('ScoresOpacity change event triggered');
   autoUpdateOpacity = true;
-  updateSliderRanges(ScoresOpacityRange, 'Scores');
+  updateOpacitySliderScoresRanges();
+  console.log('ScoresOpacity change event fired - updateScoresLayer');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
-  console.log('ScoresOutline change event triggered');
   autoUpdateOutline = true;
-  updateSliderRanges(ScoresOutlineRange, 'Scores');
+  updateOutlineSliderScoresRanges();
+  console.log('ScoresOutline change event fired - updateScoresLayer');
   updateScoresLayer();
 });
 AmenitiesOpacity.addEventListener("change", () => {
-  console.log('AmenitiesOpacity change event triggered');
   autoUpdateOpacity = true;
-  updateSliderRanges(AmenitiesOpacityRange, 'Amenities');
+  updateOpacitySliderAmenitiesRanges();
+  console.log('AmenitiesOpacity change event fired - updateAmenitiesCatchmentLayer');
   updateAmenitiesCatchmentLayer();
 });
 AmenitiesOutline.addEventListener("change", () => {
-  console.log('AmenitiesOutline change event triggered');
   autoUpdateOutline = true;
-  updateSliderRanges(AmenitiesOutlineRange, 'Amenities');
+  updateOutlineSliderAmenitiesRanges();
+  console.log('AmenitiesOutline change event fired - updateAmenitiesCatchmentLayer');
   updateAmenitiesCatchmentLayer();
 });
-ScoresInverseOpacity.addEventListener("click", () => {
-  console.log('ScoresInverseOpacity click event triggered');
-  toggleInverseScale(ScoresOpacityRange, isInverseScoresOpacity, opacityScoresOrder, 'Scores');
-});
-ScoresInverseOutline.addEventListener("click", () => {
-  console.log('ScoresInverseOutline click event triggered');
-  toggleInverseScale(ScoresOutlineRange, isInverseScoresOutline, outlineScoresOrder, 'Scores');
-});
-AmenitiesInverseOpacity.addEventListener("click", () => {
-  console.log('AmenitiesInverseOpacity click event triggered');
-  toggleInverseScale(AmenitiesOpacityRange, isInverseAmenitiesOpacity, opacityAmenitiesOrder, 'Amenities');
-});
-AmenitiesInverseOutline.addEventListener("click", () => {
-  console.log('AmenitiesInverseOutline click event triggered');
-  toggleInverseScale(AmenitiesOutlineRange, isInverseAmenitiesOutline, outlineAmenitiesOrder, 'Amenities');
-});
+ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
+ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
+AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesScale);
+AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const collapsibleButtons = document.querySelectorAll(".collapsible");
@@ -232,25 +228,29 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
+          console.log('Connectivity Scores panel opened - updateScoresLayer');
           updateScoresLayer();
-          if (AmenitiesCatchmentLayer) {
+          if(AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
-          }
+          } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
+          console.log('Journey Time Catchments - Amenities panel opened - updateAmenitiesCatchmentLayer');
           updateAmenitiesCatchmentLayer();
-          if (ScoresLayer) {
+          if(ScoresLayer) {
             map.removeLayer(ScoresLayer);
           }
         }
       } else {
-        if (ScoresLayer) {
+        if(ScoresLayer) {
           map.removeLayer(ScoresLayer);
+          console.log('ScoresLayer removed');
         }
-        if (AmenitiesCatchmentLayer) {
+        if(AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
-        }
-        updateLegend();
+          console.log('AmenitiesCatchmentLayer removed');
+        } 
         drawSelectedAmenities([]);
+        updateLegend();
       }
     });
   });
@@ -285,7 +285,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
     }
   });
-
 });
 
 map.on('zoomend', () => {
@@ -298,156 +297,43 @@ map.on('zoomend', () => {
   }
 });
 
-function initializeAllSliders() {
-  const sliders = [
-    { element: document.getElementById('opacityRangeScoresSlider'), updateCallback: () => updateSliderRanges(document.getElementById('opacityRangeScoresSlider'), 'Scores') },
-    { element: document.getElementById('outlineRangeScoresSlider'), updateCallback: () => updateSliderRanges(document.getElementById('outlineRangeScoresSlider'), 'Scores') },
-    { element: document.getElementById('opacityRangeAmenitiesSlider'), updateCallback: () => updateSliderRanges(document.getElementById('opacityRangeAmenitiesSlider'), 'Amenities') },
-    { element: document.getElementById('outlineRangeAmenitiesSlider'), updateCallback: () => updateSliderRanges(document.getElementById('outlineRangeAmenitiesSlider'), 'Amenities') }
-  ];
-
-  sliders.forEach(slider => {
-    const sliderElement = slider.element;
-    const updateCallback = slider.updateCallback;
-
-    if (sliderElement.noUiSlider) {
-      return;
-    }
-
-    noUiSlider.create(sliderElement, {
-      start: [0, 0],
-      connect: [true, true, true],
-      range: {
-        'min': 0,
-        'max': 0
-      },
-      step: 1,
-      tooltips: false,
-      format: {
-        to: value => parseFloat(value).toFixed(2),
-        from: value => parseFloat(value)
-      }
-    });
-
-    const handles = sliderElement.querySelectorAll('.noUi-handle');
-    if (handles.length > 0) {
-      handles[0].classList.add('noUi-handle-transparent');
-    }
-
-    const connectElements = sliderElement.querySelectorAll('.noUi-connect');
-    if (connectElements.length > 2) {
-      connectElements[1].classList.add('noUi-connect-gradient-right');
-      connectElements[2].classList.add('noUi-connect-dark-grey');
-    }
-
-    sliderElement.noUiSlider.on('update', updateCallback);
-
-    sliderElement.noUiSlider.on('update', function(values, handle) {
-      const handleElement = handles[handle];
-      handleElement.setAttribute('data-value', formatValue(values[handle], sliderElement.noUiSlider.options.step));
-    });
-  });
-
-  ScoresOpacityRange = document.getElementById('opacityRangeScoresSlider');
-  ScoresOutlineRange = document.getElementById('outlineRangeScoresSlider');
-  AmenitiesOpacityRange = document.getElementById('opacityRangeAmenitiesSlider');
-  AmenitiesOutlineRange = document.getElementById('outlineRangeAmenitiesSlider');
-}
-
-function updateSliderRanges(sliderElement, layerType) {
-  console.log('updateSliderRanges called with sliderElement:', sliderElement, 'and layerType:', layerType);
-  
-  if (!sliderElement) {
-    console.error('Slider element is undefined');
+function initializeSliders(sliderElement, updateCallback) {
+  if (sliderElement.noUiSlider) {
     return;
   }
 
-  const field = layerType === 'Scores' ? ScoresOpacity.value : AmenitiesOpacity.value;
-  console.log('Field:', field);
-  
-  const selectedYear = layerType === 'Scores' ? ScoresYear.value : AmenitiesYear.value;
-  console.log('Selected Year:', selectedYear);
-  
-  const selectedLayer = layers[selectedYear];
-  console.log('Selected Layer:', selectedLayer);
-
-  if (selectedLayer) {
-    const values = field !== "None" ? selectedLayer.features.map(feature => feature.properties[field]).filter(value => value !== null && value !== 0) : [];
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
-    const roundedMaxValue = Math.pow(10, Math.ceil(Math.log10(maxValue)));
-    let step = roundedMaxValue / 100;
-
-    if (isNaN(step) || step <= 0) {
-      step = 1;
+  noUiSlider.create(sliderElement, {
+    start: [0, 0],
+    connect: [true, true, true],
+    range: {
+      'min': 0,
+      'max': 0
+    },
+    step: 1,
+    tooltips: false,
+    format: {
+      to: value => parseFloat(value).toFixed(2),
+      from: value => parseFloat(value)
     }
+  });
 
-    const adjustedMaxValue = Math.ceil(maxValue / step) * step;
-    const adjustedMinValue = Math.floor(minValue / step) * step;
-
-    if (field === "None") {
-      sliderElement.setAttribute('disabled', true);
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          'min': 0,
-          'max': 0
-        },
-        step: 1
-      });
-      sliderElement.noUiSlider.set(['', '']);
-      document.getElementById(`${sliderElement.id}Min`).innerText = '';
-      document.getElementById(`${sliderElement.id}Max`).innerText = '';
-    } else {
-      sliderElement.removeAttribute('disabled');
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          'min': adjustedMinValue,
-          'max': adjustedMaxValue
-        },
-        step: step
-      });
-      sliderElement.noUiSlider.set([adjustedMinValue, adjustedMaxValue]);
-      document.getElementById(`${sliderElement.id}Min`).innerText = formatValue(adjustedMinValue, step);
-      document.getElementById(`${sliderElement.id}Max`).innerText = formatValue(adjustedMaxValue, step);
-    }
-  }
-}
-
-function toggleInverseScale(context, isInverse, order) {
-  isInverse = !isInverse;
-  const handles = context.querySelectorAll('.noUi-handle');
-  const connectElements = context.querySelectorAll('.noUi-connect');
-
-  if (isInverse) {
-    context.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.add('noUi-handle-transparent');
-    handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].classList.add('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-right');
-    connectElements[1].classList.add('noUi-connect-gradient-left');
-    connectElements[2].classList.remove('noUi-connect-dark-grey');
-  } else {
-    context.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.remove('noUi-handle-transparent');
+  const handles = sliderElement.querySelectorAll('.noUi-handle');
+  if (handles.length > 0) {
     handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-left');
+  }
+
+  const connectElements = sliderElement.querySelectorAll('.noUi-connect');
+  if (connectElements.length > 2) {
     connectElements[1].classList.add('noUi-connect-gradient-right');
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  order = order === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  sliderElement.noUiSlider.on('update', updateCallback);
 
-  updateSliderRanges(context, layerType);
-  if (layerType === 'Scores') {
-    updateScoresLayer();
-  } else {
-    updateAmenitiesCatchmentLayer();
-  }
+  sliderElement.noUiSlider.on('update', function(values, handle) {
+    const handleElement = handles[handle];
+    handleElement.setAttribute('data-value', formatValue(values[handle], sliderElement.noUiSlider.options.step));
+  });
 }
 
 function styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacityValue, maxOpacityValue, minOutlineValue, maxOutlineValue, selectedYear) {
@@ -605,7 +491,6 @@ function isClassVisible(value, selectedYear) {
 }
 
 function updateLegend() {
-  console.log('UpdateLegend called');
   const selectedYear = ScoresYear.value;
   const legendContent = document.getElementById("legend-content");
 
@@ -630,6 +515,41 @@ function updateLegend() {
       { range: `> 20 and <= 25`, color: "#414387" },
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
+    const headerDiv = document.createElement("div");
+    headerDiv.innerHTML = `${headerText}`;
+    headerDiv.style.fontSize = "1.1em";
+    headerDiv.style.marginBottom = "10px";
+    legendContent.appendChild(headerDiv);
+
+    const masterCheckboxDiv = document.createElement("div");
+    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+    legendContent.appendChild(masterCheckboxDiv);
+
+    classes.forEach(c => {
+      const div = document.createElement("div");
+      const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
+      div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+      legendContent.appendChild(div);
+    });
+
+    const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
+    newLegendCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        updateMasterCheckbox();
+        updateAmenitiesCatchmentLayer();
+      });
+    });
+
+    const masterCheckbox = document.getElementById('masterCheckbox');
+    masterCheckbox.addEventListener('change', () => {
+      const isChecked = masterCheckbox.checked;
+      newLegendCheckboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+      });
+      updateAmenitiesCatchmentLayer();
+    });
+    updateMasterCheckbox();
+
   } else if (ScoresLayer) {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
@@ -652,9 +572,6 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
-  }
-
-  if (headerText && classes) {
     const headerDiv = document.createElement("div");
     headerDiv.innerHTML = `${headerText}`;
     headerDiv.style.fontSize = "1.1em";
@@ -676,11 +593,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
-        if (AmenitiesCatchmentLayer) {
-          updateAmenitiesCatchmentLayer();
-        } else if (ScoresLayer) {
-          updateScoresLayer();
-        }
+        updateScoresLayer();
       });
     });
 
@@ -690,14 +603,39 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
-      if (AmenitiesCatchmentLayer) {
-        updateAmenitiesCatchmentLayer();
-      } else if (ScoresLayer) {
-        updateScoresLayer();
-      }
+      updateScoresLayer();
     });
     updateMasterCheckbox();
   }
+
+  const amenitiesSpacingDiv = document.createElement("div");
+  amenitiesSpacingDiv.style.marginTop = "20px";
+  legendContent.appendChild(amenitiesSpacingDiv);
+  const amenitiesCheckboxDiv = document.createElement("div");
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
+  legendContent.appendChild(amenitiesCheckboxDiv);
+
+  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+  amenitiesCheckbox.addEventListener('change', () => {
+    if (amenitiesCheckbox.checked) {
+      amenitiesLayerGroup.addTo(map);
+    } else {
+      map.removeLayer(amenitiesLayerGroup);
+    }
+  });
+  
+  const wardBoundariesCheckboxDiv = document.createElement("div");
+  wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" checked> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
+  legendContent.appendChild(wardBoundariesCheckboxDiv);
+
+  const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
+  wardBoundariesCheckbox.addEventListener('change', () => {
+    if (wardBoundariesCheckbox.checked) {
+      wardBoundariesLayer.addTo(map);
+    } else {
+      map.removeLayer(wardBoundariesLayer);
+    }
+  });
 }
 
 function updateMasterCheckbox() {
@@ -710,10 +648,14 @@ function updateMasterCheckbox() {
 }
 
 function drawSelectedAmenities(amenities) {
-  console.log('Drawselectedamenities called');
+  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
   amenitiesLayerGroup.clearLayers();
 
-  if (!amenities || amenities.length === 0) {
+  if (!amenitiesCheckbox || !amenitiesCheckbox.checked) {
+    return;
+  }
+
+  if (amenities.length === 0) {
     amenities = Object.keys(amenityLayers);
   }
 
@@ -811,8 +753,177 @@ function AmenitiesPopup(amenity, properties) {
   return `<strong>Amenity Type:</strong> ${amenityType}<br><strong>Name:</strong> ${name}<br>`;
 }
 
+function initializeScoresSliders() {
+  ScoresOpacityRange = document.getElementById('opacityRangeScoresSlider');
+  ScoresOutlineRange = document.getElementById('outlineRangeScoresSlider');
+  initializeSliders(ScoresOpacityRange, updateScoresLayer);
+  initializeSliders(ScoresOutlineRange, updateScoresLayer);
+  console.log('initializeScoresSliders function called - 785');
+}
+
+function toggleInverseOpacityScoresScale() {
+  isInverseScoresOpacity = !isInverseScoresOpacity;
+  const handles = ScoresOpacityRange.querySelectorAll('.noUi-handle');
+  const connectElements = ScoresOpacityRange.querySelectorAll('.noUi-connect');
+
+  if (isInverseScoresOpacity) {
+    ScoresOpacityRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    ScoresOpacityRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
+
+  opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateOpacitySliderScoresRanges();
+  concole.log('toggleInverseOpacityScoresScale function called - 818');
+  updateScoresLayer();
+}
+
+function toggleInverseOutlineScoresScale() {
+  isInverseScoresOutline = !isInverseScoresOutline;
+  const handles = ScoresOutlineRange.querySelectorAll('.noUi-handle');
+  const connectElements = ScoresOutlineRange.querySelectorAll('.noUi-connect');
+
+  if (isInverseScoresOutline) {
+    ScoresOutlineRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    ScoresOutlineRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
+
+  outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateOutlineSliderScoresRanges();
+  console.log('toggleInverseOutlineScoresScale function called - 852');
+  updateScoresLayer();
+}
+
+function updateOpacitySliderScoresRanges() {
+  const opacityField = ScoresOpacity.value;
+  const selectedYear = ScoresYear.value;
+  const selectedLayer = layers[selectedYear];
+
+  if (selectedLayer) {
+    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
+    const minOpacity = Math.min(...opacityValues);
+    const maxOpacity = Math.max(...opacityValues);
+    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
+    let opacityStep = roundedMaxOpacity / 100;
+
+    if (isNaN(opacityStep) || opacityStep <= 0) {
+      opacityStep = 1;
+    }
+
+    const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
+    const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
+
+    if (opacityField === "None") {
+      ScoresOpacityRange.setAttribute('disabled', true);
+      ScoresOpacityRange.noUiSlider.updateOptions({
+        range: {
+          'min': 0,
+          'max': 0
+        },
+        step: 1
+      });
+      ScoresOpacityRange.noUiSlider.set(['', '']);
+      document.getElementById('opacityRangeScoresMin').innerText = '';
+      document.getElementById('opacityRangeScoresMax').innerText = '';
+    } else {
+      ScoresOpacityRange.removeAttribute('disabled');
+      ScoresOpacityRange.noUiSlider.updateOptions({
+        range: {
+          'min': adjustedMinOpacity,
+          'max': adjustedMaxOpacity
+        },
+        step: opacityStep
+      });
+      ScoresOpacityRange.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
+      document.getElementById('opacityRangeScoresMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
+      document.getElementById('opacityRangeScoresMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+    }
+  }
+}
+
+function updateOutlineSliderScoresRanges() {
+  const outlineField = ScoresOutline.value;
+  const selectedYear = ScoresYear.value;
+  const selectedLayer = layers[selectedYear];
+
+  if (selectedLayer) {
+    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
+    const minOutline = Math.min(...outlineValues);
+    const maxOutline = Math.max(...outlineValues);
+    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
+    let outlineStep = roundedMaxOutline / 100;
+
+    if (isNaN(outlineStep) || outlineStep <= 0) {
+      outlineStep = 1;
+    }
+
+    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
+    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
+
+    if (outlineField === "None") {
+      ScoresOutlineRange.setAttribute('disabled', true);
+      ScoresOutlineRange.noUiSlider.updateOptions({
+        range: {
+          'min': 0,
+          'max': 0
+        },
+        step: 1
+      });
+      ScoresOutlineRange.noUiSlider.set(['', '']);
+      document.getElementById('outlineRangeScoresMin').innerText = '';
+      document.getElementById('outlineRangeScoresMax').innerText = '';
+    } else {
+      ScoresOutlineRange.removeAttribute('disabled');
+      ScoresOutlineRange.noUiSlider.updateOptions({
+        range: {
+          'min': adjustedMinOutline,
+          'max': adjustedMaxOutline
+        },
+        step: outlineStep
+      });
+      ScoresOutlineRange.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
+      document.getElementById('outlineRangeScoresMin').innerText = formatValue(adjustedMinOutline, outlineStep);
+      document.getElementById('outlineRangeScoresMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
+    }
+  }
+}
+
 function updateScoresLayer() {
-  console.log('Updating ScoresLayer');
   const selectedYear = ScoresYear.value;
   if (!selectedYear) {
     return;
@@ -824,6 +935,7 @@ function updateScoresLayer() {
 
   if (ScoresLayer) {
     map.removeLayer(ScoresLayer);
+    console.log('ScoresLayer removed');
     ScoresLayer = null;
   }
 
@@ -850,16 +962,188 @@ function updateScoresLayer() {
       style: feature => styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
+    console.log('ScoresLayer drawn');
 
-    updateLegend();
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
+
     AmenitiesCatchmentLayer = null;
+    updateLegend();
+  }
+  console.log('ScoresLayer created');
+}
+
+function initializeAmenitiesSliders() {
+  AmenitiesOpacityRange = document.getElementById('opacityRangeAmenitiesSlider');
+  AmenitiesOutlineRange = document.getElementById('outlineRangeAmenitiesSlider');
+  initializeSliders(AmenitiesOpacityRange, updateAmenitiesCatchmentLayer);
+  initializeSliders(AmenitiesOutlineRange, updateAmenitiesCatchmentLayer);
+  console.log('initializeAmenitiesSliders function called - 990');
+}
+
+function toggleInverseOpacityAmenitiesScale() {
+  isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
+  const handles = AmenitiesOpacityRange.querySelectorAll('.noUi-handle');
+  const connectElements = AmenitiesOpacityRange.querySelectorAll('.noUi-connect');
+
+  if (isInverseAmenitiesOpacity) {
+    AmenitiesOpacityRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    AmenitiesOpacityRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
+
+  opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateOpacitySliderAmenitiesRanges();
+  console.log('toggleInverseOpacityAmenitiesScale function called - 1023');
+  updateAmenitiesCatchmentLayer();
+}
+
+function toggleInverseOutlineAmenitiesScale() {
+  isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
+  const handles = AmenitiesOutlineRange.querySelectorAll('.noUi-handle');
+  const connectElements = AmenitiesOutlineRange.querySelectorAll('.noUi-connect');
+
+  if (isInverseAmenitiesOutline) {
+    AmenitiesOutlineRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    AmenitiesOutlineRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
+
+  outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateOutlineSliderAmenitiesRanges();
+  console.log('toggleInverseOutlineAmenitiesScale function called - 1057');
+  updateAmenitiesCatchmentLayer();
+}
+
+function updateOpacitySliderAmenitiesRanges() {
+  const opacityField = AmenitiesOpacity.value;
+  const selectedYear = AmenitiesYear.value;
+  const selectedLayer = layers[selectedYear];
+
+  if (selectedLayer) {
+    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
+    const minOpacity = Math.min(...opacityValues);
+    const maxOpacity = Math.max(...opacityValues);
+    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
+    let opacityStep = roundedMaxOpacity / 100;
+
+    if (isNaN(opacityStep) || opacityStep <= 0) {
+      opacityStep = 1;
+    }
+
+    const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
+    const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
+
+    if (opacityField === "None") {
+      AmenitiesOpacityRange.setAttribute('disabled', true);
+      AmenitiesOpacityRange.noUiSlider.updateOptions({
+        range: {
+          'min': 0,
+          'max': 0
+        },
+        step: 1
+      });
+      AmenitiesOpacityRange.noUiSlider.set(['', '']);
+      document.getElementById('opacityRangeAmenitiesMin').innerText = '';
+      document.getElementById('opacityRangeAmenitiesMax').innerText = '';
+    } else {
+      AmenitiesOpacityRange.removeAttribute('disabled');
+      AmenitiesOpacityRange.noUiSlider.updateOptions({
+        range: {
+          'min': adjustedMinOpacity,
+          'max': adjustedMaxOpacity
+        },
+        step: opacityStep
+      });
+      AmenitiesOpacityRange.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
+      document.getElementById('opacityRangeAmenitiesMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
+      document.getElementById('opacityRangeAmenitiesMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+    }
+  }
+}
+
+function updateOutlineSliderAmenitiesRanges() {
+  const outlineField = AmenitiesOutline.value;
+  const selectedYear = AmenitiesYear.value;
+  const selectedLayer = layers[selectedYear];
+
+  if (selectedLayer) {
+    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
+    const minOutline = Math.min(...outlineValues);
+    const maxOutline = Math.max(...outlineValues);
+    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
+    let outlineStep = roundedMaxOutline / 100;
+
+    if (isNaN(outlineStep) || outlineStep <= 0) {
+      outlineStep = 1;
+    }
+
+    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
+    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
+
+    if (outlineField === "None") {
+      AmenitiesOutlineRange.setAttribute('disabled', true);
+      AmenitiesOutlineRange.noUiSlider.updateOptions({
+        range: {
+          'min': 0,
+          'max': 0
+        },
+        step: 1
+      });
+      AmenitiesOutlineRange.noUiSlider.set(['', '']);
+      document.getElementById('outlineRangeAmenitiesMin').innerText = '';
+      document.getElementById('outlineRangeAmenitiesMax').innerText = '';
+    } else {
+      AmenitiesOutlineRange.removeAttribute('disabled');
+      AmenitiesOutlineRange.noUiSlider.updateOptions({
+        range: {
+          'min': adjustedMinOutline,
+          'max': adjustedMaxOutline
+        },
+        step: outlineStep
+      });
+      AmenitiesOutlineRange.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
+      document.getElementById('outlineRangeAmenitiesMin').innerText = formatValue(adjustedMinOutline, outlineStep);
+      document.getElementById('outlineRangeAmenitiesMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
+    }
   }
 }
 
 function updateAmenitiesCatchmentLayer() {
-  console.log('Updating AmenitiesCatchmentLayer');
   selectedAmenitiesAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
@@ -871,7 +1155,6 @@ function updateAmenitiesCatchmentLayer() {
     if(AmenitiesCatchmentLayer) {
       map.removeLayer(AmenitiesCatchmentLayer);
     }
-    updateLegend();
     drawSelectedAmenities([]);
     return;
   }
@@ -916,6 +1199,7 @@ function updateAmenitiesCatchmentLayer() {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
       .then(data => {
+        // Remove the existing AmenitiesCatchmentLayer if it exists
         if (AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
         }
@@ -984,8 +1268,10 @@ function updateAmenitiesCatchmentLayer() {
           },
           onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
-        updateLegend();
+
         drawSelectedAmenities(selectedAmenitiesAmenities);
+
+        updateLegend();
 
         if (initialLoad) {
           initialLoad = false;
@@ -993,4 +1279,5 @@ function updateAmenitiesCatchmentLayer() {
         }
       });
   });
+  console.log('AmenitiesCatchmentLayer created');
 }
