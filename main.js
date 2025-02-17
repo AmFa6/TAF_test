@@ -287,19 +287,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   updateCheckboxStates();
 });
 
-function updateCheckboxStates() {
-  const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
-  const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
-
-  if (amenitiesCheckbox) {
-    amenitiesCheckbox.checked = map.hasLayer(amenitiesLayerGroup);
-  }
-
-  if (wardBoundariesCheckbox) {
-    wardBoundariesCheckbox.checked = map.hasLayer(wardBoundariesLayer);
-  }
-}
-
 map.on('zoomend', () => {
   if (ScoresLayer) {
     drawSelectedAmenities(selectedScoresAmenities);
