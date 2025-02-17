@@ -237,13 +237,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
           console.log('Journey Time Catchments - Amenities panel opened - updateAmenitiesCatchmentLayer');
           updateAmenitiesCatchmentLayer();
           if(ScoresLayer) {
+            console.log('ScoresLayer removed-240');
             map.removeLayer(ScoresLayer);
           }
         }
       } else {
         if(ScoresLayer) {
-          map.removeLayer(ScoresLayer);
           console.log('ScoresLayer removed-246');
+          map.removeLayer(ScoresLayer);
         }
         if(AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
@@ -935,6 +936,7 @@ function updateScoresLayer() {
   const outlineField = ScoresOutline.value;
 
   if (ScoresLayer) {
+    console.log('ScoresLayer removed- 939');
     map.removeLayer(ScoresLayer);
     ScoresLayer = null;
   }
@@ -962,7 +964,7 @@ function updateScoresLayer() {
       style: feature => styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
       onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
-
+    console.log('scoresadded- 965');
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
 
