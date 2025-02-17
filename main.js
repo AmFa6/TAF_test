@@ -136,7 +136,7 @@ let isInverseScoresOpacity = false;
 let isInverseScoresOutline = false;
 let isInverseAmenitiesOpacity = false;
 let isInverseAmenitiesOutline = false;
-let wardBoudariesLayer;
+let wardBoundariesLayer;
 let ScoresLayer = null;
 let AmenitiesCatchmentLayer = null;
 let hexTimeMap = {};
