@@ -241,6 +241,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           }
         }
       } else {
+        console.log('All panels closed')
         if(ScoresLayer) {
           map.removeLayer(ScoresLayer);
           console.log('ScoresLayer removed');
