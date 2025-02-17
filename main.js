@@ -167,29 +167,10 @@ AmenitiesPurpose.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
 });
 console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
-ScoresOpacity.addEventListener("change", () => {
-  autoUpdateOpacity = true;
-  updateOpacitySliderScoresRanges();
-  updateScoresLayer();
-});
-ScoresOutline.addEventListener("change", () => {
-  autoUpdateOutline = true;
-  updateOutlineSliderScoresRanges();
-  console.log('updateScoresLayer-179');
-  updateScoresLayer();
-});
-AmenitiesOpacity.addEventListener("change", () => {
-  autoUpdateOpacity = true;
-  updateOpacitySliderAmenitiesRanges();
-  console.log('AmenitiesOpacity change event fired - updateAmenitiesCatchmentLayer');
-  updateAmenitiesCatchmentLayer();
-});
-AmenitiesOutline.addEventListener("change", () => {
-  autoUpdateOutline = true;
-  updateOutlineSliderAmenitiesRanges();
-  console.log('AmenitiesOutline change event fired - updateAmenitiesCatchmentLayer');
-  updateAmenitiesCatchmentLayer();
-});
+ScoresOpacity.addEventListener("change", updateOpacitySliderScoresRanges);
+ScoresOpacity.addEventListener("change", updateOutlineSliderScoresRanges);
+AmenitiesOpacity.addEventListener("change", updateOpacitySliderAmenitiesRanges);
+AmenitiesOpacity.addEventListener("change", updateOutlineSliderAmenitiesRanges);
 ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
 ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
 AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesScale);
@@ -822,8 +803,6 @@ function toggleInverseOpacityScoresScale() {
   opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOpacitySliderScoresRanges();
-  concole.log('toggleInverseOpacityScoresScale function called - 818');
-  updateScoresLayer();
 }
 
 function toggleInverseOutlineScoresScale() {
@@ -905,6 +884,7 @@ function updateOpacitySliderScoresRanges() {
       document.getElementById('opacityRangeScoresMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
   }
+  updateScoresLayer();
 }
 
 function updateOutlineSliderScoresRanges() {
