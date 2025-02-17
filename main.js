@@ -162,25 +162,25 @@ AmenitiesPurpose.forEach(checkbox => {
 ScoresOpacity.addEventListener("change", () => {
   console.log('ScoresOpacity change event triggered');
   autoUpdateOpacity = true;
-  updateSliderRanges(ScoresOpacityRange, 'Scores');
+  updateSliderRanges(ScoresOpacity, 'Scores');
   updateScoresLayer();
 });
 ScoresOutline.addEventListener("change", () => {
   console.log('ScoresOutline change event triggered');
   autoUpdateOutline = true;
-  updateSliderRanges(ScoresOutlineRange, 'Scores');
+  updateSliderRanges(ScoresOutline, 'Scores');
   updateScoresLayer();
 });
 AmenitiesOpacity.addEventListener("change", () => {
   console.log('AmenitiesOpacity change event triggered');
   autoUpdateOpacity = true;
-  updateSliderRanges(AmenitiesOpacityRange, 'Amenities');
+  updateSliderRanges(AmenitiesOpacity, 'Amenities');
   updateAmenitiesCatchmentLayer();
 });
 AmenitiesOutline.addEventListener("change", () => {
   console.log('AmenitiesOutline change event triggered');
   autoUpdateOutline = true;
-  updateSliderRanges(AmenitiesOutlineRange, 'Amenities');
+  updateSliderRanges(AmenitiesOutline, 'Amenities');
   updateAmenitiesCatchmentLayer();
 });
 ScoresInverseOpacity.addEventListener("click", () => {
