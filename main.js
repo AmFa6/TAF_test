@@ -491,6 +491,31 @@ function isClassVisible(value, selectedYear) {
   return true;
 }
 
+function updateFeatureVisibility() {
+  if (AmenitiesCatchmentLayer) {
+    const selectedYear = AmenitiesYear.value;
+    const selectedMode = AmenitiesMode.value;
+
+    AmenitiesCatchmentLayer.eachLayer(layer => {
+      const feature = layer.feature;
+      const hexId = feature.properties.Hex_ID;
+      const time = hexTimeMap[hexId];
+      const isVisible = isClassVisible(time, selectedYear);
+      layer.setStyle({ opacity: isVisible ? 1 : 0, fillOpacity: isVisible ? layer.options.fillOpacity : 0 });
+    });
+  } else if (ScoresLayer) {
+    const selectedYear = ScoresYear.value;
+    const fieldToDisplay = selectedYear.includes('-') ? `${ScoresPurpose.value}_${ScoresMode.value}` : `${ScoresPurpose.value}_${ScoresMode.value}_100`;
+
+    ScoresLayer.eachLayer(layer => {
+      const feature = layer.feature;
+      const value = feature.properties[fieldToDisplay];
+      const isVisible = isClassVisible(value, selectedYear);
+      layer.setStyle({ opacity: isVisible ? 1 : 0, fillOpacity: isVisible ? layer.options.fillOpacity : 0 });
+    });
+  }
+}
+
 function updateLegend() {
   const selectedYear = ScoresYear.value;
   const legendContent = document.getElementById("legend-content");
@@ -537,7 +562,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
-        updateAmenitiesCatchmentLayer();
+        updateFeatureVisibility();
       });
     });
 
@@ -547,7 +572,7 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
-      updateAmenitiesCatchmentLayer();
+      updateFeatureVisibility();
     });
     updateMasterCheckbox();
 
@@ -594,7 +619,7 @@ function updateLegend() {
     newLegendCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         updateMasterCheckbox();
-        updateScoresLayer();
+        updateFeatureVisibility();
       });
     });
 
@@ -604,7 +629,7 @@ function updateLegend() {
       newLegendCheckboxes.forEach(checkbox => {
         checkbox.checked = isChecked;
       });
-      updateScoresLayer();
+      updateFeatureVisibility();
     });
     updateMasterCheckbox();
   }
