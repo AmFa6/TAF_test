@@ -270,6 +270,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
     }
   });
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
+    if (amenitiesCheckbox && amenitiesCheckbox.checked) {
+      drawSelectedAmenities([]);
+    }
+  });
 });
 
 map.on('zoomend', () => {
@@ -584,6 +590,7 @@ function updateLegend() {
     } else {
       map.removeLayer(amenitiesLayerGroup);
     }
+    drawSelectedAmenities([]);
   });
 
   const wardBoundariesCheckboxDiv = document.createElement("div");
