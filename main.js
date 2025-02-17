@@ -172,18 +172,18 @@ ScoresOutline.addEventListener("change", () => {
 });
 AmenitiesOpacity.addEventListener("change", () => {
   autoUpdateOpacity = true;
-  updateSliderAmenitiesRanges('opacity');
+  updateOpacitySliderAmenitiesRanges();
   updateAmenitiesCatchmentLayer();
 });
 AmenitiesOutline.addEventListener("change", () => {
   autoUpdateOutline = true;
-  updateSliderAmenitiesRanges('outline');
+  updateOutlineSliderAmenitiesRanges();
   updateAmenitiesCatchmentLayer();
 });
 ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
 ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
-AmenitiesInverseOpacity.addEventListener("click", toggleInverseAmenitiesScale('opacity'));
-AmenitiesInverseOutline.addEventListener("click", toggleInverseAmenitiesScale('outline'));
+AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesScale);
+AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const collapsibleButtons = document.querySelectorAll(".collapsible");
@@ -905,20 +905,13 @@ function initializeAmenitiesSliders() {
   initializeSliders(AmenitiesOutlineRange, updateAmenitiesCatchmentLayer);
 }
 
-function toggleInverseAmenitiesScale(type) {
-  const isInverse = type === 'opacity' ? isInverseAmenitiesOpacity : isInverseAmenitiesOutline;
-  const rangeElement = type === 'opacity' ? AmenitiesOpacityRange : AmenitiesOutlineRange;
-  const handles = rangeElement.querySelectorAll('.noUi-handle');
-  const connectElements = rangeElement.querySelectorAll('.noUi-connect');
+function toggleInverseOpacityAmenitiesScale() {
+  isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
+  const handles = AmenitiesOpacityRange.querySelectorAll('.noUi-handle');
+  const connectElements = AmenitiesOpacityRange.querySelectorAll('.noUi-connect');
 
-  if (type === 'opacity') {
-    isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
-  } else {
-    isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
-  }
-
-  if (isInverse) {
-    rangeElement.noUiSlider.updateOptions({
+  if (isInverseAmenitiesOpacity) {
+    AmenitiesOpacityRange.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.add('noUi-handle-transparent');
@@ -928,7 +921,7 @@ function toggleInverseAmenitiesScale(type) {
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
-    rangeElement.noUiSlider.updateOptions({
+    AmenitiesOpacityRange.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.remove('noUi-handle-transparent');
@@ -939,63 +932,135 @@ function toggleInverseAmenitiesScale(type) {
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  if (type === 'opacity') {
-    opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-    updateSliderAmenitiesRanges('opacity');
-  } else {
-    outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-    updateSliderAmenitiesRanges('outline');
-  }
+  opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
+  updateOpacitySliderAmenitiesRanges();
   updateAmenitiesCatchmentLayer();
 }
 
-function updateSliderAmenitiesRanges(type) {
-  const field = type === 'opacity' ? AmenitiesOpacity.value : AmenitiesOutline.value;
+function toggleInverseOutlineAmenitiesScale() {
+  isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
+  const handles = AmenitiesOutlineRange.querySelectorAll('.noUi-handle');
+  const connectElements = AmenitiesOutlineRange.querySelectorAll('.noUi-connect');
+
+  if (isInverseAmenitiesOutline) {
+    AmenitiesOutlineRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    AmenitiesOutlineRange.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
+
+  outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateOutlineSliderAmenitiesRanges();
+  updateAmenitiesCatchmentLayer();
+}
+
+function updateOpacitySliderAmenitiesRanges() {
+  const opacityField = AmenitiesOpacity.value;
   const selectedYear = AmenitiesYear.value;
   const selectedLayer = layers[selectedYear];
-  const rangeElement = type === 'opacity' ? AmenitiesOpacityRange : AmenitiesOutlineRange;
-  const minElementId = type === 'opacity' ? 'opacityRangeAmenitiesMin' : 'outlineRangeAmenitiesMin';
-  const maxElementId = type === 'opacity' ? 'opacityRangeAmenitiesMax' : 'outlineRangeAmenitiesMax';
 
   if (selectedLayer) {
-    const values = field !== "None" ? selectedLayer.features.map(feature => feature.properties[field]).filter(value => value !== null && value !== 0) : [];
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
-    const roundedMaxValue = Math.pow(10, Math.ceil(Math.log10(maxValue)));
-    let step = roundedMaxValue / 100;
+    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
+    const minOpacity = Math.min(...opacityValues);
+    const maxOpacity = Math.max(...opacityValues);
+    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
+    let opacityStep = roundedMaxOpacity / 100;
 
-    if (isNaN(step) || step <= 0) {
-      step = 1;
+    if (isNaN(opacityStep) || opacityStep <= 0) {
+      opacityStep = 1;
     }
 
-    const adjustedMaxValue = Math.ceil(maxValue / step) * step;
-    const adjustedMinValue = Math.floor(minValue / step) * step;
+    const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
+    const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
 
-    if (field === "None") {
-      rangeElement.setAttribute('disabled', true);
-      rangeElement.noUiSlider.updateOptions({
+    if (opacityField === "None") {
+      AmenitiesOpacityRange.setAttribute('disabled', true);
+      AmenitiesOpacityRange.noUiSlider.updateOptions({
         range: {
           'min': 0,
           'max': 0
         },
         step: 1
       });
-      rangeElement.noUiSlider.set(['', '']);
-      document.getElementById(minElementId).innerText = '';
-      document.getElementById(maxElementId).innerText = '';
+      AmenitiesOpacityRange.noUiSlider.set(['', '']);
+      document.getElementById('opacityRangeAmenitiesMin').innerText = '';
+      document.getElementById('opacityRangeAmenitiesMax').innerText = '';
     } else {
-      rangeElement.removeAttribute('disabled');
-      rangeElement.noUiSlider.updateOptions({
+      AmenitiesOpacityRange.removeAttribute('disabled');
+      AmenitiesOpacityRange.noUiSlider.updateOptions({
         range: {
-          'min': adjustedMinValue,
-          'max': adjustedMaxValue
+          'min': adjustedMinOpacity,
+          'max': adjustedMaxOpacity
         },
-        step: step
+        step: opacityStep
       });
-      rangeElement.noUiSlider.set([adjustedMinValue, adjustedMaxValue]);
-      document.getElementById(minElementId).innerText = formatValue(adjustedMinValue, step);
-      document.getElementById(maxElementId).innerText = formatValue(adjustedMaxValue, step);
+      AmenitiesOpacityRange.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
+      document.getElementById('opacityRangeAmenitiesMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
+      document.getElementById('opacityRangeAmenitiesMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
+    }
+  }
+}
+
+function updateOutlineSliderAmenitiesRanges() {
+  const outlineField = AmenitiesOutline.value;
+  const selectedYear = AmenitiesYear.value;
+  const selectedLayer = layers[selectedYear];
+
+  if (selectedLayer) {
+    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
+    const minOutline = Math.min(...outlineValues);
+    const maxOutline = Math.max(...outlineValues);
+    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
+    let outlineStep = roundedMaxOutline / 100;
+
+    if (isNaN(outlineStep) || outlineStep <= 0) {
+      outlineStep = 1;
+    }
+
+    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
+    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
+
+    if (outlineField === "None") {
+      AmenitiesOutlineRange.setAttribute('disabled', true);
+      AmenitiesOutlineRange.noUiSlider.updateOptions({
+        range: {
+          'min': 0,
+          'max': 0
+        },
+        step: 1
+      });
+      AmenitiesOutlineRange.noUiSlider.set(['', '']);
+      document.getElementById('outlineRangeAmenitiesMin').innerText = '';
+      document.getElementById('outlineRangeAmenitiesMax').innerText = '';
+    } else {
+      AmenitiesOutlineRange.removeAttribute('disabled');
+      AmenitiesOutlineRange.noUiSlider.updateOptions({
+        range: {
+          'min': adjustedMinOutline,
+          'max': adjustedMaxOutline
+        },
+        step: outlineStep
+      });
+      AmenitiesOutlineRange.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
+      document.getElementById('outlineRangeAmenitiesMin').innerText = formatValue(adjustedMinOutline, outlineStep);
+      document.getElementById('outlineRangeAmenitiesMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   }
 }
