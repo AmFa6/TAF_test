@@ -838,7 +838,7 @@ function toggleInverseScale(isInverse, sliderElement, orderField, minField, maxF
 
   orderField = orderField === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
-  updateSliderRanges(sliderElement, minField, maxField);
+  updateSliderRanges(sliderElement, field, selectedLayer, minField, maxField, stepField, isInverse);
 }
 
 function toggleInverseOpacityScoresScale() {
