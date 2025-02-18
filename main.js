@@ -171,10 +171,10 @@ ScoresOpacity.addEventListener("change", updateScoresLayer);
 ScoresOpacity.addEventListener("change", updateScoresLayer);
 AmenitiesOpacity.addEventListener("change", updateAmenitiesCatchmentLayer);
 AmenitiesOpacity.addEventListener("change", updateAmenitiesCatchmentLayer);
-ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
-ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
-AmenitiesInverseOpacity.addEventListener("click", updateAmenitiesCatchmentLayer);
-AmenitiesInverseOutline.addEventListener("click", updateAmenitiesCatchmentLayer);
+ScoresInverseOpacity.addEventListener("click", () => updateScoresLayer(true));
+ScoresInverseOutline.addEventListener("click", () => updateScoresLayer(true));
+AmenitiesInverseOpacity.addEventListener("click", () => updateAmenitiesCatchmentLayer(true));
+AmenitiesInverseOutline.addEventListener("click", () => updateAmenitiesCatchmentLayer(true));
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const collapsibleButtons = document.querySelectorAll(".collapsible");
@@ -841,29 +841,7 @@ function toggleInverseScale(isInverse, sliderElement, orderField, minField, maxF
   updateSliderRanges(sliderElement, field, selectedLayer, minField, maxField, stepField, isInverse);
 }
 
-function toggleInverseOpacityScoresScale() {
-  isInverseScoresOpacity = !isInverseScoresOpacity;
-  opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateScoresLayer();
-}
-
-function toggleInverseOutlineScoresScale() {
-  isInverseScoresOutline = !isInverseScoresOutline;
-  outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-  updateScoresLayer();
-}
-
-function toggleInverseOpacityAmenitiesScale() {
-  toggleInverseScale(isInverseAmenitiesOpacity, AmenitiesOpacityRange, opacityAmenitiesOrder, 'opacityRangeAmenitiesMin', 'opacityRangeAmenitiesMax');
-  updateAmenitiesCatchmentLayer();
-}
-
-function toggleInverseOutlineAmenitiesScale() {
-  toggleInverseScale(isInverseAmenitiesOutline, AmenitiesOutlineRange, outlineAmenitiesOrder, 'outlineRangeAmenitiesMin', 'outlineRangeAmenitiesMax');
-  updateAmenitiesCatchmentLayer();
-}
-
-function updateScoresLayer() {
+function updateScoresLayer(inverse = false) {
   const selectedYear = ScoresYear.value;
   if (!selectedYear) {
     return;
@@ -872,6 +850,15 @@ function updateScoresLayer() {
   const selectedMode = ScoresMode.value;
   const opacityField = ScoresOpacity.value;
   const outlineField = ScoresOutline.value;
+
+  if (inverse) {
+    if (opacityField !== 'None') {
+      toggleInverseScale(isInverseScoresOpacity, ScoresOpacityRange, opacityScoresOrder, 'opacityRangeScoresMin', 'opacityRangeScoresMax');
+    }
+    if (outlineField !== 'None') {
+      toggleInverseScale(isInverseScoresOutline, ScoresOutlineRange, outlineScoresOrder, 'outlineRangeScoresMin', 'outlineRangeScoresMax');
+    }
+  }
 
   if (ScoresLayer) {
     map.removeLayer(ScoresLayer);
@@ -912,7 +899,7 @@ function updateScoresLayer() {
   }
 }
 
-function updateAmenitiesCatchmentLayer() {
+function updateAmenitiesCatchmentLayer(inverse = false) {
   selectedAmenitiesAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
@@ -926,6 +913,15 @@ function updateAmenitiesCatchmentLayer() {
     }
     drawSelectedAmenities([]);
     return;
+  }
+
+  if (inverse) {
+    if (AmenitiesOpacity.value !== 'None') {
+      toggleInverseScale(isInverseAmenitiesOpacity, AmenitiesOpacityRange, opacityAmenitiesOrder, 'opacityRangeAmenitiesMin', 'opacityRangeAmenitiesMax');
+    }
+    if (AmenitiesOutline.value !== 'None') {
+      toggleInverseScale(isInverseAmenitiesOutline, AmenitiesOutlineRange, outlineAmenitiesOrder, 'outlineRangeAmenitiesMin', 'outlineRangeAmenitiesMax');
+    }
   }
 
   hexTimeMap = {};
