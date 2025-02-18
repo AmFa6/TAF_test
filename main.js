@@ -270,6 +270,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
   document.querySelectorAll('.legend-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', updateFeatureVisibility);
   });
+
+  createStaticLegendControls();
+
 });
 
 map.on('zoomend', () => {
@@ -526,41 +529,6 @@ function updateLegend() {
       { range: `> 20 and <= 25`, color: "#414387" },
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
-    const headerDiv = document.createElement("div");
-    headerDiv.innerHTML = `${headerText}`;
-    headerDiv.style.fontSize = "1.1em";
-    headerDiv.style.marginBottom = "10px";
-    legendContent.appendChild(headerDiv);
-
-    const masterCheckboxDiv = document.createElement("div");
-    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
-    legendContent.appendChild(masterCheckboxDiv);
-
-    classes.forEach(c => {
-      const div = document.createElement("div");
-      const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
-      div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
-      legendContent.appendChild(div);
-    });
-
-    const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
-    newLegendCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', () => {
-        updateMasterCheckbox();
-        updateFeatureVisibility();
-      });
-    });
-
-    const masterCheckbox = document.getElementById('masterCheckbox');
-    masterCheckbox.addEventListener('change', () => {
-      const isChecked = masterCheckbox.checked;
-      newLegendCheckboxes.forEach(checkbox => {
-        checkbox.checked = isChecked;
-      });
-      updateFeatureVisibility();
-    });
-    updateMasterCheckbox();
-
   } else if (ScoresLayer) {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
@@ -583,49 +551,56 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
-    const headerDiv = document.createElement("div");
-    headerDiv.innerHTML = `${headerText}`;
-    headerDiv.style.fontSize = "1.1em";
-    headerDiv.style.marginBottom = "10px";
-    legendContent.appendChild(headerDiv);
-
-    const masterCheckboxDiv = document.createElement("div");
-    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
-    legendContent.appendChild(masterCheckboxDiv);
-
-    classes.forEach(c => {
-      const div = document.createElement("div");
-      const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
-      div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
-      legendContent.appendChild(div);
-    });
-
-    const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
-    newLegendCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', () => {
-        updateMasterCheckbox();
-        updateFeatureVisibility();
-      });
-    });
-
-    const masterCheckbox = document.getElementById('masterCheckbox');
-    masterCheckbox.addEventListener('change', () => {
-      const isChecked = masterCheckbox.checked;
-      newLegendCheckboxes.forEach(checkbox => {
-        checkbox.checked = isChecked;
-      });
-      updateFeatureVisibility();
-    });
-    updateMasterCheckbox();
   }
 
-  const amenitiesSpacingDiv = document.createElement("div");
-  amenitiesSpacingDiv.style.marginTop = "20px";
-  legendContent.appendChild(amenitiesSpacingDiv);
+  const headerDiv = document.createElement("div");
+  headerDiv.innerHTML = `${headerText}`;
+  headerDiv.style.fontSize = "1.1em";
+  headerDiv.style.marginBottom = "10px";
+  legendContent.appendChild(headerDiv);
+
+  const masterCheckboxDiv = document.createElement("div");
+  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+  legendContent.appendChild(masterCheckboxDiv);
+
+  classes.forEach(c => {
+    const div = document.createElement("div");
+    const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
+    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+    legendContent.appendChild(div);
+  });
+
+  const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
+  newLegendCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      updateMasterCheckbox();
+      updateFeatureVisibility();
+    });
+  });
+
+  const masterCheckbox = document.getElementById('masterCheckbox');
+  masterCheckbox.addEventListener('change', () => {
+    const isChecked = masterCheckbox.checked;
+    newLegendCheckboxes.forEach(checkbox => {
+      checkbox.checked = isChecked;
+    });
+    updateFeatureVisibility();
+  });
+  updateMasterCheckbox();
+
+  // Remove amenities and ward boundaries checkboxes from the dynamic legend
+  // They will be created separately through createStaticLegendControls()
+}
+
+function createStaticLegendControls() {
+  const legendContainer = document.getElementById("legend-extra");
+  if (!legendContainer) return;
+
+  legendContainer.innerHTML = '';
+
   const amenitiesCheckboxDiv = document.createElement("div");
   amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
-  legendContent.appendChild(amenitiesCheckboxDiv);
-
+  legendContainer.appendChild(amenitiesCheckboxDiv);
   const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
   amenitiesCheckbox.addEventListener('change', () => {
     if (amenitiesCheckbox.checked) {
@@ -634,11 +609,10 @@ function updateLegend() {
       map.removeLayer(amenitiesLayerGroup);
     }
   });
-  
+
   const wardBoundariesCheckboxDiv = document.createElement("div");
   wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" checked> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
-  legendContent.appendChild(wardBoundariesCheckboxDiv);
-
+  legendContainer.appendChild(wardBoundariesCheckboxDiv);
   const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
   wardBoundariesCheckbox.addEventListener('change', () => {
     if (wardBoundariesCheckbox.checked) {
