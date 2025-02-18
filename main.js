@@ -230,23 +230,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         if (header.textContent.includes("Connectivity Scores")) {
           console.log('updateScoresLayer-231');
           updateScoresLayer();
-          if(AmenitiesCatchmentLayer) {
-            map.removeLayer(AmenitiesCatchmentLayer);
-            AmenitiesCatchmentLayer = null;
-            console.log('AmenitiesCatchmentLayer removed-236');
-          } 
-          if(!AmenitiesCatchmentLayer) {
-            console.log('noamenitieslayerfound-239');
-          }
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
           console.log('updateAmenitiesCatchmentLayer-239');
-          updateAmenitiesCatchmentLayer().then(() => {
-            if(ScoresLayer) {
-              map.removeLayer(ScoresLayer);
-              ScoresLayer = null;
-              console.log('ScoresLayer removed-245');
-            }
-          });
+          updateAmenitiesCatchmentLayer();
         }
       } else {
         if(ScoresLayer) {
@@ -963,9 +949,12 @@ function updateScoresLayer() {
 
   if (ScoresLayer) {
     map.removeLayer(ScoresLayer);
-    console.log('ScoresLayer removed');
     ScoresLayer = null;
   }
+  if(AmenitiesCatchmentLayer) {
+    map.removeLayer(AmenitiesCatchmentLayer);
+    AmenitiesCatchmentLayer = null;
+  } 
 
   const fieldToDisplay = selectedYear.includes('-') ? `${selectedPurpose}_${selectedMode}` : `${selectedPurpose}_${selectedMode}_100`;
   const selectedLayer = layers[selectedYear];
@@ -1175,6 +1164,11 @@ function updateAmenitiesCatchmentLayer() {
   selectedAmenitiesAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
+
+  if (ScoresLayer) {
+    map.removeLayer(ScoresLayer);
+    ScoresLayer = null;
+  }
 
   const selectedYear = AmenitiesYear.value;
   const selectedMode = AmenitiesMode.value;
