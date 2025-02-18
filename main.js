@@ -252,6 +252,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         } 
         drawSelectedAmenities([]);
         updateLegend();
+        console.log('updatelegend-255')
       }
     });
   });
