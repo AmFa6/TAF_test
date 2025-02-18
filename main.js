@@ -646,7 +646,6 @@ function createStaticLegendControls() {
       amenitiesLayerGroup.addTo(map);
     } else {
       map.removeLayer(amenitiesLayerGroup);
-      amenitiesLayerGroup = null;
     }
   });
 
