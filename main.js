@@ -541,12 +541,6 @@ function updateLegend() {
   const selectedYear = ScoresYear.value;
   const legendContent = document.getElementById("legend-content");
 
-  if (!ScoresLayer && !AmenitiesCatchmentLayer) {
-    console.log('ScoresLayer and AmenitiesCatchmentLayer not found - legendContent cleared');
-    legendContent.innerHTML = '';
-    return;
-  }
-
   const checkboxStates = {};
   const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
   legendCheckboxes.forEach(checkbox => {
@@ -590,6 +584,9 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
+  } else if (!AmenitiesCatchmentLayer && !ScoresLayer) {
+    legendContent.innerHTML = '';
+    return;
   }
 
   const headerDiv = document.createElement("div");
