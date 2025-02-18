@@ -937,6 +937,11 @@ function updateOutlineSliderScoresRanges() {
 }
 
 function updateScoresLayer() {
+  if(AmenitiesCatchmentLayer) {
+    map.removeLayer(AmenitiesCatchmentLayer);
+    AmenitiesCatchmentLayer = null;
+  } 
+
   const selectedYear = ScoresYear.value;
   if (!selectedYear) {
     return;
@@ -950,10 +955,6 @@ function updateScoresLayer() {
     map.removeLayer(ScoresLayer);
     ScoresLayer = null;
   }
-  if(AmenitiesCatchmentLayer) {
-    map.removeLayer(AmenitiesCatchmentLayer);
-    AmenitiesCatchmentLayer = null;
-  } 
 
   const fieldToDisplay = selectedYear.includes('-') ? `${selectedPurpose}_${selectedMode}` : `${selectedPurpose}_${selectedMode}_100`;
   const selectedLayer = layers[selectedYear];
