@@ -171,8 +171,8 @@ ScoresOpacity.addEventListener("change", updateScoresLayer);
 ScoresOpacity.addEventListener("change", updateScoresLayer);
 AmenitiesOpacity.addEventListener("change", updateAmenitiesCatchmentLayer);
 AmenitiesOpacity.addEventListener("change", updateAmenitiesCatchmentLayer);
-ScoresInverseOpacity.addEventListener("click", updateScoresLayer);
-ScoresInverseOutline.addEventListener("click", updateScoresLayer);
+ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
+ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
 AmenitiesInverseOpacity.addEventListener("click", updateAmenitiesCatchmentLayer);
 AmenitiesInverseOutline.addEventListener("click", updateAmenitiesCatchmentLayer);
 
@@ -842,12 +842,14 @@ function toggleInverseScale(isInverse, sliderElement, orderField, minField, maxF
 }
 
 function toggleInverseOpacityScoresScale() {
-  toggleInverseScale(isInverseScoresOpacity, ScoresOpacityRange, opacityScoresOrder, 'opacityRangeScoresMin', 'opacityRangeScoresMax');
+  isInverseScoresOpacity = !isInverseScoresOpacity;
+  opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
   updateScoresLayer();
 }
 
 function toggleInverseOutlineScoresScale() {
-  toggleInverseScale(isInverseScoresOutline, ScoresOutlineRange, outlineScoresOrder, 'outlineRangeScoresMin', 'outlineRangeScoresMax');
+  isInverseScoresOutline = !isInverseScoresOutline;
+  outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
   updateScoresLayer();
 }
 
