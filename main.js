@@ -542,6 +542,7 @@ function updateLegend() {
   const legendContent = document.getElementById("legend-content");
 
   if (!ScoresLayer && !AmenitiesCatchmentLayer) {
+    console.log('ScoresLayer and AmenitiesCatchmentLayer not found - updateLegend-545');
     legendContent.innerHTML = '';
     return;
   }
