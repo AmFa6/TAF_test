@@ -235,6 +235,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
             AmenitiesCatchmentLayer = null;
             console.log('AmenitiesCatchmentLayer removed-236');
           } 
+          if(!AmenitiesCatchmentLayer) {
+            console.log('noamenitieslayerfound-239');
+          }
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
           console.log('updateAmenitiesCatchmentLayer-239');
           updateAmenitiesCatchmentLayer();
