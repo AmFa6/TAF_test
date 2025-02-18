@@ -841,24 +841,52 @@ function updateSliderRanges(sliderElement, field, selectedLayer, minField, maxFi
   }
 }
 
+function toggleInverseScale(isInverse, sliderElement, orderField, minField, maxField) {
+  isInverse = !isInverse;
+  const handles = sliderElement.querySelectorAll('.noUi-handle');
+  const connectElements = sliderElement.querySelectorAll('.noUi-connect');
+
+  if (isInverse) {
+    sliderElement.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    sliderElement.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
+
+  orderField = orderField === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateSliderRanges(sliderElement, minField, maxField);
+}
+
 function toggleInverseOpacityScoresScale() {
   toggleInverseScale(isInverseScoresOpacity, ScoresOpacityRange, opacityScoresOrder, 'opacityRangeScoresMin', 'opacityRangeScoresMax');
-  updateScoresLayer();
 }
 
 function toggleInverseOutlineScoresScale() {
   toggleInverseScale(isInverseScoresOutline, ScoresOutlineRange, outlineScoresOrder, 'outlineRangeScoresMin', 'outlineRangeScoresMax');
-  updateScoresLayer();
 }
 
 function toggleInverseOpacityAmenitiesScale() {
   toggleInverseScale(isInverseAmenitiesOpacity, AmenitiesOpacityRange, opacityAmenitiesOrder, 'opacityRangeAmenitiesMin', 'opacityRangeAmenitiesMax');
-  updateAmenitiesCatchmentLayer();
 }
 
 function toggleInverseOutlineAmenitiesScale() {
   toggleInverseScale(isInverseAmenitiesOutline, AmenitiesOutlineRange, outlineAmenitiesOrder, 'outlineRangeAmenitiesMin', 'outlineRangeAmenitiesMax');
-  updateAmenitiesCatchmentLayer();
 }
 
 function updateScoresLayer() {
