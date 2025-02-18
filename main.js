@@ -150,16 +150,15 @@ let selectingFromMap = false;
 let selectedAmenitiesFromMap = [];
 let initialLoad = true;
 let initialLoadComplete = false;
-let isUpdatingSlider = false;
 
 initializeAmenitiesSliders()
 
 ScoresYear.addEventListener("change", updateScoresLayer)
-console.log('updateScoresLayer-157');
+console.log('ScoresYear change event fired - updateScoresLayer');
 ScoresPurpose.addEventListener("change", updateScoresLayer);
-console.log('updateScoresLayer-159');
+console.log('ScoresPurpose change event fired - updateScoresLayer');
 ScoresMode.addEventListener("change", updateScoresLayer);
-console.log('updateScoresLayer-161');
+console.log('ScoresMode change event fired - updateScoresLayer');
 AmenitiesYear.addEventListener("change", updateAmenitiesCatchmentLayer);
 console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
 AmenitiesMode.addEventListener("change", updateAmenitiesCatchmentLayer);
@@ -168,10 +167,30 @@ AmenitiesPurpose.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
 });
 console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
-ScoresOpacity.addEventListener("change", updateOpacitySliderScoresRanges);
-ScoresOpacity.addEventListener("change", updateOutlineSliderScoresRanges);
-AmenitiesOpacity.addEventListener("change", updateOpacitySliderAmenitiesRanges);
-AmenitiesOpacity.addEventListener("change", updateOutlineSliderAmenitiesRanges);
+ScoresOpacity.addEventListener("change", () => {
+  autoUpdateOpacity = true;
+  updateOpacitySliderScoresRanges();
+  console.log('ScoresOpacity change event fired - updateScoresLayer');
+  updateScoresLayer();
+});
+ScoresOutline.addEventListener("change", () => {
+  autoUpdateOutline = true;
+  updateOutlineSliderScoresRanges();
+  console.log('ScoresOutline change event fired - updateScoresLayer');
+  updateScoresLayer();
+});
+AmenitiesOpacity.addEventListener("change", () => {
+  autoUpdateOpacity = true;
+  updateOpacitySliderAmenitiesRanges();
+  console.log('AmenitiesOpacity change event fired - updateAmenitiesCatchmentLayer');
+  updateAmenitiesCatchmentLayer();
+});
+AmenitiesOutline.addEventListener("change", () => {
+  autoUpdateOutline = true;
+  updateOutlineSliderAmenitiesRanges();
+  console.log('AmenitiesOutline change event fired - updateAmenitiesCatchmentLayer');
+  updateAmenitiesCatchmentLayer();
+});
 ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
 ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
 AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesScale);
@@ -209,7 +228,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
       if (panelContent.style.display === "block") {
         if (header.textContent.includes("Connectivity Scores")) {
-          console.log('updateScoresLayer-231');
+          console.log('Connectivity Scores panel opened - updateScoresLayer');
           updateScoresLayer();
           if(AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
@@ -218,14 +237,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
           console.log('Journey Time Catchments - Amenities panel opened - updateAmenitiesCatchmentLayer');
           updateAmenitiesCatchmentLayer();
           if(ScoresLayer) {
-            console.log('ScoresLayer removed-240');
             map.removeLayer(ScoresLayer);
           }
         }
       } else {
         if(ScoresLayer) {
-          console.log('ScoresLayer removed-246');
           map.removeLayer(ScoresLayer);
+          console.log('ScoresLayer removed');
         }
         if(AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
@@ -267,11 +285,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
     }
   });
-
-  document.querySelectorAll('.legend-checkbox').forEach(checkbox => {
-    checkbox.addEventListener('change', updateFeatureVisibility);
-  });
-  createStaticLegendControls();
 });
 
 map.on('zoomend', () => {
@@ -380,7 +393,7 @@ function formatValue(value, step) {
   }
 }
 
-function scorepopup(feature, layer, selectedYear, selectedPurpose, selectedMode) {
+function onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode) {
   layer.on({
     click: function (e) {
       const properties = feature.properties;
@@ -477,46 +490,6 @@ function isClassVisible(value, selectedYear) {
   return true;
 }
 
-function updateFeatureVisibility() {
-  console.log('updateFeatureVisibility-495');
-  if (AmenitiesCatchmentLayer) {
-    const selectedYear = AmenitiesYear.value;
-    const selectedMode = AmenitiesMode.value;
-
-    AmenitiesCatchmentLayer.eachLayer(layer => {
-      const feature = layer.feature;
-      const hexId = feature.properties.Hex_ID;
-      const time = hexTimeMap[hexId];
-      const isVisible = isClassVisible(time, selectedYear);
-      if (layer.options._originalFillOpacity === undefined) {
-        layer.options._originalFillOpacity = layer.options.fillOpacity;
-      }
-      layer.setStyle({ 
-        opacity: isVisible ? 1 : 0, 
-        fillOpacity: isVisible ? layer.options._originalFillOpacity : 0 
-      });
-    });
-  } else if (ScoresLayer) {
-    const selectedYear = ScoresYear.value;
-    const fieldToDisplay = selectedYear.includes('-') 
-      ? `${ScoresPurpose.value}_${ScoresMode.value}` 
-      : `${ScoresPurpose.value}_${ScoresMode.value}_100`;
-
-    ScoresLayer.eachLayer(layer => {
-      const feature = layer.feature;
-      const value = feature.properties[fieldToDisplay];
-      const isVisible = isClassVisible(value, selectedYear);
-      if (layer.options._originalFillOpacity === undefined) {
-        layer.options._originalFillOpacity = layer.options.fillOpacity;
-      }
-      layer.setStyle({ 
-        opacity: isVisible ? 1 : 0, 
-        fillOpacity: isVisible ? layer.options._originalFillOpacity : 0 
-      });
-    });
-  }
-}
-
 function updateLegend() {
   const selectedYear = ScoresYear.value;
   const legendContent = document.getElementById("legend-content");
@@ -542,6 +515,41 @@ function updateLegend() {
       { range: `> 20 and <= 25`, color: "#414387" },
       { range: `> 25 and <= 30`, color: "#440154" }
     ];
+    const headerDiv = document.createElement("div");
+    headerDiv.innerHTML = `${headerText}`;
+    headerDiv.style.fontSize = "1.1em";
+    headerDiv.style.marginBottom = "10px";
+    legendContent.appendChild(headerDiv);
+
+    const masterCheckboxDiv = document.createElement("div");
+    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+    legendContent.appendChild(masterCheckboxDiv);
+
+    classes.forEach(c => {
+      const div = document.createElement("div");
+      const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
+      div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+      legendContent.appendChild(div);
+    });
+
+    const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
+    newLegendCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        updateMasterCheckbox();
+        updateAmenitiesCatchmentLayer();
+      });
+    });
+
+    const masterCheckbox = document.getElementById('masterCheckbox');
+    masterCheckbox.addEventListener('change', () => {
+      const isChecked = masterCheckbox.checked;
+      newLegendCheckboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+      });
+      updateAmenitiesCatchmentLayer();
+    });
+    updateMasterCheckbox();
+
   } else if (ScoresLayer) {
     headerText = selectedYear.includes('-') ? "Score Difference" : "Population Percentiles";
     classes = selectedYear.includes('-') ? [
@@ -564,53 +572,49 @@ function updateLegend() {
       { range: `10-20`, color: "#482777" },
       { range: `0-10 - 10% of region's population with worst access to amenities`, color: "#440154" }
     ];
+    const headerDiv = document.createElement("div");
+    headerDiv.innerHTML = `${headerText}`;
+    headerDiv.style.fontSize = "1.1em";
+    headerDiv.style.marginBottom = "10px";
+    legendContent.appendChild(headerDiv);
+
+    const masterCheckboxDiv = document.createElement("div");
+    masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
+    legendContent.appendChild(masterCheckboxDiv);
+
+    classes.forEach(c => {
+      const div = document.createElement("div");
+      const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
+      div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
+      legendContent.appendChild(div);
+    });
+
+    const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
+    newLegendCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        updateMasterCheckbox();
+        updateScoresLayer();
+      });
+    });
+
+    const masterCheckbox = document.getElementById('masterCheckbox');
+    masterCheckbox.addEventListener('change', () => {
+      const isChecked = masterCheckbox.checked;
+      newLegendCheckboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+      });
+      updateScoresLayer();
+    });
+    updateMasterCheckbox();
   }
 
-  const headerDiv = document.createElement("div");
-  headerDiv.innerHTML = `${headerText}`;
-  headerDiv.style.fontSize = "1.1em";
-  headerDiv.style.marginBottom = "10px";
-  legendContent.appendChild(headerDiv);
-
-  const masterCheckboxDiv = document.createElement("div");
-  masterCheckboxDiv.innerHTML = `<input type="checkbox" id="masterCheckbox" checked> <i>Select/Deselect All</i>`;
-  legendContent.appendChild(masterCheckboxDiv);
-
-  classes.forEach(c => {
-    const div = document.createElement("div");
-    const isChecked = checkboxStates[c.range] !== undefined ? checkboxStates[c.range] : true;
-    div.innerHTML = `<input type="checkbox" class="legend-checkbox" data-range="${c.range}" ${isChecked ? 'checked' : ''}> <span style="display: inline-block; width: 20px; height: 20px; background-color: ${c.color};"></span> ${c.range}`;
-    legendContent.appendChild(div);
-  });
-
-  const newLegendCheckboxes = document.querySelectorAll('.legend-checkbox');
-  newLegendCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      updateMasterCheckbox();
-      updateFeatureVisibility();
-    });
-  });
-
-  const masterCheckbox = document.getElementById('masterCheckbox');
-  masterCheckbox.addEventListener('change', () => {
-    const isChecked = masterCheckbox.checked;
-    newLegendCheckboxes.forEach(checkbox => {
-      checkbox.checked = isChecked;
-    });
-    updateFeatureVisibility();
-  });
-  updateMasterCheckbox();
-}
-
-function createStaticLegendControls() {
-  const legendContainer = document.getElementById("legend-extra");
-  if (!legendContainer) return;
-
-  legendContainer.innerHTML = '';
-
+  const amenitiesSpacingDiv = document.createElement("div");
+  amenitiesSpacingDiv.style.marginTop = "20px";
+  legendContent.appendChild(amenitiesSpacingDiv);
   const amenitiesCheckboxDiv = document.createElement("div");
   amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
-  legendContainer.appendChild(amenitiesCheckboxDiv);
+  legendContent.appendChild(amenitiesCheckboxDiv);
+
   const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
   amenitiesCheckbox.addEventListener('change', () => {
     if (amenitiesCheckbox.checked) {
@@ -619,10 +623,11 @@ function createStaticLegendControls() {
       map.removeLayer(amenitiesLayerGroup);
     }
   });
-
+  
   const wardBoundariesCheckboxDiv = document.createElement("div");
   wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" checked> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
-  legendContainer.appendChild(wardBoundariesCheckboxDiv);
+  legendContent.appendChild(wardBoundariesCheckboxDiv);
+
   const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
   wardBoundariesCheckbox.addEventListener('change', () => {
     if (wardBoundariesCheckbox.checked) {
@@ -752,9 +757,8 @@ function initializeScoresSliders() {
   ScoresOpacityRange = document.getElementById('opacityRangeScoresSlider');
   ScoresOutlineRange = document.getElementById('outlineRangeScoresSlider');
   initializeSliders(ScoresOpacityRange, updateScoresLayer);
-  console.log('udpatescoreslayer-760');
   initializeSliders(ScoresOutlineRange, updateScoresLayer);
-  console.log('udpatescoreslayer-762');
+  console.log('initializeScoresSliders function called - 785');
 }
 
 function toggleInverseOpacityScoresScale() {
@@ -787,6 +791,8 @@ function toggleInverseOpacityScoresScale() {
   opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOpacitySliderScoresRanges();
+  concole.log('toggleInverseOpacityScoresScale function called - 818');
+  updateScoresLayer();
 }
 
 function toggleInverseOutlineScoresScale() {
@@ -819,6 +825,8 @@ function toggleInverseOutlineScoresScale() {
   outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
   updateOutlineSliderScoresRanges();
+  console.log('toggleInverseOutlineScoresScale function called - 852');
+  updateScoresLayer();
 }
 
 function updateOpacitySliderScoresRanges() {
@@ -866,8 +874,6 @@ function updateOpacitySliderScoresRanges() {
       document.getElementById('opacityRangeScoresMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
     }
   }
-  updateScoresLayer();
-  console.log('updateScoresLayer- 886');
 }
 
 function updateOutlineSliderScoresRanges() {
@@ -915,8 +921,6 @@ function updateOutlineSliderScoresRanges() {
       document.getElementById('outlineRangeScoresMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
     }
   }
-  updateScoresLayer();
-  console.log('updateScoresLayer- 934');
 }
 
 function updateScoresLayer() {
@@ -930,8 +934,8 @@ function updateScoresLayer() {
   const outlineField = ScoresOutline.value;
 
   if (ScoresLayer) {
-    console.log('ScoresLayer removed- 939');
     map.removeLayer(ScoresLayer);
+    console.log('ScoresLayer removed');
     ScoresLayer = null;
   }
 
@@ -956,16 +960,17 @@ function updateScoresLayer() {
 
     ScoresLayer = L.geoJSON(filteredScoresLayer, {
       style: feature => styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
-      onEachFeature: (feature, layer) => scorepopup(feature, layer, selectedYear, selectedPurpose, selectedMode)
+      onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
-    console.log('scoresadded- 965');
+    console.log('ScoresLayer drawn');
+
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
-    console.log('drawselectedamenities-970');
+
     AmenitiesCatchmentLayer = null;
     updateLegend();
-    console.log('updateLegend-973');
   }
+  console.log('ScoresLayer created');
 }
 
 function initializeAmenitiesSliders() {
@@ -1252,6 +1257,7 @@ function updateAmenitiesCatchmentLayer() {
                 weight = scaleExp(outlineValue, minOutlineValue, maxOutlineValue, 0, 4, outlineAmenitiesOrder);
               }
             }
+
             return {
               fillColor: color,
               weight: weight,
@@ -1260,7 +1266,7 @@ function updateAmenitiesCatchmentLayer() {
               fillOpacity: opacity
             };
           },
-          onEachFeature: (feature, layer) => scorepopup(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
+          onEachFeature: (feature, layer) => onEachFeature(feature, layer, selectedYear, selectedAmenitiesAmenities.join(','), selectedMode)
         }).addTo(map);
 
         drawSelectedAmenities(selectedAmenitiesAmenities);
