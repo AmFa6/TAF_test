@@ -944,6 +944,7 @@ function updateScoresLayer() {
 
   const selectedYear = ScoresYear.value;
   if (!selectedYear) {
+    updateLegend();
     return;
   }
   const selectedPurpose = ScoresPurpose.value;
