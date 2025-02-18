@@ -240,12 +240,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
           }
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
           console.log('updateAmenitiesCatchmentLayer-239');
-          updateAmenitiesCatchmentLayer();
-          if(ScoresLayer) {
-            map.removeLayer(ScoresLayer);
-            ScoresLayer = null;
-            console.log('ScoresLayer removed-245');
-          }
+          updateAmenitiesCatchmentLayer().then(() => {
+            if(ScoresLayer) {
+              map.removeLayer(ScoresLayer);
+              ScoresLayer = null;
+              console.log('ScoresLayer removed-245');
+            }
+          });
         }
       } else {
         if(ScoresLayer) {
