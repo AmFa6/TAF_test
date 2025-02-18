@@ -312,7 +312,10 @@ map.on('click', function (e) {
   });
 
   if (features.length > 0) {
-    handleMultiplePopups(e, features);
+    const selectedYear = ScoresYear.value;
+    const selectedPurpose = ScoresPurpose.value;
+    const selectedMode = ScoresMode.value;
+    handleMultiplePopups(e, features, selectedYear, selectedPurpose, selectedMode);
   }
 });
 
@@ -455,7 +458,7 @@ function onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMo
   });
 }
 
-function handleMultiplePopups(e, features) {
+function handleMultiplePopups(e, features, selectedYear, selectedPurpose, selectedMode) {
   let currentIndex = 0;
 
   const createPopupContent = (feature) => {
