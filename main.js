@@ -758,13 +758,21 @@ function initializeScoresSliders() {
   console.log('udpatescoreslayer-762');
 }
 
-function toggleInverseOpacityScoresScale() {
-  isInverseScoresOpacity = !isInverseScoresOpacity;
-  const handles = ScoresOpacityRange.querySelectorAll('.noUi-handle');
-  const connectElements = ScoresOpacityRange.querySelectorAll('.noUi-connect');
+function initializeAmenitiesSliders() {
+  AmenitiesOpacityRange = document.getElementById('opacityRangeAmenitiesSlider');
+  AmenitiesOutlineRange = document.getElementById('outlineRangeAmenitiesSlider');
+  initializeSliders(AmenitiesOpacityRange, updateAmenitiesCatchmentLayer);
+  initializeSliders(AmenitiesOutlineRange, updateAmenitiesCatchmentLayer);
+  console.log('initializeAmenitiesSliders function called - 990');
+}
 
-  if (isInverseScoresOpacity) {
-    ScoresOpacityRange.noUiSlider.updateOptions({
+function toggleInverseScale(isInverse, sliderElement, orderField, minField, maxField) {
+  isInverse = !isInverse;
+  const handles = sliderElement.querySelectorAll('.noUi-handle');
+  const connectElements = sliderElement.querySelectorAll('.noUi-connect');
+
+  if (isInverse) {
+    sliderElement.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.add('noUi-handle-transparent');
@@ -774,7 +782,7 @@ function toggleInverseOpacityScoresScale() {
     connectElements[1].classList.add('noUi-connect-gradient-left');
     connectElements[2].classList.remove('noUi-connect-dark-grey');
   } else {
-    ScoresOpacityRange.noUiSlider.updateOptions({
+    sliderElement.noUiSlider.updateOptions({
       connect: [true, true, true]
     });
     handles[1].classList.remove('noUi-handle-transparent');
@@ -785,139 +793,72 @@ function toggleInverseOpacityScoresScale() {
     connectElements[2].classList.add('noUi-connect-dark-grey');
   }
 
-  opacityScoresOrder = opacityScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+  orderField = orderField === 'low-to-high' ? 'high-to-low' : 'low-to-high';
 
-  updateOpacitySliderScoresRanges();
+  updateSliderRanges(sliderElement, minField, maxField);
+}
+
+function updateSliderRanges(sliderElement, field, selectedLayer, minField, maxField, stepField, isInverse) {
+  if (selectedLayer) {
+    const values = field !== "None" ? selectedLayer.features.map(feature => feature.properties[field]).filter(value => value !== null && value !== 0) : [];
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const roundedMaxValue = Math.pow(10, Math.ceil(Math.log10(maxValue)));
+    let step = roundedMaxValue / 100;
+
+    if (isNaN(step) || step <= 0) {
+      step = 1;
+    }
+
+    const adjustedMaxValue = Math.ceil(maxValue / step) * step;
+    const adjustedMinValue = Math.floor(minValue / step) * step;
+
+    if (field === "None") {
+      sliderElement.setAttribute('disabled', true);
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          'min': 0,
+          'max': 0
+        },
+        step: 1
+      });
+      sliderElement.noUiSlider.set(['', '']);
+      document.getElementById(minField).innerText = '';
+      document.getElementById(maxField).innerText = '';
+    } else {
+      sliderElement.removeAttribute('disabled');
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          'min': adjustedMinValue,
+          'max': adjustedMaxValue
+        },
+        step: step
+      });
+      sliderElement.noUiSlider.set([adjustedMinValue, adjustedMaxValue]);
+      document.getElementById(minField).innerText = formatValue(adjustedMinValue, step);
+      document.getElementById(maxField).innerText = formatValue(adjustedMaxValue, step);
+    }
+  }
+}
+
+function toggleInverseOpacityScoresScale() {
+  toggleInverseScale(isInverseScoresOpacity, ScoresOpacityRange, opacityScoresOrder, 'opacityRangeScoresMin', 'opacityRangeScoresMax');
+  updateScoresLayer();
 }
 
 function toggleInverseOutlineScoresScale() {
-  isInverseScoresOutline = !isInverseScoresOutline;
-  const handles = ScoresOutlineRange.querySelectorAll('.noUi-handle');
-  const connectElements = ScoresOutlineRange.querySelectorAll('.noUi-connect');
-
-  if (isInverseScoresOutline) {
-    ScoresOutlineRange.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.add('noUi-handle-transparent');
-    handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].classList.add('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-right');
-    connectElements[1].classList.add('noUi-connect-gradient-left');
-    connectElements[2].classList.remove('noUi-connect-dark-grey');
-  } else {
-    ScoresOutlineRange.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.remove('noUi-handle-transparent');
-    handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-left');
-    connectElements[1].classList.add('noUi-connect-gradient-right');
-    connectElements[2].classList.add('noUi-connect-dark-grey');
-  }
-
-  outlineScoresOrder = outlineScoresOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-
-  updateOutlineSliderScoresRanges();
+  toggleInverseScale(isInverseScoresOutline, ScoresOutlineRange, outlineScoresOrder, 'outlineRangeScoresMin', 'outlineRangeScoresMax');
+  updateScoresLayer();
 }
 
-function updateOpacitySliderScoresRanges() {
-  const opacityField = ScoresOpacity.value;
-  const selectedYear = ScoresYear.value;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
-    const minOpacity = Math.min(...opacityValues);
-    const maxOpacity = Math.max(...opacityValues);
-    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
-    let opacityStep = roundedMaxOpacity / 100;
-
-    if (isNaN(opacityStep) || opacityStep <= 0) {
-      opacityStep = 1;
-    }
-
-    const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
-    const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
-
-    if (opacityField === "None") {
-      ScoresOpacityRange.setAttribute('disabled', true);
-      ScoresOpacityRange.noUiSlider.updateOptions({
-        range: {
-          'min': 0,
-          'max': 0
-        },
-        step: 1
-      });
-      ScoresOpacityRange.noUiSlider.set(['', '']);
-      document.getElementById('opacityRangeScoresMin').innerText = '';
-      document.getElementById('opacityRangeScoresMax').innerText = '';
-    } else {
-      ScoresOpacityRange.removeAttribute('disabled');
-      ScoresOpacityRange.noUiSlider.updateOptions({
-        range: {
-          'min': adjustedMinOpacity,
-          'max': adjustedMaxOpacity
-        },
-        step: opacityStep
-      });
-      ScoresOpacityRange.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      document.getElementById('opacityRangeScoresMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
-      document.getElementById('opacityRangeScoresMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
-    }
-  }
-  updateScoresLayer();
-  console.log('updateScoresLayer- 886');
+function toggleInverseOpacityAmenitiesScale() {
+  toggleInverseScale(isInverseAmenitiesOpacity, AmenitiesOpacityRange, opacityAmenitiesOrder, 'opacityRangeAmenitiesMin', 'opacityRangeAmenitiesMax');
+  updateAmenitiesCatchmentLayer();
 }
 
-function updateOutlineSliderScoresRanges() {
-  const outlineField = ScoresOutline.value;
-  const selectedYear = ScoresYear.value;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
-    const minOutline = Math.min(...outlineValues);
-    const maxOutline = Math.max(...outlineValues);
-    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
-    let outlineStep = roundedMaxOutline / 100;
-
-    if (isNaN(outlineStep) || outlineStep <= 0) {
-      outlineStep = 1;
-    }
-
-    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
-    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
-
-    if (outlineField === "None") {
-      ScoresOutlineRange.setAttribute('disabled', true);
-      ScoresOutlineRange.noUiSlider.updateOptions({
-        range: {
-          'min': 0,
-          'max': 0
-        },
-        step: 1
-      });
-      ScoresOutlineRange.noUiSlider.set(['', '']);
-      document.getElementById('outlineRangeScoresMin').innerText = '';
-      document.getElementById('outlineRangeScoresMax').innerText = '';
-    } else {
-      ScoresOutlineRange.removeAttribute('disabled');
-      ScoresOutlineRange.noUiSlider.updateOptions({
-        range: {
-          'min': adjustedMinOutline,
-          'max': adjustedMaxOutline
-        },
-        step: outlineStep
-      });
-      ScoresOutlineRange.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-      document.getElementById('outlineRangeScoresMin').innerText = formatValue(adjustedMinOutline, outlineStep);
-      document.getElementById('outlineRangeScoresMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
-    }
-  }
-  updateScoresLayer();
-  console.log('updateScoresLayer- 934');
+function toggleInverseOutlineAmenitiesScale() {
+  toggleInverseScale(isInverseAmenitiesOutline, AmenitiesOutlineRange, outlineAmenitiesOrder, 'outlineRangeAmenitiesMin', 'outlineRangeAmenitiesMax');
+  updateAmenitiesCatchmentLayer();
 }
 
 function updateScoresLayer() {
@@ -931,7 +872,6 @@ function updateScoresLayer() {
   const outlineField = ScoresOutline.value;
 
   if (ScoresLayer) {
-    console.log('ScoresLayer removed- 939');
     map.removeLayer(ScoresLayer);
     ScoresLayer = null;
   }
@@ -940,6 +880,9 @@ function updateScoresLayer() {
   const selectedLayer = layers[selectedYear];
 
   if (selectedLayer) {
+    updateSliderRanges(ScoresOpacityRange, opacityField, selectedLayer, 'opacityRangeScoresMin', 'opacityRangeScoresMax', opacityScoresOrder);
+    updateSliderRanges(ScoresOutlineRange, outlineField, selectedLayer, 'outlineRangeScoresMin', 'outlineRangeScoresMax', outlineScoresOrder);
+
     const filteredFeatures = selectedLayer.features.filter(feature => {
       const value = feature.properties[fieldToDisplay];
       return feature.properties[fieldToDisplay] !== undefined && isClassVisible(value, selectedYear);
@@ -959,183 +902,11 @@ function updateScoresLayer() {
       style: feature => styleScoresFeature(feature, fieldToDisplay, opacityField, outlineField, minOpacity, maxOpacity, minOutline, maxOutline, selectedYear),
       onEachFeature: (feature, layer) => scorepopup(feature, layer, selectedYear, selectedPurpose, selectedMode)
     }).addTo(map);
-    console.log('scoresadded- 965');
+
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
-    console.log('drawselectedamenities-970');
     AmenitiesCatchmentLayer = null;
     updateLegend();
-    console.log('updateLegend-973');
-  }
-}
-
-function initializeAmenitiesSliders() {
-  AmenitiesOpacityRange = document.getElementById('opacityRangeAmenitiesSlider');
-  AmenitiesOutlineRange = document.getElementById('outlineRangeAmenitiesSlider');
-  initializeSliders(AmenitiesOpacityRange, updateAmenitiesCatchmentLayer);
-  initializeSliders(AmenitiesOutlineRange, updateAmenitiesCatchmentLayer);
-  console.log('initializeAmenitiesSliders function called - 990');
-}
-
-function toggleInverseOpacityAmenitiesScale() {
-  isInverseAmenitiesOpacity = !isInverseAmenitiesOpacity;
-  const handles = AmenitiesOpacityRange.querySelectorAll('.noUi-handle');
-  const connectElements = AmenitiesOpacityRange.querySelectorAll('.noUi-connect');
-
-  if (isInverseAmenitiesOpacity) {
-    AmenitiesOpacityRange.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.add('noUi-handle-transparent');
-    handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].classList.add('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-right');
-    connectElements[1].classList.add('noUi-connect-gradient-left');
-    connectElements[2].classList.remove('noUi-connect-dark-grey');
-  } else {
-    AmenitiesOpacityRange.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.remove('noUi-handle-transparent');
-    handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-left');
-    connectElements[1].classList.add('noUi-connect-gradient-right');
-    connectElements[2].classList.add('noUi-connect-dark-grey');
-  }
-
-  opacityAmenitiesOrder = opacityAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-
-  updateOpacitySliderAmenitiesRanges();
-  console.log('toggleInverseOpacityAmenitiesScale function called - 1023');
-  updateAmenitiesCatchmentLayer();
-}
-
-function toggleInverseOutlineAmenitiesScale() {
-  isInverseAmenitiesOutline = !isInverseAmenitiesOutline;
-  const handles = AmenitiesOutlineRange.querySelectorAll('.noUi-handle');
-  const connectElements = AmenitiesOutlineRange.querySelectorAll('.noUi-connect');
-
-  if (isInverseAmenitiesOutline) {
-    AmenitiesOutlineRange.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.add('noUi-handle-transparent');
-    handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].classList.add('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-right');
-    connectElements[1].classList.add('noUi-connect-gradient-left');
-    connectElements[2].classList.remove('noUi-connect-dark-grey');
-  } else {
-    AmenitiesOutlineRange.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.remove('noUi-handle-transparent');
-    handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-left');
-    connectElements[1].classList.add('noUi-connect-gradient-right');
-    connectElements[2].classList.add('noUi-connect-dark-grey');
-  }
-
-  outlineAmenitiesOrder = outlineAmenitiesOrder === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-
-  updateOutlineSliderAmenitiesRanges();
-  console.log('toggleInverseOutlineAmenitiesScale function called - 1057');
-  updateAmenitiesCatchmentLayer();
-}
-
-function updateOpacitySliderAmenitiesRanges() {
-  const opacityField = AmenitiesOpacity.value;
-  const selectedYear = AmenitiesYear.value;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const opacityValues = opacityField !== "None" ? selectedLayer.features.map(feature => feature.properties[opacityField]).filter(value => value !== null && value !== 0) : [];
-    const minOpacity = Math.min(...opacityValues);
-    const maxOpacity = Math.max(...opacityValues);
-    const roundedMaxOpacity = Math.pow(10, Math.ceil(Math.log10(maxOpacity)));
-    let opacityStep = roundedMaxOpacity / 100;
-
-    if (isNaN(opacityStep) || opacityStep <= 0) {
-      opacityStep = 1;
-    }
-
-    const adjustedMaxOpacity = Math.ceil(maxOpacity / opacityStep) * opacityStep;
-    const adjustedMinOpacity = Math.floor(minOpacity / opacityStep) * opacityStep;
-
-    if (opacityField === "None") {
-      AmenitiesOpacityRange.setAttribute('disabled', true);
-      AmenitiesOpacityRange.noUiSlider.updateOptions({
-        range: {
-          'min': 0,
-          'max': 0
-        },
-        step: 1
-      });
-      AmenitiesOpacityRange.noUiSlider.set(['', '']);
-      document.getElementById('opacityRangeAmenitiesMin').innerText = '';
-      document.getElementById('opacityRangeAmenitiesMax').innerText = '';
-    } else {
-      AmenitiesOpacityRange.removeAttribute('disabled');
-      AmenitiesOpacityRange.noUiSlider.updateOptions({
-        range: {
-          'min': adjustedMinOpacity,
-          'max': adjustedMaxOpacity
-        },
-        step: opacityStep
-      });
-      AmenitiesOpacityRange.noUiSlider.set([adjustedMinOpacity, adjustedMaxOpacity]);
-      document.getElementById('opacityRangeAmenitiesMin').innerText = formatValue(adjustedMinOpacity, opacityStep);
-      document.getElementById('opacityRangeAmenitiesMax').innerText = formatValue(adjustedMaxOpacity, opacityStep);
-    }
-  }
-}
-
-function updateOutlineSliderAmenitiesRanges() {
-  const outlineField = AmenitiesOutline.value;
-  const selectedYear = AmenitiesYear.value;
-  const selectedLayer = layers[selectedYear];
-
-  if (selectedLayer) {
-    const outlineValues = outlineField !== "None" ? selectedLayer.features.map(feature => feature.properties[outlineField]).filter(value => value !== null && value !== 0) : [];
-    const minOutline = Math.min(...outlineValues);
-    const maxOutline = Math.max(...outlineValues);
-    const roundedMaxOutline = Math.pow(10, Math.ceil(Math.log10(maxOutline)));
-    let outlineStep = roundedMaxOutline / 100;
-
-    if (isNaN(outlineStep) || outlineStep <= 0) {
-      outlineStep = 1;
-    }
-
-    const adjustedMaxOutline = Math.ceil(maxOutline / outlineStep) * outlineStep;
-    const adjustedMinOutline = Math.floor(minOutline / outlineStep) * outlineStep;
-
-    if (outlineField === "None") {
-      AmenitiesOutlineRange.setAttribute('disabled', true);
-      AmenitiesOutlineRange.noUiSlider.updateOptions({
-        range: {
-          'min': 0,
-          'max': 0
-        },
-        step: 1
-      });
-      AmenitiesOutlineRange.noUiSlider.set(['', '']);
-      document.getElementById('outlineRangeAmenitiesMin').innerText = '';
-      document.getElementById('outlineRangeAmenitiesMax').innerText = '';
-    } else {
-      AmenitiesOutlineRange.removeAttribute('disabled');
-      AmenitiesOutlineRange.noUiSlider.updateOptions({
-        range: {
-          'min': adjustedMinOutline,
-          'max': adjustedMaxOutline
-        },
-        step: outlineStep
-      });
-      AmenitiesOutlineRange.noUiSlider.set([adjustedMinOutline, adjustedMaxOutline]);
-      document.getElementById('outlineRangeAmenitiesMin').innerText = formatValue(adjustedMinOutline, outlineStep);
-      document.getElementById('outlineRangeAmenitiesMax').innerText = formatValue(adjustedMaxOutline, outlineStep);
-    }
   }
 }
 
@@ -1195,7 +966,6 @@ function updateAmenitiesCatchmentLayer() {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
       .then(data => {
-        // Remove the existing AmenitiesCatchmentLayer if it exists
         if (AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
         }
@@ -1274,5 +1044,4 @@ function updateAmenitiesCatchmentLayer() {
         }
       });
   });
-  console.log('AmenitiesCatchmentLayer created');
 }
