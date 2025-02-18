@@ -150,6 +150,7 @@ let selectingFromMap = false;
 let selectedAmenitiesFromMap = [];
 let initialLoad = true;
 let initialLoadComplete = false;
+let isUpdatingSlider = false;
 
 initializeAmenitiesSliders()
 
@@ -766,6 +767,38 @@ function initializeAmenitiesSliders() {
   console.log('initializeAmenitiesSliders function called - 990');
 }
 
+function toggleInverseScale(isInverse, sliderElement, orderField, minField, maxField) {
+  isInverse = !isInverse;
+  const handles = sliderElement.querySelectorAll('.noUi-handle');
+  const connectElements = sliderElement.querySelectorAll('.noUi-connect');
+
+  if (isInverse) {
+    sliderElement.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.add('noUi-handle-transparent');
+    handles[0].classList.remove('noUi-handle-transparent');
+    connectElements[0].classList.add('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-right');
+    connectElements[1].classList.add('noUi-connect-gradient-left');
+    connectElements[2].classList.remove('noUi-connect-dark-grey');
+  } else {
+    sliderElement.noUiSlider.updateOptions({
+      connect: [true, true, true]
+    });
+    handles[1].classList.remove('noUi-handle-transparent');
+    handles[0].classList.add('noUi-handle-transparent');
+    connectElements[0].classList.remove('noUi-connect-dark-grey');
+    connectElements[1].classList.remove('noUi-connect-gradient-left');
+    connectElements[1].classList.add('noUi-connect-gradient-right');
+    connectElements[2].classList.add('noUi-connect-dark-grey');
+  }
+
+  orderField = orderField === 'low-to-high' ? 'high-to-low' : 'low-to-high';
+
+  updateSliderRanges(sliderElement, field, selectedLayer, minField, maxField, stepField, isInverse);
+}
+
 function updateSliderRanges(sliderElement, field, selectedLayer, minField, maxField, stepField, isInverse) {
   if (selectedLayer) {
     const values = field !== "None" ? selectedLayer.features.map(feature => feature.properties[field]).filter(value => value !== null && value !== 0) : [];
@@ -802,46 +835,18 @@ function updateSliderRanges(sliderElement, field, selectedLayer, minField, maxFi
         },
         step: step
       });
+      isUpdatingSlider = true;
       sliderElement.noUiSlider.set([adjustedMinValue, adjustedMaxValue]);
+      isUpdatingSlider = false;
       document.getElementById(minField).innerText = formatValue(adjustedMinValue, step);
       document.getElementById(maxField).innerText = formatValue(adjustedMaxValue, step);
     }
   }
 }
 
-function toggleInverseScale(isInverse, sliderElement, orderField, minField, maxField) {
-  isInverse = !isInverse;
-  const handles = sliderElement.querySelectorAll('.noUi-handle');
-  const connectElements = sliderElement.querySelectorAll('.noUi-connect');
-
-  if (isInverse) {
-    sliderElement.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.add('noUi-handle-transparent');
-    handles[0].classList.remove('noUi-handle-transparent');
-    connectElements[0].classList.add('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-right');
-    connectElements[1].classList.add('noUi-connect-gradient-left');
-    connectElements[2].classList.remove('noUi-connect-dark-grey');
-  } else {
-    sliderElement.noUiSlider.updateOptions({
-      connect: [true, true, true]
-    });
-    handles[1].classList.remove('noUi-handle-transparent');
-    handles[0].classList.add('noUi-handle-transparent');
-    connectElements[0].classList.remove('noUi-connect-dark-grey');
-    connectElements[1].classList.remove('noUi-connect-gradient-left');
-    connectElements[1].classList.add('noUi-connect-gradient-right');
-    connectElements[2].classList.add('noUi-connect-dark-grey');
-  }
-
-  orderField = orderField === 'low-to-high' ? 'high-to-low' : 'low-to-high';
-
-  updateSliderRanges(sliderElement, field, selectedLayer, minField, maxField, stepField, isInverse);
-}
-
 function updateScoresLayer(inverse = false) {
+  if (isUpdatingSlider) return;
+
   const selectedYear = ScoresYear.value;
   if (!selectedYear) {
     return;
@@ -900,6 +905,8 @@ function updateScoresLayer(inverse = false) {
 }
 
 function updateAmenitiesCatchmentLayer(inverse = false) {
+  if (isUpdatingSlider) return;
+
   selectedAmenitiesAmenities = Array.from(AmenitiesPurpose)
     .filter(checkbox => checkbox.checked)
     .map(checkbox => checkbox.value);
