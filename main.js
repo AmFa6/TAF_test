@@ -548,6 +548,10 @@ function updateLegend() {
 
   legendContent.innerHTML = '';
 
+  if (!ScoresLayer && !AmenitiesCatchmentLayer) {
+    return; // Exit the function if neither layer is present
+  }
+
   let headerText;
   let classes;
 
