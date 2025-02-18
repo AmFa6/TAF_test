@@ -542,15 +542,17 @@ function updateLegend() {
   const legendContent = document.getElementById("legend-content");
 
   if (!ScoresLayer && !AmenitiesCatchmentLayer) {
-    console.log('ScoresLayer and AmenitiesCatchmentLayer not found - updateLegend-545');
     legendContent.innerHTML = '';
     return;
   }
+
   const checkboxStates = {};
   const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
   legendCheckboxes.forEach(checkbox => {
     checkboxStates[checkbox.getAttribute('data-range')] = checkbox.checked;
   });
+
+  legendContent.innerHTML = '';
 
   let headerText;
   let classes;
