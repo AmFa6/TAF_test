@@ -540,6 +540,10 @@ function updateLegend() {
   const selectedYear = ScoresYear.value;
   const legendContent = document.getElementById("legend-content");
 
+  if (!ScoresLayer && !AmenitiesCatchmentLayer) {
+    legendContent.innerHTML = '';
+    return;
+  }
   const checkboxStates = {};
   const legendCheckboxes = document.querySelectorAll('.legend-checkbox');
   legendCheckboxes.forEach(checkbox => {
