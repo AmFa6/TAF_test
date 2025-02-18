@@ -236,28 +236,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
             console.log('AmenitiesCatchmentLayer removed-236');
           } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
-          console.log('Journey Time Catchments - Amenities panel opened - updateAmenitiesCatchmentLayer');
+          console.log('updateAmenitiesCatchmentLayer-239');
           updateAmenitiesCatchmentLayer();
           if(ScoresLayer) {
-            console.log('ScoresLayer removed-240');
             map.removeLayer(ScoresLayer);
             ScoresLayer = null;
+            console.log('ScoresLayer removed-245');
           }
         }
       } else {
         if(ScoresLayer) {
-          console.log('ScoresLayer removed-246');
           map.removeLayer(ScoresLayer);
           ScoresLayer = null;
+          console.log('ScoresLayer removed-251');
         }
         if(AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
           AmenitiesCatchmentLayer = null;
-          console.log('AmenitiesCatchmentLayer removed');
+          console.log('AmenitiesCatchmentLayer removed-256');
         } 
         drawSelectedAmenities([]);
         updateLegend();
-        console.log('updatelegend-255')
+        console.log('updatelegend-260')
       }
     });
   });
