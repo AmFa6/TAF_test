@@ -28,7 +28,7 @@ fetch('https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_
             .openOn(map);
         });
       }
-    }).addTo(map);
+    });
   })
   .catch(error => console.error('Error loading GeoJSON data:', error));
 
