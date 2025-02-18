@@ -669,11 +669,9 @@ function drawSelectedAmenities(amenities) {
   const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
   amenitiesLayerGroup.clearLayers();
 
-  if (!amenitiesCheckbox) {
+  if (!amenitiesCheckbox || !amenitiesCheckbox.checked) {
     return;
   }
-
-  const isChecked = amenitiesCheckbox.checked;
 
   if (amenities.length === 0) {
     amenities = Object.keys(amenityLayers);
@@ -706,22 +704,13 @@ function drawSelectedAmenities(amenities) {
               }
             });
           }
-
-          // Set opacity based on the checkbox state
-          if (!isChecked) {
-            layer.setStyle({ opacity: 0 });
-          } else {
-            layer.setStyle({ opacity: 1 });
-          }
         }
       });
       amenitiesLayerGroup.addLayer(layer);
     }
   });
 
-  if (isChecked) {
-    amenitiesLayerGroup.addTo(map);
-  }
+  amenitiesLayerGroup.addTo(map);
 }
 
 function AmenitiesPopup(amenity, properties) {
