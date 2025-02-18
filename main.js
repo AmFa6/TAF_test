@@ -676,7 +676,7 @@ function drawSelectedAmenities(amenities) {
   const currentZoom = map.getZoom();
   const minZoomLevel = 14;
 
-  amenities.forEach(amenity => {
+  Object.keys(amenityLayers).forEach(amenity => {
     const amenityLayer = amenityLayers[amenity];
     if (amenityLayer) {
       const layer = L.geoJSON(amenityLayer, {
@@ -700,6 +700,12 @@ function drawSelectedAmenities(amenities) {
               }
             });
           }
+        },
+        style: (feature) => {
+          return {
+            opacity: amenities.includes(amenity) ? 1 : 0,
+            fillOpacity: amenities.includes(amenity) ? 1 : 0
+          };
         }
       });
       amenitiesLayerGroup.addLayer(layer);
