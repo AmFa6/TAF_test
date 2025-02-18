@@ -669,7 +669,7 @@ function drawSelectedAmenities(amenities) {
   const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
   amenitiesLayerGroup.clearLayers();
 
-  if (!amenitiesCheckbox || !amenitiesCheckbox.checked) {
+  if (!amenitiesCheckbox) {
     return;
   }
 
