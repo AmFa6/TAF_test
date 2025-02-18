@@ -632,7 +632,7 @@ function createStaticLegendControls() {
   legendContainer.innerHTML = '';
 
   const amenitiesCheckboxDiv = document.createElement("div");
-  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox" checked> <span style="font-size: 1em;">Amenities</span>`;
+  amenitiesCheckboxDiv.innerHTML = `<input type="checkbox" id="amenitiesCheckbox"> <span style="font-size: 1em;">Amenities</span>`;
   legendContainer.appendChild(amenitiesCheckboxDiv);
   const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
   amenitiesCheckbox.addEventListener('change', () => {
@@ -644,7 +644,7 @@ function createStaticLegendControls() {
   });
 
   const wardBoundariesCheckboxDiv = document.createElement("div");
-  wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox" checked> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
+  wardBoundariesCheckboxDiv.innerHTML = `<input type="checkbox" id="wardBoundariesCheckbox"> <span style="font-size: 1em;">Ward Boundaries (2021)</span>`;
   legendContainer.appendChild(wardBoundariesCheckboxDiv);
   const wardBoundariesCheckbox = document.getElementById('wardBoundariesCheckbox');
   wardBoundariesCheckbox.addEventListener('change', () => {
