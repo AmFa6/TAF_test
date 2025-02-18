@@ -299,6 +299,23 @@ map.on('zoomend', () => {
   }
 });
 
+map.on('click', function (e) {
+  const features = [];
+  map.eachLayer(function (layer) {
+    if (layer instanceof L.GeoJSON) {
+      layer.eachLayer(function (subLayer) {
+        if (subLayer.getBounds && subLayer.getBounds().contains(e.latlng)) {
+          features.push(subLayer.feature);
+        }
+      });
+    }
+  });
+
+  if (features.length > 0) {
+    handleMultiplePopups(e, features);
+  }
+});
+
 function initializeSliders(sliderElement, updateCallback) {
   if (sliderElement.noUiSlider) {
     return;
@@ -422,12 +439,78 @@ function onEachFeature(feature, layer, selectedYear, selectedPurpose, selectedMo
 
       let popupContent = `<strong>Hex_ID:</strong> ${hexId}<br><strong>${scoreLabel}:</strong> ${score}<br><strong>Percentile:</strong> ${percentile}<br><strong>Population:</strong> ${population}<br><strong>IMD:</strong> ${imd}<br><strong>Car Availability:</strong> ${carAvailability}<br><strong>Future Dwellings:</strong> ${futureDwellings}`;
 
-      L.popup()
+      const popup = L.popup()
         .setLatLng(e.latlng)
-        .setContent(popupContent)
-        .openOn(map);
+        .setContent(popupContent);
+
+      if (!e.target._popup) {
+        e.target.bindPopup(popup).openPopup();
+      } else {
+        const existingPopup = e.target.getPopup();
+        const existingContent = existingPopup.getContent();
+        const newContent = existingContent + '<br><hr><br>' + popupContent;
+        existingPopup.setContent(newContent).openOn(map);
+      }
     }
   });
+}
+
+function handleMultiplePopups(e, features) {
+  let currentIndex = 0;
+
+  const createPopupContent = (feature) => {
+    const properties = feature.properties;
+    const getValue = (prop) => (properties[prop] !== undefined && properties[prop] !== null) ? properties[prop] : '-';
+    const hexId = getValue('Hex_ID');
+    const scoreValue = getValue(`${selectedPurpose}_${selectedMode}`);
+    let score = '-';
+    let scoreLabel = 'Score';
+
+    if (scoreValue !== '-') {
+      if (selectedYear.includes('-')) {
+        score = Math.round(scoreValue * 100) + '%';
+        scoreLabel = 'Score Difference';
+      } else {
+        score = Math.round(scoreValue);
+      }
+    }
+
+    const percentile = getValue(`${selectedPurpose}_${selectedMode}_100`) !== '-' ? Math.round(getValue(`${selectedPurpose}_${selectedMode}_100`)) : '-';
+    const population = getValue('pop') !== '-' ? Math.round(getValue('pop')) : '-';
+    const imd = population === 0 ? '-' : (getValue('imd') !== '-' ? getValue('imd').toFixed(2) : '-');
+    const carAvailability = population === 0 ? '-' : (getValue('carav') !== '-' ? getValue('carav').toFixed(2) : '-');
+    const futureDwellings = getValue('hh_fut') === 0 ? '-' : (getValue('hh_fut') !== '-' ? Math.round(getValue('hh_fut')) : '-');
+
+    return `<strong>Hex_ID:</strong> ${hexId}<br><strong>${scoreLabel}:</strong> ${score}<br><strong>Percentile:</strong> ${percentile}<br><strong>Population:</strong> ${population}<br><strong>IMD:</strong> ${imd}<br><strong>Car Availability:</strong> ${carAvailability}<br><strong>Future Dwellings:</strong> ${futureDwellings}`;
+  };
+
+  const updatePopupContent = () => {
+    const popupContent = createPopupContent(features[currentIndex]);
+    const navigationButtons = `
+      <div style="text-align: center; margin-top: 10px;">
+        <button id="prevPopup" style="margin-right: 10px;">&lt;</button>
+        <button id="nextPopup">&gt;</button>
+      </div>
+    `;
+    popup.setContent(popupContent + navigationButtons).openOn(map);
+
+    document.getElementById('prevPopup').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + features.length) % features.length;
+      updatePopupContent();
+    });
+
+    document.getElementById('nextPopup').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % features.length;
+      updatePopupContent();
+    });
+  };
+
+  const popup = L.popup()
+    .setLatLng(e.latlng)
+    .setContent(createPopupContent(features[currentIndex]))
+    .openOn(map);
+
+  updatePopupContent();
 }
 
 function getColor(value, selectedYear) {
