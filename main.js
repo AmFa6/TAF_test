@@ -138,7 +138,7 @@ let isInverseScoresOpacity = false;
 let isInverseScoresOutline = false;
 let isInverseAmenitiesOpacity = false;
 let isInverseAmenitiesOutline = false;
-let wardBoudariesLayer;
+let wardBoundariesLayer;
 let ScoresLayer = null;
 let AmenitiesCatchmentLayer = null;
 let hexTimeMap = {};
@@ -232,6 +232,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           updateScoresLayer();
           if(AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
+            AmenitiesCatchmentLayer = null;
           } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
           console.log('Journey Time Catchments - Amenities panel opened - updateAmenitiesCatchmentLayer');
@@ -239,15 +240,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
           if(ScoresLayer) {
             console.log('ScoresLayer removed-240');
             map.removeLayer(ScoresLayer);
+            ScoresLayer = null;
           }
         }
       } else {
         if(ScoresLayer) {
           console.log('ScoresLayer removed-246');
           map.removeLayer(ScoresLayer);
+          ScoresLayer = null;
         }
         if(AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
+          AmenitiesCatchmentLayer = null;
           console.log('AmenitiesCatchmentLayer removed');
         } 
         drawSelectedAmenities([]);
@@ -642,6 +646,7 @@ function createStaticLegendControls() {
       amenitiesLayerGroup.addTo(map);
     } else {
       map.removeLayer(amenitiesLayerGroup);
+      amenitiesLayerGroup = null;
     }
   });
 
@@ -654,6 +659,7 @@ function createStaticLegendControls() {
       wardBoundariesLayer.addTo(map);
     } else {
       map.removeLayer(wardBoundariesLayer);
+      wardBoundariesLayer = null;
     }
   });
 }
@@ -1172,6 +1178,7 @@ function updateAmenitiesCatchmentLayer() {
   if (!selectedYear || !selectedMode || selectedAmenitiesAmenities.length === 0) {
     if(AmenitiesCatchmentLayer) {
       map.removeLayer(AmenitiesCatchmentLayer);
+      AmenitiesCatchmentLayer = null;
     }
     drawSelectedAmenities([]);
     return;
@@ -1220,6 +1227,7 @@ function updateAmenitiesCatchmentLayer() {
         // Remove the existing AmenitiesCatchmentLayer if it exists
         if (AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
+          AmenitiesCatchmentLayer = null;
         }
 
         const filteredFeatures = data.features.filter(feature => {
