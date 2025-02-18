@@ -552,12 +552,6 @@ function updateLegend() {
     checkboxStates[checkbox.getAttribute('data-range')] = checkbox.checked;
   });
 
-  legendContent.innerHTML = '';
-
-  if (!ScoresLayer && !AmenitiesCatchmentLayer) {
-    return; // Exit the function if neither layer is present
-  }
-
   let headerText;
   let classes;
 
