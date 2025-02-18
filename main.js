@@ -983,8 +983,6 @@ function updateScoresLayer() {
 
     selectedScoresAmenities = purposeToAmenitiesMap[selectedPurpose];
     drawSelectedAmenities(selectedScoresAmenities);
-
-    AmenitiesCatchmentLayer = null;
     updateLegend();
   }
   console.log('ScoresLayer created');
