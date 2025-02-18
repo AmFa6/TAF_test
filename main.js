@@ -167,14 +167,14 @@ AmenitiesPurpose.forEach(checkbox => {
   checkbox.addEventListener("change", updateAmenitiesCatchmentLayer);
 });
 console.log('AmenitiesPurpose change event fired - updateAmenitiesCatchmentLayer');
-ScoresOpacity.addEventListener("change", updateOpacitySliderScoresRanges);
-ScoresOpacity.addEventListener("change", updateOutlineSliderScoresRanges);
-AmenitiesOpacity.addEventListener("change", updateOpacitySliderAmenitiesRanges);
-AmenitiesOpacity.addEventListener("change", updateOutlineSliderAmenitiesRanges);
-ScoresInverseOpacity.addEventListener("click", toggleInverseOpacityScoresScale);
-ScoresInverseOutline.addEventListener("click", toggleInverseOutlineScoresScale);
-AmenitiesInverseOpacity.addEventListener("click", toggleInverseOpacityAmenitiesScale);
-AmenitiesInverseOutline.addEventListener("click", toggleInverseOutlineAmenitiesScale);
+ScoresOpacity.addEventListener("change", updateScoresLayer);
+ScoresOpacity.addEventListener("change", updateScoresLayer);
+AmenitiesOpacity.addEventListener("change", updateAmenitiesCatchmentLayer);
+AmenitiesOpacity.addEventListener("change", updateAmenitiesCatchmentLayer);
+ScoresInverseOpacity.addEventListener("click", updateScoresLayer);
+ScoresInverseOutline.addEventListener("click", updateScoresLayer);
+AmenitiesInverseOpacity.addEventListener("click", updateAmenitiesCatchmentLayer);
+AmenitiesInverseOutline.addEventListener("click", updateAmenitiesCatchmentLayer);
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const collapsibleButtons = document.querySelectorAll(".collapsible");
