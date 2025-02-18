@@ -233,6 +233,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           if(AmenitiesCatchmentLayer) {
             map.removeLayer(AmenitiesCatchmentLayer);
             AmenitiesCatchmentLayer = null;
+            console.log('AmenitiesCatchmentLayer removed-236');
           } 
         } else if (header.textContent.includes("Journey Time Catchments - Amenities")) {
           console.log('Journey Time Catchments - Amenities panel opened - updateAmenitiesCatchmentLayer');
