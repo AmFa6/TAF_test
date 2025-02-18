@@ -649,7 +649,6 @@ function createStaticLegendControls() {
       wardBoundariesLayer.addTo(map);
     } else {
       map.removeLayer(wardBoundariesLayer);
-      wardBoundariesLayer = null;
     }
   });
 }
