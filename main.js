@@ -1306,7 +1306,8 @@ function updateAmenitiesCatchmentLayer() {
           initialLoad = false;
           initialLoadComplete = true;
         }
+        console.log('AmenitiesCatchmentLayer created and added to map');
       });
   });
-  console.log('AmenitiesCatchmentLayer created');
+  console.log('AmenitiesCatchmentLayer creation process completed');
 }
