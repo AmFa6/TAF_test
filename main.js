@@ -709,8 +709,6 @@ function drawSelectedAmenities(amenities) {
       amenitiesLayerGroup.addLayer(layer);
     }
   });
-
-  amenitiesLayerGroup.addTo(map);
 }
 
 function AmenitiesPopup(amenity, properties) {
