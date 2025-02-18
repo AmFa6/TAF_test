@@ -489,17 +489,31 @@ function updateFeatureVisibility() {
       const hexId = feature.properties.Hex_ID;
       const time = hexTimeMap[hexId];
       const isVisible = isClassVisible(time, selectedYear);
-      layer.setStyle({ opacity: isVisible ? 1 : 0, fillOpacity: isVisible ? layer.options.fillOpacity : 0 });
+      if (layer.options._originalFillOpacity === undefined) {
+        layer.options._originalFillOpacity = layer.options.fillOpacity;
+      }
+      layer.setStyle({ 
+        opacity: isVisible ? 1 : 0, 
+        fillOpacity: isVisible ? layer.options._originalFillOpacity : 0 
+      });
     });
   } else if (ScoresLayer) {
     const selectedYear = ScoresYear.value;
-    const fieldToDisplay = selectedYear.includes('-') ? `${ScoresPurpose.value}_${ScoresMode.value}` : `${ScoresPurpose.value}_${ScoresMode.value}_100`;
+    const fieldToDisplay = selectedYear.includes('-') 
+      ? `${ScoresPurpose.value}_${ScoresMode.value}` 
+      : `${ScoresPurpose.value}_${ScoresMode.value}_100`;
 
     ScoresLayer.eachLayer(layer => {
       const feature = layer.feature;
       const value = feature.properties[fieldToDisplay];
       const isVisible = isClassVisible(value, selectedYear);
-      layer.setStyle({ opacity: isVisible ? 1 : 0, fillOpacity: isVisible ? layer.options.fillOpacity : 0 });
+      if (layer.options._originalFillOpacity === undefined) {
+        layer.options._originalFillOpacity = layer.options.fillOpacity;
+      }
+      layer.setStyle({ 
+        opacity: isVisible ? 1 : 0, 
+        fillOpacity: isVisible ? layer.options._originalFillOpacity : 0 
+      });
     });
   }
 }
@@ -587,9 +601,6 @@ function updateLegend() {
     updateFeatureVisibility();
   });
   updateMasterCheckbox();
-
-  // Remove amenities and ward boundaries checkboxes from the dynamic legend
-  // They will be created separately through createStaticLegendControls()
 }
 
 function createStaticLegendControls() {
