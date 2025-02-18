@@ -669,6 +669,12 @@ function drawSelectedAmenities(amenities) {
   const amenitiesCheckbox = document.getElementById('amenitiesCheckbox');
   amenitiesLayerGroup.clearLayers();
 
+  if (!amenitiesCheckbox) {
+    return;
+  }
+
+  const isChecked = amenitiesCheckbox.checked;
+
   if (amenities.length === 0) {
     amenities = Object.keys(amenityLayers);
   }
@@ -676,7 +682,7 @@ function drawSelectedAmenities(amenities) {
   const currentZoom = map.getZoom();
   const minZoomLevel = 14;
 
-  Object.keys(amenityLayers).forEach(amenity => {
+  amenities.forEach(amenity => {
     const amenityLayer = amenityLayers[amenity];
     if (amenityLayer) {
       const layer = L.geoJSON(amenityLayer, {
@@ -700,19 +706,22 @@ function drawSelectedAmenities(amenities) {
               }
             });
           }
-        },
-        style: (feature) => {
-          return {
-            opacity: amenities.includes(amenity) ? 1 : 0,
-            fillOpacity: amenities.includes(amenity) ? 1 : 0
-          };
+
+          // Set opacity based on the checkbox state
+          if (!isChecked) {
+            layer.setStyle({ opacity: 0 });
+          } else {
+            layer.setStyle({ opacity: 1 });
+          }
         }
       });
       amenitiesLayerGroup.addLayer(layer);
     }
   });
 
-  amenitiesLayerGroup.addTo(map);
+  if (isChecked) {
+    amenitiesLayerGroup.addTo(map);
+  }
 }
 
 function AmenitiesPopup(amenity, properties) {
