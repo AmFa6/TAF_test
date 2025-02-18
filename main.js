@@ -271,6 +271,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   document.querySelectorAll('.legend-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', updateFeatureVisibility);
   });
+  createStaticLegendControls();
 });
 
 map.on('zoomend', () => {
