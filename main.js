@@ -1179,6 +1179,7 @@ function updateAmenitiesCatchmentLayer() {
       AmenitiesCatchmentLayer = null;
     }
     drawSelectedAmenities([]);
+    updateLegend();
     return;
   }
 
@@ -1222,7 +1223,6 @@ function updateAmenitiesCatchmentLayer() {
     fetch('https://AmFa6.github.io/TAF_test/HexesSocioEco.geojson')
       .then(response => response.json())
       .then(data => {
-        // Remove the existing AmenitiesCatchmentLayer if it exists
         if (AmenitiesCatchmentLayer) {
           map.removeLayer(AmenitiesCatchmentLayer);
           AmenitiesCatchmentLayer = null;
